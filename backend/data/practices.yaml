@@ -1,0 +1,138 @@
+# Integrated pest management practices tied to crops and problems.
+# Prevention and non-chemical practices only: the planner never recommends a pesticide
+# product or rate (see SPEC.md). Each practice cites the fact sheet it came from.
+
+- id: PRAC-SCOUT-HORNWORM
+  crops: [tomato, pepper, eggplant, potato]
+  problems: [tomato-hornworm]
+  text: >
+    Check plants for large green caterpillars, chewed leaves and dark droppings, and
+    handpick or snip hornworms. Leave caterpillars carrying white wasp cocoons, since
+    natural enemies usually keep hornworms in check. Till after harvest to destroy pupae
+    in the soil.
+  source: SRC-UCIPM-HORNWORM
+  verified: false
+
+- id: PRAC-EARLY-BLIGHT
+  crops: [tomato, pepper, eggplant, potato]
+  problems: [early-blight]
+  text: >
+    Keep tomatoes and related crops out of this bed for at least two years, and pull
+    nightshade weeds and volunteer tomatoes. Mulch 2 to 3 inches around plants to stop
+    soil splash, stake or cage plants so leaves dry faster, and remove tomato debris in fall.
+  source: SRC-UMN-EARLYBLIGHT
+  verified: false
+
+- id: PRAC-CABBAGE-WORMS
+  crops: [cabbage, broccoli, collards, kale]
+  problems: [cabbage-worms]
+  text: >
+    Cover plants with floating row cover to keep cabbage white butterflies from laying
+    eggs. Handpick caterpillars, and plant early so the crop is harvested before
+    cabbageworm numbers peak.
+  source: SRC-USU-CABBAGEWORM
+  verified: false
+
+- id: PRAC-SQUASH-BUGS
+  crops: [squash]
+  problems: [squash-bugs]
+  text: >
+    Scout leaf undersides at least weekly once egg laying starts and crush bronze egg
+    clusters. Lay damp cardboard or boards near plants and collect the bugs that shelter
+    under them in the morning. Clear cucurbit debris in fall, and skip straw mulch where
+    squash bugs are severe.
+  source: SRC-NMSU-SQUASHBUG
+  verified: false
+
+- id: PRAC-VINE-BORER
+  crops: [squash]
+  problems: [squash-vine-borer]
+  text: >
+    Plant squash away from where it grew last year, since borers overwinter in that soil.
+    Cover young plants with row cover until flowering, watch stem bases for frass and
+    entry holes, and mound soil over vine nodes so they root if the base is attacked.
+  source: SRC-UCONN-SVB
+  verified: false
+
+- id: PRAC-BEAN-BEETLE
+  crops: [bush_bean]
+  problems: [mexican-bean-beetle]
+  text: >
+    Check leaf undersides for spotted adults, egg clusters and spiny yellow larvae, and
+    remove them by hand. Pull and destroy heavily infested plants after harvest.
+  source: SRC-CORNELL-MBB
+  verified: false
+
+# --- Added for new problems ---
+
+- id: PRAC-CUCUMBER-BEETLE
+  crops: [cucumber, squash, watermelon]
+  problems: [cucumber-beetle]
+  text: >
+    Cover cucurbits with floating row cover right after planting and remove it when
+    flowers open. Setting out larger transplants later helps. Pull plants that wilt,
+    since bacterial wilt spread by the beetles has no cure.
+  source: SRC-UVM-CUCBEETLE
+  verified: false
+
+- id: PRAC-FLEA-BEETLE
+  crops: [cabbage, broccoli, collards, kale, eggplant]
+  problems: [flea-beetle]
+  text: >
+    Protect seedlings with row cover (use hoops for eggplant) or use transplants instead of
+    direct seeding. A trap row of radish or mustard planted 7 to 14 days earlier draws
+    beetles away. Clear crop debris and nearby weeds after harvest.
+  source: SRC-UMN-FLEABEETLE
+  verified: false
+
+- id: PRAC-HARLEQUIN-BUG
+  crops: [cabbage, broccoli, collards, kale]
+  problems: [harlequin-bug]
+  text: >
+    Destroy brassica residues in fall and control wild mustard weeds. An early trap planting
+    of mustard or kale can draw overwintering bugs, which are removed before the main crop
+    is vulnerable.
+  source: SRC-WVU-HARLEQUIN
+  verified: false
+
+- id: PRAC-ONION-THRIPS
+  crops: [onion, garlic]
+  problems: [onion-thrips]
+  text: >
+    Clean up onion residue, don't replant last year's onions as sets, and keep onions away
+    from alfalfa, wheat or clover. Straw mulch deters thrips; scout field edges weekly,
+    especially in hot, dry weather and during bulbing.
+  source: SRC-UMASS-THRIPS
+  verified: false
+
+- id: PRAC-WHITE-ROT
+  crops: [onion, garlic]
+  problems: [white-rot]
+  text: >
+    Keep onions and garlic out of infested soil for 8 to 10 years, plant disease-free sets,
+    and don't move infested soil. Remove infected plants and their neighbors, and don't
+    compost them.
+  source: SRC-WSU-WHITEROT
+  verified: false
+
+- id: PRAC-SOUTHERN-BLIGHT
+  crops: [tomato, pepper, eggplant, potato, squash, cucumber, watermelon, bush_bean, southern_pea, cabbage, collards, okra, sweet_potato]
+  problems: [southern-blight]
+  text: >
+    Southern blight attacks hundreds of plant species, so rotate this bed into grasses
+    such as sweet corn. Keep beds separate and wash soil off tools and shoes so infested
+    soil doesn't spread.
+  source: SRC-CLEMSON-ROTATION
+  verified: false
+
+- id: PRAC-ROOT-KNOT
+  crops: [tomato, pepper, okra, bush_bean, southern_pea, squash, sweet_potato, carrot, lettuce]
+  problems: [root-knot-nematode]
+  text: >
+    Confirm by checking roots for galls or sending a soil sample through the county
+    extension office. Choose resistant varieties where they exist, grow non-hosts such as
+    corn, onions or garlic in the spot for about three years, and pull plants and roots
+    right after harvest. Soil solarization under clear plastic for 6 to 12 weeks in summer
+    also lowers numbers.
+  source: SRC-CLEMSON-RKN
+  verified: false

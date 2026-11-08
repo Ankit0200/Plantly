@@ -1,0 +1,111 @@
+# Nutrient recommendations (lb per 1000 sq ft) by soil test level and crop demand.
+#
+# Source: Clemson HGIC "Fertilizing Vegetables" (home garden, Mehlich-1 state).
+# Clemson's rule: add all recommended P and K before planting unless the soil test
+# rates that nutrient High or Excessive, in which case add none.
+#   P needed  -> 9 lb triple superphosphate (0-46-0) per 1000 sq ft = 4.1 lb P2O5
+#   K needed  -> 6.5 lb muriate of potash (0-0-60) per 1000 sq ft = 3.9 lb K2O
+#   (When both P and K are needed Clemson uses 10 lb 10-10-10 + 8.5 lb 0-46-0 + 5 lb 0-0-60,
+#    about 4.9 lb P2O5 and 4.0 lb K2O; the single-nutrient rates are used here.)
+#
+# Clemson's home-garden guide does not vary P and K by crop, so all four demand groups
+# share the same numbers. Commercial guides do vary by crop; switch to them later if needed.
+# Level names follow soil_test_levels.yaml (very_low = Clemson Low ... very_high = Excessive).
+
+# --- P2O5 recommendations ---
+- id: NUT-P2O5-HEAVY
+  nutrient: P2O5
+  n_demand: heavy
+  lb_per_1000sqft:
+    very_low: 4.1
+    low: 4.1
+    medium: 4.1
+    high: 0
+    very_high: 0
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: NUT-P2O5-MEDIUM
+  nutrient: P2O5
+  n_demand: medium
+  lb_per_1000sqft:
+    very_low: 4.1
+    low: 4.1
+    medium: 4.1
+    high: 0
+    very_high: 0
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: NUT-P2O5-LIGHT
+  nutrient: P2O5
+  n_demand: light
+  lb_per_1000sqft:
+    very_low: 4.1
+    low: 4.1
+    medium: 4.1
+    high: 0
+    very_high: 0
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: NUT-P2O5-FIXER
+  nutrient: P2O5
+  n_demand: fixer
+  lb_per_1000sqft:
+    very_low: 4.1
+    low: 4.1
+    medium: 4.1
+    high: 0
+    very_high: 0
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+# --- K2O recommendations ---
+- id: NUT-K2O-HEAVY
+  nutrient: K2O
+  n_demand: heavy
+  lb_per_1000sqft:
+    very_low: 3.9
+    low: 3.9
+    medium: 3.9
+    high: 0
+    very_high: 0
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: NUT-K2O-MEDIUM
+  nutrient: K2O
+  n_demand: medium
+  lb_per_1000sqft:
+    very_low: 3.9
+    low: 3.9
+    medium: 3.9
+    high: 0
+    very_high: 0
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: NUT-K2O-LIGHT
+  nutrient: K2O
+  n_demand: light
+  lb_per_1000sqft:
+    very_low: 3.9
+    low: 3.9
+    medium: 3.9
+    high: 0
+    very_high: 0
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: NUT-K2O-FIXER
+  nutrient: K2O
+  n_demand: fixer
+  lb_per_1000sqft:
+    very_low: 3.9
+    low: 3.9
+    medium: 3.9
+    high: 0
+    very_high: 0
+  source: SRC-CLEMSON-FERTVEG
+  verified: false

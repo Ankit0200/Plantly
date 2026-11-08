@@ -1,0 +1,31 @@
+{
+  "name": "Backyard Beginner",
+  "crops_needed": ["tomato", "lettuce", "bush_bean"],
+  "compost_available_cu_yd": 1.0,
+  "compost_price_usd_per_cu_yd": 35,
+  "price_overrides": {},
+  "plots": [
+    {
+      "id": "A",
+      "name": "Raised Bed",
+      "area_sqft": 200,
+      "soil_texture": "loam",
+      "soil_test": {
+        "ph": 6.2,
+        "p_ppm": 25,
+        "k_ppm": 90,
+        "organic_matter_pct": 3.5
+      },
+      "crop_two_years_ago": null,
+      "crop_last_year": "tomato",
+      "crop_planned": "tomato",
+      "problems": [],
+      "baseline": {
+        "inputs": [
+          {"product_id": "fert-10-10-10", "amount_lb": 10}
+        ],
+        "pesticide_applications": 2
+      }
+    }
+  ]
+}

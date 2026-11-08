@@ -1,0 +1,158 @@
+# Lime application rates (lb ground limestone per 1000 sq ft) by soil texture, pH band
+# and target pH.
+#
+# STILL PLACEHOLDERS. No Southern extension guide publishes a simple texture table:
+# Clemson and UGA calculate lime from a lab buffer test, and SARE (Building Soils ch. 20)
+# says pH alone tells you whether lime is needed, not how much.
+# Best fix: let the user enter the lime amount printed on their soil test report and use
+# this table only as a fallback, labeled as an estimate.
+#
+# Sourced limits the engine can enforce now:
+# - UConn "Liming Soils": no more than 10 lb per 100 sq ft (= 100 lb per 1000 sq ft) at
+#   once when tilled in 6 inches, or 5-7 lb per 100 sq ft on the surface. All rows below
+#   stay under 100.
+# - Clemson HGIC "Changing the pH of Your Soil": apply 2-3 months before planting.
+#
+# Target-6.0 rows (for potato, sweet potato, watermelon) were added so those crops can get
+# a lime line; their placeholder values reuse the target-6.5 row with the same pH rise.
+
+# --- Sandy soil, target 6.5 ---
+- id: LIME-SANDY-01
+  soil_texture: sandy
+  ph_min: 5.0
+  ph_max: 5.5
+  target_ph: 6.5
+  lime_lb_per_1000sqft: 35   # PLACEHOLDER
+  source: SRC-PLACEHOLDER
+  verified: false
+
+- id: LIME-SANDY-02
+  soil_texture: sandy
+  ph_min: 5.5
+  ph_max: 6.0
+  target_ph: 6.5
+  lime_lb_per_1000sqft: 25   # PLACEHOLDER
+  source: SRC-PLACEHOLDER
+  verified: false
+
+- id: LIME-SANDY-03
+  soil_texture: sandy
+  ph_min: 6.0
+  ph_max: 6.5
+  target_ph: 6.5
+  lime_lb_per_1000sqft: 15   # PLACEHOLDER
+  source: SRC-PLACEHOLDER
+  verified: false
+
+# --- Sandy soil, target 6.0 ---
+- id: LIME-SANDY-04
+  soil_texture: sandy
+  ph_min: 5.0
+  ph_max: 5.5
+  target_ph: 6.0
+  lime_lb_per_1000sqft: 25   # PLACEHOLDER (same rise as LIME-SANDY-02)
+  source: SRC-PLACEHOLDER
+  verified: false
+
+- id: LIME-SANDY-05
+  soil_texture: sandy
+  ph_min: 5.5
+  ph_max: 6.0
+  target_ph: 6.0
+  lime_lb_per_1000sqft: 15   # PLACEHOLDER (same rise as LIME-SANDY-03)
+  source: SRC-PLACEHOLDER
+  verified: false
+
+# --- Loam soil, target 6.5 ---
+- id: LIME-LOAM-01
+  soil_texture: loam
+  ph_min: 5.0
+  ph_max: 5.5
+  target_ph: 6.5
+  lime_lb_per_1000sqft: 50   # PLACEHOLDER
+  source: SRC-PLACEHOLDER
+  verified: false
+
+- id: LIME-LOAM-02
+  soil_texture: loam
+  ph_min: 5.5
+  ph_max: 6.0
+  target_ph: 6.5
+  lime_lb_per_1000sqft: 35   # PLACEHOLDER
+  source: SRC-PLACEHOLDER
+  verified: false
+
+- id: LIME-LOAM-03
+  soil_texture: loam
+  ph_min: 6.0
+  ph_max: 6.5
+  target_ph: 6.5
+  lime_lb_per_1000sqft: 20   # PLACEHOLDER
+  source: SRC-PLACEHOLDER
+  verified: false
+
+# --- Loam soil, target 6.0 ---
+- id: LIME-LOAM-04
+  soil_texture: loam
+  ph_min: 5.0
+  ph_max: 5.5
+  target_ph: 6.0
+  lime_lb_per_1000sqft: 35   # PLACEHOLDER (same rise as LIME-LOAM-02)
+  source: SRC-PLACEHOLDER
+  verified: false
+
+- id: LIME-LOAM-05
+  soil_texture: loam
+  ph_min: 5.5
+  ph_max: 6.0
+  target_ph: 6.0
+  lime_lb_per_1000sqft: 20   # PLACEHOLDER (same rise as LIME-LOAM-03)
+  source: SRC-PLACEHOLDER
+  verified: false
+
+# --- Clay soil, target 6.5 ---
+- id: LIME-CLAY-01
+  soil_texture: clay
+  ph_min: 5.0
+  ph_max: 5.5
+  target_ph: 6.5
+  lime_lb_per_1000sqft: 75   # PLACEHOLDER
+  source: SRC-PLACEHOLDER
+  verified: false
+
+- id: LIME-CLAY-02
+  soil_texture: clay
+  ph_min: 5.5
+  ph_max: 6.0
+  target_ph: 6.5
+  lime_lb_per_1000sqft: 55   # PLACEHOLDER
+  source: SRC-PLACEHOLDER
+  verified: false
+
+- id: LIME-CLAY-03
+  soil_texture: clay
+  ph_min: 6.0
+  ph_max: 6.5
+  target_ph: 6.5
+  lime_lb_per_1000sqft: 35   # PLACEHOLDER
+  source: SRC-PLACEHOLDER
+  verified: false
+
+# --- Clay soil, target 6.0 ---
+- id: LIME-CLAY-04
+  soil_texture: clay
+  ph_min: 5.0
+  ph_max: 5.5
+  target_ph: 6.0
+  lime_lb_per_1000sqft: 55   # PLACEHOLDER (same rise as LIME-CLAY-02)
+  source: SRC-PLACEHOLDER
+  verified: false
+
+- id: LIME-CLAY-05
+  soil_texture: clay
+  ph_min: 5.5
+  ph_max: 6.0
+  target_ph: 6.0
+  lime_lb_per_1000sqft: 35   # PLACEHOLDER (same rise as LIME-CLAY-03)
+  source: SRC-PLACEHOLDER
+  verified: false

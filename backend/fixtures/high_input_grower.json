@@ -1,0 +1,53 @@
+{
+  "name": "Heavy Input Farm",
+  "crops_needed": ["tomato", "pepper", "sweet_corn", "cabbage"],
+  "compost_available_cu_yd": 0,
+  "compost_price_usd_per_cu_yd": 0,
+  "price_overrides": {},
+  "plots": [
+    {
+      "id": "A",
+      "name": "Tomato Row",
+      "area_sqft": 8000,
+      "soil_texture": "loam",
+      "soil_test": {
+        "ph": 6.3,
+        "p_ppm": 85,
+        "k_ppm": 180,
+        "organic_matter_pct": 2.0
+      },
+      "crop_two_years_ago": "tomato",
+      "crop_last_year": "tomato",
+      "crop_planned": "tomato",
+      "problems": ["early-blight", "tomato-hornworm"],
+      "baseline": {
+        "inputs": [
+          {"product_id": "fert-10-10-10", "amount_lb": 500}
+        ],
+        "pesticide_applications": 12
+      }
+    },
+    {
+      "id": "B",
+      "name": "Pepper Field",
+      "area_sqft": 6000,
+      "soil_texture": "sandy",
+      "soil_test": {
+        "ph": 5.6,
+        "p_ppm": 95,
+        "k_ppm": 160,
+        "organic_matter_pct": 1.0
+      },
+      "crop_two_years_ago": "pepper",
+      "crop_last_year": "pepper",
+      "crop_planned": "pepper",
+      "problems": [],
+      "baseline": {
+        "inputs": [
+          {"product_id": "fert-10-10-10", "amount_lb": 350}
+        ],
+        "pesticide_applications": 10
+      }
+    }
+  ]
+}

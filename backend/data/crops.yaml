@@ -1,0 +1,204 @@
+# Crop definitions for Soil-Smart Planner.
+#
+# family:    botanical family (Clemson HGIC 1330 crop rotation family list).
+# n_demand:  feeder group from UGA C963 "Vegetable Gardening in Georgia"
+#            (heavy, medium, light). Legumes are "fixer" in this engine.
+#            Broccoli and garlic are not listed in C963; see comments on those rows.
+# target_ph: Clemson HGIC "Fertilizing Vegetables": optimum 6.0-6.5 for most vegetables;
+#            the top of the range (6.5) is used as the liming target. Exceptions noted per row.
+# n_need_lb_per_1000sqft: Clemson HGIC "Fertilizing Vegetables" home-garden program,
+#            about 1.0 lb N preplant (6.5 lb calcium nitrate) + 1.55 lb N sidedress
+#            (10 lb calcium nitrate) = ~2.55 lb N per 1000 sq ft. Clemson gives one rate
+#            for all vegetables, so heavy and medium feeders share it.
+#            LEGUMES: 0 lb N is a planner assumption (they fix their own N), NOT a sourced
+#            value. UGA C963 still lists beans as medium and southern peas as light feeders.
+#            Decide as a team and record the decision here.
+
+- id: tomato
+  name: Tomato
+  family: nightshade
+  n_demand: heavy
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: pepper
+  name: Pepper
+  family: nightshade
+  n_demand: medium          # UGA C963 medium feeder
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: eggplant
+  name: Eggplant
+  family: nightshade
+  n_demand: medium          # UGA C963 medium feeder
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: potato
+  name: Potato
+  family: nightshade
+  n_demand: heavy           # UGA C963 heavy feeder (Irish potato)
+  target_ph: 6.0            # UGA C963: pH 5.0-6.0 for Irish potatoes
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-UGA-C963
+  verified: false
+
+- id: cabbage
+  name: Cabbage
+  family: brassica
+  n_demand: heavy
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: broccoli
+  name: Broccoli
+  family: brassica
+  n_demand: heavy           # not in UGA C963; SARE Table 3.1 lists broccoli as high demand
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: collards
+  name: Collards
+  family: brassica
+  n_demand: medium          # UGA C963 "greens"
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: kale
+  name: Kale
+  family: brassica
+  n_demand: medium          # UGA C963 "greens"
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: squash
+  name: Squash
+  family: cucurbit
+  n_demand: medium
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: cucumber
+  name: Cucumber
+  family: cucurbit
+  n_demand: medium
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: watermelon
+  name: Watermelon
+  family: cucurbit
+  n_demand: medium
+  target_ph: 6.0            # SARE Building Soils ch. 20: watermelon prefers pH 5-6
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: bush_bean
+  name: Bush Bean
+  family: legume
+  n_demand: fixer
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 0.0   # planner assumption, see header
+  source: SRC-PLACEHOLDER
+  verified: false
+
+- id: southern_pea
+  name: Southern Pea
+  family: legume
+  n_demand: fixer
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 0.0   # planner assumption, see header
+  source: SRC-PLACEHOLDER
+  verified: false
+
+- id: snap_pea
+  name: Snap Pea
+  family: legume
+  n_demand: fixer
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 0.0   # planner assumption, see header
+  source: SRC-PLACEHOLDER
+  verified: false
+
+- id: onion
+  name: Onion
+  family: allium
+  n_demand: heavy           # UGA C963 heavy feeder
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: garlic
+  name: Garlic
+  family: allium
+  n_demand: medium          # not in UGA C963; OSU EM 9235 Table 6 lists garlic as medium
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: sweet_corn
+  name: Sweet Corn
+  family: grass
+  n_demand: medium          # UGA C963 medium feeder
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: lettuce
+  name: Lettuce
+  family: aster
+  n_demand: heavy           # UGA C963 heavy feeder (SARE agrees: poor root foraging)
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: carrot
+  name: Carrot
+  family: carrot
+  n_demand: medium          # UGA C963 medium feeder
+  target_ph: 6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: okra
+  name: Okra
+  family: mallow
+  n_demand: medium          # UGA C963 medium feeder
+  target_ph: 6.5            # Clemson HGIC 1313: keep pH 5.8-6.5
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false
+
+- id: sweet_potato
+  name: Sweet Potato
+  family: morning_glory
+  n_demand: heavy           # UGA C963 heavy feeder
+  target_ph: 6.0            # SARE Building Soils ch. 20: sweet potato prefers pH 5-6
+  n_need_lb_per_1000sqft: 2.55
+  source: SRC-CLEMSON-FERTVEG
+  verified: false

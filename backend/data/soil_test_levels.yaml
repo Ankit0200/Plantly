@@ -1,0 +1,39 @@
+# Soil test interpretation levels for P and K.
+# Upper bounds define the ceiling for each category (values at or below).
+#
+# Source: Clemson "Interpreting Routine Soil Tests" (Agricultural Service Lab ratings,
+# sandy loam / silt loam / clay loam soils). South Carolina uses the Mehlich-1 extractant
+# (SERA-6 Fact Sheet 5). Clemson reports in lb/acre; converted here with
+# ppm = lb/acre / 2 (assumes a 2-million-lb acre-furrow slice, per SERA-6 FS-5).
+#
+# Engine key -> Clemson rating name (show the Clemson name in the UI if you can):
+#   very_low  = Low         (P <21 lb/A,  K <71 lb/A)
+#   low       = Medium      (P 21-40,     K 71-156)
+#   medium    = Sufficient  (P 41-54,     K 157-182)
+#   high      = High        (P 55-80,     K 183-235)
+#   very_high = Excessive   (P >80,       K >235)
+#
+# Only valid for Mehlich-1 results. If your growers' lab uses Mehlich-3 or another
+# extractant, replace BOTH this file and nutrient_recs.yaml from that lab's guide.
+
+- id: STL-P
+  nutrient: P
+  extraction_method: "Mehlich-1 (Clemson ASL ratings; lb/A converted to ppm by dividing by 2)"
+  upper_bounds_ppm:
+    very_low: 10      # Clemson Low: <21 lb/A
+    low: 20           # Clemson Medium: 21-40 lb/A
+    medium: 27        # Clemson Sufficient: 41-54 lb/A
+    high: 40          # Clemson High: 55-80 lb/A; above this = Excessive
+  source: SRC-CLEMSON-SOILTEST
+  verified: false
+
+- id: STL-K
+  nutrient: K
+  extraction_method: "Mehlich-1 (Clemson ASL ratings; lb/A converted to ppm by dividing by 2)"
+  upper_bounds_ppm:
+    very_low: 35      # Clemson Low: <71 lb/A
+    low: 78           # Clemson Medium: 71-156 lb/A
+    medium: 91        # Clemson Sufficient: 157-182 lb/A
+    high: 117.5       # Clemson High: 183-235 lb/A; above this = Excessive
+  source: SRC-CLEMSON-SOILTEST
+  verified: false

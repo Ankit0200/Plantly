@@ -1,0 +1,938 @@
+# source_notes.yaml: the AI's reading material (searched by search_sources).
+# Each note is one or two sentences in our own words, tied to a source in sources.yaml.
+# Numbers in notes are allowed by the number guard because they come back from a tool,
+# but they are background only: the rules engine still sets every rate and amount.
+# verified: false until a teammate checks the note against the page listed.
+# Topic tags match crop, family and problem ids in the data files.
+
+# ---------------------------------------------------------------------------
+# Rotation and disease (SARE, Crop Rotation on Organic Farms, ch. 3)
+# ---------------------------------------------------------------------------
+- id: NOTE-ROT-001
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation (intro)"
+  topics: [rotation, disease]
+  note: "Rotation fights disease by growing non-host crops until a soil pathogen dies off or falls to a level that does little damage. To plan it you need to know how long the pathogen survives, what other plants (including weeds and cover crops) it can live on, and how it gets back into the field."
+  verified: false
+
+- id: NOTE-ROT-002
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, pathogen characteristics"
+  topics: [rotation, disease]
+  note: "Rotation works best on pathogens that survive only in crop debris or only a few years in soil, because they die out once the debris decomposes. Fungi that live freely on soil organic matter, such as Pythium, Rhizoctonia and Fusarium, are hard to control with rotation alone."
+  verified: false
+
+- id: NOTE-ROT-003
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, pathogen characteristics"
+  topics: [rotation, disease, early-blight, nightshade, cucurbit]
+  note: "Leaf pathogens with large spores, such as Alternaria (early blight), Septoria and Cercospora, spread only short distances by wind, so rotation helps against them. Cucurbit powdery and downy mildew spores travel very long distances, so rotation does little for those."
+  verified: false
+
+- id: NOTE-ROT-004
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, beneficial plants to include"
+  topics: [rotation, disease, grass, sweet_corn]
+  note: "Alternating crop families is a good starting point because crops in one family share many diseases, but a few pathogens cross families (Phytophthora capsici affects cucurbits, peppers and lima beans). Corn, small grains and other grasses are usually good crops to rotate with vegetables."
+  verified: false
+
+- id: NOTE-ROT-005
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, diseases not easily managed by rotation"
+  topics: [rotation, disease, nightshade, brassica, cucurbit]
+  note: "Fusarium wilts of tomato, crucifers, cucurbits, pea and spinach persist for many years as dormant spores, so even 5 to 7 year rotations may fall short after a severe outbreak; resistant varieties are the practical fix. Each crop's Fusarium wilt is a different strain, so muskmelon can follow watermelon that had it."
+  verified: false
+
+- id: NOTE-ROT-006
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, diseases that can be managed"
+  topics: [rotation, disease, tomato, pepper, nightshade]
+  note: "The bacterium behind bacterial spot of tomato and pepper cannot survive in soil once infected debris decomposes, so at least two years without a host crop is recommended. Use tested seed and pull volunteer tomato and pepper plants during the rotation."
+  verified: false
+
+- id: NOTE-ROT-007
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, root-knot nematodes"
+  topics: [rotation, nematodes, grass, cover-crop]
+  note: "Root-knot nematodes feed on most vegetables, so switching vegetable families does little. Sorghum, small grains, grasses or a clean summer fallow lower their numbers, but only briefly; hairy vetch is a good host for them."
+  verified: false
+
+- id: NOTE-ROT-008
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, other factors"
+  topics: [rotation, sanitation]
+  note: "Rotation works better when the whole field or bed unit leaves the susceptible crop, since tools and runoff carry infested soil and debris. Clean equipment before moving between units."
+  verified: false
+
+- id: NOTE-ROT-009
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, other factors"
+  topics: [tomato, nightshade, mulch, early-blight]
+  note: "After rotating land out of tomatoes, staking and mulching the next tomato crop keeps leftover spores in the soil from splashing up onto the plants."
+  verified: false
+
+- id: NOTE-ROT-010
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, beneficial plants to include"
+  topics: [brassica, legume, cover-crop, disease]
+  note: "Some legumes and mustard-family plants suppress soil pathogens; decomposing mustards release compounds toxic to some fungi and nematodes (biofumigation), and broccoli residue lowered verticillium wilt and lettuce drop in studies. These crops can still build up diseases of their own family."
+  verified: false
+
+- id: NOTE-ROT-011
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, pathogen characteristics; beneficial plants"
+  topics: [cover-crop, compost, timing, disease]
+  note: "Planting right after tilling in a big cover crop or immature compost can feed damping-off fungi such as Pythium. After incorporating a mustard biofumigant, wait about a month before planting because the compounds can harm crops too."
+  verified: false
+
+- id: NOTE-ROT-012
+  source: SRC-SARE-ROTATION
+  page: "Ch. 5, Tips for Sequencing Crops, step C"
+  topics: [rotation, planning]
+  note: "If any one crop family other than grasses would cover more than about a quarter of your growing area, diversify. Otherwise most beds rotate back to that family quickly and soilborne disease builds up."
+  verified: false
+
+- id: NOTE-ROT-013
+  source: SRC-SARE-ROTATION
+  page: "Ch. 5, Tips for Sequencing Crops, step G"
+  topics: [rotation, planning]
+  note: "When placing crops, skip beds that grew the same family in the last few years and keep succession plantings of one crop out of neighboring beds. Place your largest crop family first, then high-value crops, then crops that can go anywhere."
+  verified: false
+
+- id: NOTE-ROT-014
+  source: SRC-SARE-ROTATION
+  page: "Ch. 5, Tips for Sequencing Crops, sidebar 5.1"
+  topics: [rotation, planning, nightshade, brassica, cucurbit]
+  note: "One example of a general rotation plan: nightshade crops, then mustard-family crops, then other salad greens, then cucurbits. Keep the plan flexible with backup crops in case weather or markets change."
+  verified: false
+
+- id: NOTE-ROT-015
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, pathogen characteristics"
+  topics: [early-blight, tomato, potato, nightshade]
+  note: "Research has found that most tomato early blight is caused by a different Alternaria species than potato early blight, so tomatoes after blighted potatoes may fare no worse than after other crops. Many extension guides still group all nightshades together for rotation, which is the safer default."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Rotation and insects (SARE, Crop Rotation on Organic Farms, ch. 3)
+# ---------------------------------------------------------------------------
+- id: NOTE-INS-001
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Management of Insect Pests with Crop Rotation and Field Layout (intro)"
+  topics: [rotation, insects]
+  note: "Rotation controls an insect only if it spends the gap between crops in a stage that can't move far and it feeds on few plants. Few pests fit: most adults fly across a whole farm, and some, like corn earworm and cabbage looper, migrate in each year."
+  verified: false
+
+- id: NOTE-INS-002
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Management of Insect Pests; Table 3.5"
+  topics: [rotation, insects, potato, tomato, eggplant, nightshade]
+  note: "Colorado potato beetle overwinters as adults in or beside last year's nightshade field and walks to new hosts in spring, so moving potatoes, tomatoes or eggplant away from last year's spot delays and shrinks the attack. About 200 m helps; full control may need about 0.8 km or a barrier."
+  verified: false
+
+- id: NOTE-INS-003
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Management of Insect Pests, no-till and crop residue effects"
+  topics: [insects, sanitation, squash-vine-borer, onion, allium]
+  note: "Breaking down or turning under crop residue after harvest kills overwintering stages of some pests that hide in it, including squash vine borer, onion maggot and European corn borer. The payoff is biggest when neighbors do it too."
+  verified: false
+
+- id: NOTE-INS-004
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Management of Insect Pests, movement between crops"
+  topics: [insects, brassica, planning]
+  note: "Back-to-back plantings of the same crop in neighboring beds let pests with several generations a year, such as crucifer flea beetles, build up large populations. Separate succession plantings."
+  verified: false
+
+- id: NOTE-INS-005
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Management of Insect Pests, planting time"
+  topics: [insects, brassica, row-cover, timing]
+  note: "Flea beetles and cabbage maggot do most of their damage to young cole crop seedlings, so delaying planting or covering early plantings with row cover avoids much of it."
+  verified: false
+
+- id: NOTE-INS-006
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Management of Insect Pests, planting time"
+  topics: [mexican-bean-beetle, legume, bush_bean, ipm]
+  note: "Mexican bean beetles come out later in the season and prefer the biggest, earliest bean plantings. Biological control programs have used early snap bean trap plantings to concentrate them, then released a parasitic wasp there."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Fertility (SARE, Crop Rotation on Organic Farms, ch. 3 fertility section)
+# ---------------------------------------------------------------------------
+- id: NOTE-FERT-001
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Crop Rotation Effects on Soil Fertility, legume N contributions"
+  topics: [legume, nitrogen, cover-crop]
+  note: "Rhizobium bacteria in legume roots turn nitrogen from the air into a form plants use. How much a legume leaves for the next crop depends on species, growth stage at kill, whether the whole plant or just roots stay, and weather; estimates run from about 50 to over 200 lb N per acre."
+  verified: false
+
+- id: NOTE-FERT-002
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Crop Rotation Effects on Soil Fertility, Table 3.1"
+  topics: [nitrogen, crop-demand, tomato, cabbage, broccoli, sweet_corn, lettuce, potato, bush_bean, snap_pea, squash, cucumber, pepper, eggplant, watermelon, sweet_potato, carrot]
+  note: "Nutrient demand by crop (Northeast guide): low for beans, peas, beets, carrot, radish and herbs; medium for cucumber, eggplant, pepper, squash, sweet potato, watermelon and brassica greens; high for broccoli, cabbage, cauliflower, corn, lettuce, potato and tomato. Aim compost and green manures at the high-demand crops."
+  verified: false
+
+- id: NOTE-FERT-003
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Crop Rotation Effects on Soil Fertility, compost and nutrient budgets"
+  topics: [compost, phosphorus, nitrogen]
+  note: "Most composts release nutrients slowly, so trying to meet a crop's whole N need with compost usually overloads phosphorus. Vegetable crops remove few nutrients, so yearly compost quickly builds up N and P; a simple nutrient budget catches this."
+  verified: false
+
+- id: NOTE-FERT-004
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Crop Rotation Effects on Soil Fertility, compost and amendments"
+  topics: [ph, lime, phosphorus]
+  note: "Before adding amendments, bring soil pH into the range that suits most crops in the rotation, generally 6.2 to 6.8. Soil that is too acid or too alkaline makes phosphorus and many micronutrients less available."
+  verified: false
+
+- id: NOTE-FERT-005
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Crop Rotation Effects on Soil Fertility, N scavenging"
+  topics: [nitrogen, cover-crop, timing]
+  note: "Tilling in residue with a carbon-to-nitrogen ratio of 30:1 or more can tie up soil nitrogen for a while. Waiting about two weeks before planting, mixing a legume into grain cover crops, or tilling covers in while young and leafy reduces the problem."
+  verified: false
+
+- id: NOTE-FERT-006
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Crop Rotation Effects on Soil Fertility, N scavenging"
+  topics: [brassica, cover-crop, nitrogen]
+  note: "Mustard-family cover crops grab a lot of leftover nitrogen in fall, but they can host clubroot and flea beetles that attack brassica cash crops in the same rotation."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Plant-available nitrogen (OSU EM 9235; calibrated for Oregon's Willamette Valley)
+# ---------------------------------------------------------------------------
+- id: NOTE-OSU-001
+  source: SRC-OSU-EM9235
+  page: "p. 2 and Table 4, p. 5"
+  topics: [compost, nitrogen]
+  note: "Finished, stable compost releases little plant-available nitrogen: under 10% of its total N in the first 10 weeks. Uncomposted manures and meals like feather, blood and fish meal release much more."
+  verified: false
+
+- id: NOTE-OSU-002
+  source: SRC-OSU-EM9235
+  page: "Table 8, p. 13"
+  topics: [nitrogen, organic-fertilizer]
+  note: "In lab tests, high-N organic fertilizers (about 8 to 14% N, such as feather, blood and fish meal) released roughly 60% of their N in a plant-available form within 4 weeks."
+  verified: false
+
+- id: NOTE-OSU-003
+  source: SRC-OSU-EM9235
+  page: "Questions and answers, p. 8; Table 3, p. 5"
+  topics: [cover-crop, legume, nitrogen]
+  note: "Most nitrogen from a tilled-in cover crop becomes available in the first 4 weeks and very little after 10 weeks. Low-N residues such as oat or cereal rye alone can temporarily tie up nitrogen instead."
+  verified: false
+
+- id: NOTE-OSU-004
+  source: SRC-OSU-EM9235
+  page: "Caveats, p. 3"
+  topics: [nitrogen, compost, organic-fertilizer]
+  note: "Only about 5 to 10% of an organic input's total nitrogen becomes available in the second year after it is applied."
+  verified: false
+
+- id: NOTE-OSU-005
+  source: SRC-OSU-EM9235
+  page: "Questions and answers, p. 8"
+  topics: [phosphorus, legume, cover-crop, organic-fertilizer]
+  note: "If soil-test phosphorus is already excessive, grow a legume cover crop (which adds no P) or use a low-P nitrogen source like feather or blood meal instead of manure-based fertilizer."
+  verified: false
+
+- id: NOTE-OSU-006
+  source: SRC-OSU-EM9235
+  page: "Long-term PAN management, p. 9"
+  topics: [compost, phosphorus, potassium, cover-crop, soil-organic-matter]
+  note: "Frequent, heavy compost or manure applications are not recommended once a system is established, because soil-test P and K climb. Cover crops build organic matter without piling up those nutrients."
+  verified: false
+
+- id: NOTE-OSU-007
+  source: SRC-OSU-EM9235
+  page: "Table 6, p. 7"
+  topics: [nitrogen, crop-demand, tomato, cabbage, broccoli, squash, cucumber, bush_bean, onion, pepper, lettuce, sweet_corn, potato]
+  note: "OSU groups vegetable N needs as low (snap bean, cucumber, squash, radish, spinach), medium (tomato, pepper, onion, garlic, lettuce, sweet corn, carrot, melon) and high (broccoli, cabbage, cauliflower, potato, celery). This differs from the SARE table for tomato and squash, and it is calibrated for Oregon's Willamette Valley; OSU recommends in-season soil nitrate testing to check."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Cover crops (SARE, Managing Cover Crops Profitably)
+# ---------------------------------------------------------------------------
+- id: NOTE-CC-001
+  source: SRC-SARE-MCCP
+  page: "Legume Cover Crops: Cowpeas"
+  topics: [southern_pea, legume, cover-crop, nitrogen]
+  note: "Cowpeas (southern peas) are the most productive heat-adapted legume cover crop in the US. They average about 130 lb N per acre in the East and handle drought, heat and low fertility well."
+  verified: false
+
+- id: NOTE-CC-002
+  source: SRC-SARE-MCCP
+  page: "Legume Cover Crops: Cowpeas, benefits"
+  topics: [southern_pea, legume, ipm, nitrogen]
+  note: "Unlike many grain legumes, cowpeas can leave a net nitrogen gain even when the seed is harvested. Nectar glands on their leaves and stems attract beneficial insects such as lady beetles and parasitic wasps."
+  verified: false
+
+- id: NOTE-CC-003
+  source: SRC-SARE-MCCP
+  page: "Legume Cover Crops: Cowpeas, establishment and pest management"
+  topics: [southern_pea, timing, disease, nematodes]
+  note: "Plant cowpeas once soil stays around 65 F, since seed rots in cool, wet soil, and till them in while still green for the fastest nutrient release. To limit disease and nematodes, the guide suggests rotating with four or five years of non-host crops."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Soil health, pH and lime (SARE, Building Soils for Better Crops)
+# ---------------------------------------------------------------------------
+- id: NOTE-BSBC-001
+  source: SRC-SARE-BSBC
+  page: "Ch. 20, Other Fertility Issues, soil acidity background"
+  topics: [ph, lime, watermelon, sweet_potato]
+  note: "Most crops grow best between pH 6 and 7.5. A few, including watermelon, sweet potato and peanut, prefer moderately acid soil around pH 5 to 6."
+  verified: false
+
+- id: NOTE-BSBC-002
+  source: SRC-SARE-BSBC
+  page: "Ch. 20, Other Fertility Issues, pH management"
+  topics: [lime, ph, soil-test]
+  note: "Soil pH tells you whether lime is needed, not how much. The amount comes from a lab's lime requirement test, adjusted for the lime's fineness and carbonate content; soils with more clay or organic matter need more lime for the same change."
+  verified: false
+
+- id: NOTE-BSBC-003
+  source: SRC-SARE-BSBC
+  page: "Ch. 20, Other Fertility Issues, soil acidity box and overliming"
+  topics: [lime, ph, timing]
+  note: "Spread lime well before planting sensitive crops and mix it into the topsoil; split very large lime needs over two years. Raising very acid soil too fast can cause overliming injury by reducing phosphorus, potassium or boron availability."
+  verified: false
+
+- id: NOTE-BSBC-004
+  source: SRC-SARE-BSBC
+  page: "Ch. 20, Other Fertility Issues, soil acidity background"
+  topics: [lime, nitrogen, synthetic-fertilizer, ph]
+  note: "Most common nitrogen fertilizers acidify soil as their ammonium converts to nitrate; it takes roughly 4 to 7 lb of lime to neutralize the acid from each pound of N applied. Many manures do not acidify soil."
+  verified: false
+
+- id: NOTE-BSBC-005
+  source: SRC-SARE-BSBC
+  page: "Ch. 20, Other Fertility Issues, potassium"
+  topics: [potassium, lime, sandy-soil]
+  note: "Sandy soils and soils with low-CEC clays (such as the kaolinitic clays common in the Southeast) hold little potassium, so large single K applications can leach; split them. Liming acid soil can also lower K availability somewhat."
+  verified: false
+
+- id: NOTE-BSBC-006
+  source: SRC-SARE-BSBC
+  page: "Ch. 9, Managing for High-Quality Soils, organic matter management"
+  topics: [soil-organic-matter, compost, cover-crop]
+  note: "Build soil organic matter by keeping crop residues, growing cover crops, adding a variety of materials (manure, compost, leaves) and reducing tillage and erosion. Avoid overloading soil with nutrients from imported organics, and test soil regularly when you use them."
+  verified: false
+
+- id: NOTE-BSBC-007
+  source: SRC-SARE-BSBC
+  page: "Ch. 9, Managing for High-Quality Soils, C:N ratios and Table 9.4"
+  topics: [nitrogen, compost, cover-crop]
+  note: "Typical carbon-to-nitrogen ratios: poultry manure about 10, young clover about 13, compost about 15, green rye about 36, straw about 80. Materials above about 40:1 tie up nitrogen for a while; those in the teens to low 20s release it fairly quickly."
+  verified: false
+
+- id: NOTE-BSBC-008
+  source: SRC-SARE-BSBC
+  page: "Ch. 9, Managing for High-Quality Soils, using residues as mulches"
+  topics: [mulch, early-blight, weeds, water]
+  note: "Mulch improves water infiltration, cuts evaporation and weeds, evens out soil temperature and reduces soil splashing onto leaves and fruit, which lowers disease. In cold climates it can slow spring soil warming."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# USDA standard (NRCS Conservation Practice Standard 328, Sept 2014 version)
+# ---------------------------------------------------------------------------
+- id: NOTE-NRCS-001
+  source: SRC-NRCS-328
+  page: "328-3, considerations to reduce plant pest pressures"
+  topics: [rotation, insects, disease]
+  note: "To reduce pests, NRCS suggests mixing crops from at least three plant families and leaving three or more years between plantings of crops in the same family."
+  verified: false
+
+- id: NOTE-NRCS-002
+  source: SRC-NRCS-328
+  page: "328-1 to 328-2, criteria and considerations for excess nutrients"
+  topics: [legume, nitrogen, phosphorus, compost]
+  note: "The NRCS standard calls for crediting nutrients supplied by legumes and by manure or compost, and suggests legumes to supply nitrogen where high soil phosphorus or potassium limits manure use."
+  verified: false
+
+- id: NOTE-NRCS-003
+  source: SRC-NRCS-328
+  page: "328-3, considerations to improve soil health and reduce pests"
+  topics: [cover-crop, soil-organic-matter, ipm]
+  note: "For vegetable-heavy rotations, NRCS suggests cover crops and high-residue crops for about half the rotation, plus flowering crops like buckwheat or clover to feed beneficial insects."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Early blight (tomato)
+# ---------------------------------------------------------------------------
+- id: NOTE-EB-001
+  source: SRC-UMN-EARLYBLIGHT
+  page: "Managing early blight on farms"
+  topics: [early-blight, tomato, nightshade, rotation, weeds]
+  note: "Rotate out of tomatoes and related crops for at least two years, and control nightshade weeds and volunteer tomatoes during the rotation."
+  verified: false
+
+- id: NOTE-EB-002
+  source: SRC-UMN-EARLYBLIGHT
+  page: "Quick facts"
+  topics: [early-blight, tomato, sanitation]
+  note: "The early blight fungi overwinter in infected plant debris and soil, and can also arrive on tomato seed or transplants."
+  verified: false
+
+- id: NOTE-EB-003
+  source: SRC-UMN-EARLYBLIGHT
+  page: "Managing early blight in the home garden"
+  topics: [early-blight, tomato, ipm]
+  note: "Most home gardeners do not need fungicides for early blight; tomato plants can tolerate a lot of it without losing much harvest."
+  verified: false
+
+- id: NOTE-EB-004
+  source: SRC-ISU-TOMATOBLIGHT
+  page: "Applying mulch; air movement and wire support"
+  topics: [early-blight, tomato, mulch, sanitation]
+  note: "Plant tomatoes in a new spot each year, put 2 to 3 inches of mulch around them in early summer to stop spores splashing up from soil, and grow them in cages or on stakes so leaves dry faster. Remove tomato debris in fall."
+  verified: false
+
+- id: NOTE-EB-005
+  source: SRC-CSU-EARLYBLIGHT
+  page: "Symptoms; weed control; crop rotation"
+  topics: [early-blight, tomato, nitrogen, rotation]
+  note: "Early blight is caused by Alternaria solani and A. tomatophila. Plants weakened by too little water or nitrogen in midsummer are more susceptible, volunteer tomatoes and potatoes carry the fungus, and moving tomatoes just a few rows over is not an effective rotation."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Hornworms (tomato and other nightshades)
+# ---------------------------------------------------------------------------
+- id: NOTE-HW-001
+  source: SRC-UCIPM-HORNWORM
+  page: "Solutions"
+  topics: [tomato-hornworm, tomato, ipm, sanitation]
+  note: "Handpick or snip hornworms; natural enemies usually keep them in check. Tilling after harvest destroys pupae in the soil."
+  verified: false
+
+- id: NOTE-HW-002
+  source: SRC-ILL-HORNWORM
+  page: "Damage; management"
+  topics: [tomato-hornworm, nightshade, tomato, pepper, eggplant, potato]
+  note: "Hornworms feed on tomato, eggplant, potato and pepper, usually with two generations a summer; the second overwinters as pupae in soil. Tilling after the season can destroy up to 90% of overwintering pupae."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Cabbage worms (brassicas)
+# ---------------------------------------------------------------------------
+- id: NOTE-CW-001
+  source: SRC-UNH-CABBAGEWORM
+  page: "Prevention and non-chemical control"
+  topics: [cabbage-worms, brassica, cabbage, row-cover]
+  note: "Floating row covers are an effective barrier that keeps cabbage white butterflies from laying eggs on cabbage-family crops."
+  verified: false
+
+- id: NOTE-CW-002
+  source: SRC-USU-CABBAGEWORM
+  page: "Management"
+  topics: [cabbage-worms, brassica, cabbage, timing, row-cover]
+  note: "Hand-remove caterpillars, plant cabbage early so it is harvested before cabbageworm numbers peak, and use floating row covers to keep the butterflies off."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Squash bugs (cucurbits)
+# ---------------------------------------------------------------------------
+- id: NOTE-SB-001
+  source: SRC-UMN-SQUASHBUG
+  page: "Biology of squash bugs"
+  topics: [squash-bugs, squash, cucurbit]
+  note: "Squash bugs mainly attack squash and pumpkins. Females lay clusters of about 20 bronze eggs on leaf undersides, often in the V between veins, and the eggs hatch in about 10 days, so crush egg clusters while scouting."
+  verified: false
+
+- id: NOTE-SB-002
+  source: SRC-UMN-SQUASHBUG
+  page: "Cultural controls"
+  topics: [squash-bugs, squash, sanitation, mulch]
+  note: "Adults overwinter in plant debris, so clear crop residues and cucurbit debris in fall. Butternut and buttercup squash tolerate feeding better, and where squash bugs are a severe problem, skip straw mulch because it gives them shelter."
+  verified: false
+
+- id: NOTE-SB-003
+  source: SRC-NMSU-SQUASHBUG
+  page: "Monitoring; home garden tip"
+  topics: [squash-bugs, ipm]
+  note: "Scout for eggs at least weekly once egg laying starts; a suggested action threshold is one egg cluster or one adult per plant. Damp cardboard or newspaper laid near plants traps adults and nymphs for removal."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Squash vine borer (cucurbits)
+# ---------------------------------------------------------------------------
+- id: NOTE-SVB-001
+  source: SRC-UGA-SVB
+  page: "Article"
+  topics: [squash-vine-borer, squash, rotation, timing]
+  note: "Squash vine borers overwinter in the soil, usually where squash grew the year before, so moving squash helps. Planting early lets plants produce before borers peak, and insecticides often fail because the larvae feed inside the stem."
+  verified: false
+
+- id: NOTE-SVB-002
+  source: SRC-UCONN-SVB
+  page: "Host plants; management"
+  topics: [squash-vine-borer, cucurbit, squash, row-cover]
+  note: "Squash and pumpkins are most susceptible; cucumbers and melons less so. After a bad year, grow less susceptible cucurbits like butternut, cucumber or melon for a season or two, mound soil over vine nodes so they root, and use row covers until flowering if you can't rotate."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Mexican bean beetle (beans)
+# ---------------------------------------------------------------------------
+- id: NOTE-MBB-001
+  source: SRC-CORNELL-MBB
+  page: "Life cycle; cultural control"
+  topics: [mexican-bean-beetle, legume, bush_bean]
+  note: "Mexican bean beetle, a plant-eating relative of lady beetles, feeds on snap, dry and lima beans and soybeans, leaving lacy, skeletonized leaves. On a small farm or garden, hand removal works because most of the population sits on the foliage."
+  verified: false
+
+# ===========================================================================
+# BATCH 2 (added 2026-11-07): rotation intervals, Southern guides, more crops,
+# pests and cover crops
+# ===========================================================================
+
+# ---------------------------------------------------------------------------
+# Rotation intervals by crop and disease (UConn IPM table)
+# ---------------------------------------------------------------------------
+- id: NOTE-INT-001
+  source: SRC-UCONN-ROTATION
+  page: "Rotation table: tomato"
+  topics: [rotation, tomato, nightshade, early-blight, potato, pepper, disease]
+  note: "Suggested years without a host crop for tomato diseases: early blight 2 (also keep potato out), bacterial spot 2 (keep pepper out), bacterial canker 3, Fusarium wilt 3, bacterial speck 1, and several years for Verticillium wilt (longer is better, keep potato out)."
+  verified: false
+
+- id: NOTE-INT-002
+  source: SRC-UCONN-ROTATION
+  page: "Rotation table: pepper, eggplant, potato"
+  topics: [rotation, pepper, eggplant, potato, nightshade, disease]
+  note: "Pepper: bacterial spot 1 to 2 years; Phytophthora blight 2 years, also keeping tomato and eggplant out. Eggplant: Verticillium wilt 4 years, keeping out tomato, potato, pepper, strawberry and brambles. Potato: Verticillium wilt 3 to 4 years without tomatoes."
+  verified: false
+
+- id: NOTE-INT-003
+  source: SRC-UCONN-ROTATION
+  page: "Rotation table: cabbage-related crops, radish, turnip"
+  topics: [rotation, brassica, cabbage, collards, kale, broccoli, disease]
+  note: "Cabbage-family diseases need long breaks: clubroot 7 years (also keep turnip and radish out), blackleg 3 to 4 years, black rot 2 to 3 years, and Fusarium yellows many years."
+  verified: false
+
+- id: NOTE-INT-004
+  source: SRC-UCONN-ROTATION
+  page: "Rotation table: cucurbits"
+  topics: [rotation, cucurbit, squash, cucumber, watermelon, disease]
+  note: "Cucurbit intervals: cucumber scab and leaf spot 2 years; black rot of squash, pumpkin and watermelon 2 or more years, keeping the other melons and squash out too. Watermelon and muskmelon Fusarium wilts are separate diseases, each needing several years."
+  verified: false
+
+- id: NOTE-INT-005
+  source: SRC-UCONN-ROTATION
+  page: "Rotation table: beans"
+  topics: [rotation, legume, bush_bean, disease]
+  note: "Bean diseases: anthracnose and bacterial blight 2 years each; root rots several years; pod white mold several years, also keeping potato, tomato, lettuce and cabbage out because they share the pathogen."
+  verified: false
+
+- id: NOTE-INT-006
+  source: SRC-UCONN-ROTATION
+  page: "Rotation table: onion, lettuce, carrot"
+  topics: [rotation, onion, allium, lettuce, carrot, disease]
+  note: "Onion leaf blights: 1 to 2 years without onions. Lettuce bottom rot and drop: 3 years. Carrot leaf blights: a few years. Plan rotation length per disease, since each pathogen survives in soil for a different time."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Southern home garden rotation (Clemson HGIC; WSU)
+# ---------------------------------------------------------------------------
+- id: NOTE-SOU-001
+  source: SRC-CLEMSON-ROTATION
+  page: "HGIC 1330"
+  topics: [rotation, nightshade, tomato, pepper, eggplant]
+  note: "Grow a crop in the same spot no more than once every three years; a four- or five-year rotation is even better against soil-borne pests. Rotate families, not single crops: tomato, pepper and eggplant are one family and should not follow each other."
+  verified: false
+
+- id: NOTE-SOU-002
+  source: SRC-CLEMSON-ROTATION
+  page: "HGIC 1330, benefits and limitations"
+  topics: [rotation, southern-blight, disease, insects, nematodes, grass, sweet_corn]
+  note: "Rotation reduces Southern blight, bacterial wilt and Sclerotinia stem rot, plus wireworms, cutworms, rootworms and nematodes. Southern blight attacks over 500 plant species, so grasses such as sweet corn are the best rotation partners where it is a problem."
+  verified: false
+
+- id: NOTE-SOU-003
+  source: SRC-CLEMSON-ROTATION
+  page: "HGIC 1330, limitations"
+  topics: [rotation, disease, insects, weeds]
+  note: "Rotation does not control diseases spread by wind-borne spores or pests that overwinter on weeds; those need other measures."
+  verified: false
+
+- id: NOTE-SOU-004
+  source: SRC-CLEMSON-ROTATION
+  page: "HGIC 1330, examples"
+  topics: [rotation, planning, tomato, sweet_corn, okra, bush_bean]
+  note: "Clemson's sample four-bed plan rotates tomatoes, sweet corn, okra and beans, with each bed moving to the next crop each year. A three-year example is beans, then tomatoes, then sweet corn."
+  verified: false
+
+- id: NOTE-SOU-005
+  source: SRC-CLEMSON-ROTATION
+  page: "HGIC 1330, practical tips"
+  topics: [sanitation, planning, rotation]
+  note: "Use separate beds rather than one plot split into zones, because tilling a single plot mixes the soil and spreads pests. Wash soil off tools, tires and shoes between beds, and keep records of what grew where and which problems appeared."
+  verified: false
+
+- id: NOTE-SOU-006
+  source: SRC-CLEMSON-ROTATION
+  page: "HGIC 1330, plant families"
+  topics: [families, sweet_potato, okra, lettuce, carrot, onion, garlic, collards, kale, sweet_corn]
+  note: "Family groups for Southern gardens: sweet potato is in the morning glory family, okra in the mallow family, lettuce in the aster family, carrot with parsley and celery, onion and garlic together, collards and kale with the other brassicas, peanut with beans and peas, and sweet corn with the grasses."
+  verified: false
+
+- id: NOTE-SOU-007
+  source: SRC-WSU-ROTATION
+  page: "Rotation length; tips for small gardens"
+  topics: [rotation, cover-crop, home-garden, planning]
+  note: "Don't plant the same family in one spot more than once every three to four years, counting cover crops and green manures in their families too. In small gardens, simply switching families each year still helps; use a cover crop instead of leaving ground bare, and keep a garden map."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# More rotation and disease facts (SARE, Crop Rotation on Organic Farms, ch. 3)
+# ---------------------------------------------------------------------------
+- id: NOTE-ROT-016
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, clubroot"
+  topics: [brassica, collards, kale, cabbage, rotation, disease]
+  note: "Clubroot can survive about seven years in soil without mustard-family crops or weeds. It declined faster when tomato, cucumber, snap bean or buckwheat were grown, and two or three years of aromatic perennial herbs controlled it."
+  verified: false
+
+- id: NOTE-ROT-017
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, pathogen characteristics"
+  topics: [disease, lettuce, bush_bean, grass, rotation, weeds]
+  note: "White mold (Sclerotinia sclerotiorum), the same fungus behind lettuce drop, infects more than 360 plant species. Corn and cereals are among the few non-hosts, and rotating out of susceptible crops takes at least five years plus good weed control."
+  verified: false
+
+- id: NOTE-ROT-018
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, carrot root dieback"
+  topics: [carrot, rotation, onion, allium, disease]
+  note: "In a California study, carrots after alfalfa had more Pythium and Rhizoctonia and fewer marketable roots, while carrots after onions or a fallow period were normal."
+  verified: false
+
+- id: NOTE-ROT-019
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, pathogen characteristics"
+  topics: [onion, allium, disease, rotation]
+  note: "Onion downy mildew forms resting spores that survive four to five years in soil, yet rotation can still control it because onions are grown less widely than crops whose mildew spores blow in each year."
+  verified: false
+
+- id: NOTE-ROT-020
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, other factors"
+  topics: [sweet_potato, potato, onion, sanitation, compost]
+  note: "Applying animal manure can increase scurf on sweet potatoes. Potato and onion cull piles harbor disease and should be destroyed before the next crop is planted."
+  verified: false
+
+- id: NOTE-ROT-021
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Managing Plant Diseases With Crop Rotation, other factors"
+  topics: [southern-blight, disease]
+  note: "Southern blight (Sclerotium rolfsii) is adapted to warm conditions and does not survive cold soils, which is why it is rare in the northeastern US but a concern in warmer regions."
+  verified: false
+
+- id: NOTE-FERT-007
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Crop Rotation Effects on Soil Fertility, differences in crop nutrient uptake"
+  topics: [nitrogen, lettuce, tomato, sweet_corn, crop-demand]
+  note: "Lettuce needs high soil nutrient levels partly because its roots forage poorly; tomatoes and corn need them because of heavy leafy growth before fruit or ears set. Green manures and amendments pay off most when aimed at these crops."
+  verified: false
+
+- id: NOTE-INS-007
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Management of Insect Pests, planting time; no-till and weeds"
+  topics: [brassica, cabbage, timing, weeds, insects, flea-beetle]
+  note: "A New York rule for avoiding cabbage maggot is to transplant cole crops after wild yellow rocket passes peak bloom. Wild mustard weeds also draw crucifer flea beetles into a field early in spring."
+  verified: false
+
+- id: NOTE-INS-008
+  source: SRC-SARE-ROTATION
+  page: "Ch. 3, Management of Insect Pests, movement between crops"
+  topics: [insects, cover-crop, hairy-vetch, weeds]
+  note: "Tarnished plant bug nymphs develop on hairy vetch, pigweed and lambsquarters, then move to nearby crops when those plants are mowed. Avoid mowing legume or weedy strips next to a sensitive crop while it is flowering or fruiting."
+  verified: false
+
+- id: NOTE-BSBC-009
+  source: SRC-SARE-BSBC
+  page: "Ch. 20, Other Fertility Issues, sulfur"
+  topics: [garlic, onion, allium, sulfur, sandy-soil]
+  note: "Garlic needs a good sulfur supply to develop its full pungent flavor. Sulfur shortage is most likely on sandy, low-organic-matter soils; much soil sulfur sits in organic matter, and manured fields are rarely short."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# More cover crops (SARE, Managing Cover Crops Profitably; eOrganic)
+# ---------------------------------------------------------------------------
+- id: NOTE-CC-004
+  source: SRC-SARE-MCCP
+  page: "Legume Cover Crops: Crimson Clover"
+  topics: [crimson-clover, legume, cover-crop, winter-cover, nitrogen]
+  note: "Grown as a winter annual, crimson clover supplies about 70 to 150 lb N per acre; a Mississippi study measured 135 lb. It overwinters dependably in the Deep South."
+  verified: false
+
+- id: NOTE-CC-005
+  source: SRC-SARE-MCCP
+  page: "Legume Cover Crops: Crimson Clover, planting and killing"
+  topics: [crimson-clover, timing, nitrogen]
+  note: "Seed crimson clover 6 to 8 weeks before the first fall frost; in the lower Gulf South it can go in until mid-November, and an August 15 planting in northern Mississippi outyielded later dates. Its N peaks at late bloom to early seed set, and killing it about a month earlier can cost up to 50 lb N per acre."
+  verified: false
+
+- id: NOTE-CC-006
+  source: SRC-SARE-MCCP
+  page: "Legume Cover Crops: Crimson Clover, crop systems"
+  topics: [crimson-clover, timing, sweet_potato, disease]
+  note: "Wait two to three weeks after killing crimson clover before seeding vegetables, to avoid Pythium and Rhizoctonia. Transplants set the same day worked in Pennsylvania, and Mississippi sweet potatoes no-tilled into killed clover showed no yield loss."
+  verified: false
+
+- id: NOTE-CC-007
+  source: SRC-SARE-MCCP
+  page: "Legume Cover Crops: Crimson Clover, pest management"
+  topics: [crimson-clover, ipm, insects, onion-thrips]
+  note: "Crimson clover blooms feed bees and host minute pirate bugs that eat thrips, but the clover can also host flower thrips, corn earworm and tarnished plant bug, so consider timing its kill near susceptible crops."
+  verified: false
+
+- id: NOTE-CC-008
+  source: SRC-SARE-MCCP
+  page: "Nonlegume Cover Crops: Cereal Rye"
+  topics: [cereal-rye, grass, cover-crop, winter-cover, nitrogen]
+  note: "Cereal rye is the best cool-season cover for soaking up leftover soil nitrogen, typically holding 25 to 50 lb N per acre until spring. It is the hardiest cereal cover and can be sown into midwinter in the warmest zones."
+  verified: false
+
+- id: NOTE-CC-009
+  source: SRC-SARE-MCCP
+  page: "Nonlegume Cover Crops: Cereal Rye, allelopathy and N tie-up"
+  topics: [cereal-rye, carrot, onion, timing, nitrogen]
+  note: "Rye releases compounds that suppress small seeds, so wait three to four weeks after killing it before sowing small-seeded crops like carrots or onions; transplants and large-seeded legumes are less affected. Rye ties up more nitrogen as it matures, so kill it young or mix it with hairy vetch or clover."
+  verified: false
+
+- id: NOTE-CC-010
+  source: SRC-SARE-MCCP
+  page: "Legume Cover Crops: Hairy Vetch"
+  topics: [hairy-vetch, legume, cover-crop, nitrogen]
+  note: "Hairy vetch supplied 40 to 180 lb N per acre in Illinois trials, and vetch-rye mixes 130 to 180 lb in Maryland. The guide's field estimate: weigh the fresh top growth from a 4 by 4 ft square and multiply by 12 for the plant-available N per acre."
+  verified: false
+
+- id: NOTE-CC-011
+  source: SRC-SARE-MCCP
+  page: "Legume Cover Crops: Hairy Vetch, vetch mulch system"
+  topics: [hairy-vetch, tomato, mulch, early-blight, weeds, winter-cover, cover-crop]
+  note: "In the Beltsville system, hairy vetch is mowed in spring and tomatoes are transplanted through the residue, which suppresses early weeds and cuts soil splash; yields ran up to 20% above black plastic, though plants may need more water and cooler soil can slow early growth."
+  verified: false
+
+- id: NOTE-CC-012
+  source: SRC-SARE-MCCP
+  page: "Legume Cover Crops: Hairy Vetch, pest management"
+  topics: [hairy-vetch, nematodes, weeds]
+  note: "Root-knot and soybean cyst nematodes can increase under hairy vetch, so check soil where nematodes are a problem. About 10 to 20% of vetch seed is hard seed that can sprout as a weed in later seasons."
+  verified: false
+
+- id: NOTE-CC-013
+  source: SRC-EORGANIC-BUCKWHEAT
+  page: "Benefits; management"
+  topics: [buckwheat, cover-crop, weeds, phosphorus, timing]
+  note: "Buckwheat is ready to turn under in about 35 to 40 days, smothers warm-season weeds and is far better than rye or barley at pulling phosphorus from soil. It is killed by frost, so plant after the last frost, and kill it about 10 days after flowering starts to stop it from reseeding."
+  verified: false
+
+- id: NOTE-CC-014
+  source: SRC-EORGANIC-BUCKWHEAT
+  page: "Benefits; crop systems"
+  topics: [buckwheat, ipm, planning]
+  note: "Buckwheat flowers feed hover flies, predatory wasps, minute pirate bugs and lady beetles; leaving about 20 days of bloom supports them. It fits the gap between an early spring vegetable and a fall crop."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Cucumber beetles (cucurbits)
+# ---------------------------------------------------------------------------
+- id: NOTE-CB-001
+  source: SRC-UVM-CUCBEETLE
+  page: "Article"
+  topics: [cucumber-beetle, cucurbit, cucumber, watermelon, squash, disease]
+  note: "Striped cucumber beetle adults overwinter in plant debris and spread bacterial wilt while feeding. Cucumbers and muskmelons are highly susceptible to the wilt, watermelon, squash and pumpkin much less so, and young plants before the five-leaf stage are most at risk."
+  verified: false
+
+- id: NOTE-CB-002
+  source: SRC-UVM-CUCBEETLE
+  page: "Article, management"
+  topics: [cucumber-beetle, cucurbit, row-cover, timing, sanitation]
+  note: "Cover cucurbits with floating row cover right after transplanting or seeding and remove it when flowers open. Setting out larger transplants later helps, and wilted plants should be pulled because there is no cure once infected."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Flea beetles (brassicas, eggplant)
+# ---------------------------------------------------------------------------
+- id: NOTE-FB-001
+  source: SRC-UMN-FLEABEETLE
+  page: "Hosts; damage"
+  topics: [flea-beetle, brassica, eggplant, pepper, tomato, potato]
+  note: "Flea beetles favor cole crops and eggplant seedlings and also feed on pepper, tomato and potato. Damage matters most on spring seedlings; once plants reach the four- to five-leaf stage they tolerate feeding, and transplants suffer less than direct-seeded plants."
+  verified: false
+
+- id: NOTE-FB-002
+  source: SRC-UMN-FLEABEETLE
+  page: "Management"
+  topics: [flea-beetle, row-cover, timing, sanitation, weeds]
+  note: "Protect seedlings with row covers (use hoops for eggplant, and remove before flowering), or plant a trap crop such as radish, mustard or pac choi 7 to 14 days before the main crop. Clear crop debris after harvest and control nearby weeds, since adults overwinter in leaf litter and hedgerows."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Harlequin bug (collards, kale and other brassicas)
+# ---------------------------------------------------------------------------
+- id: NOTE-HB-001
+  source: SRC-WVU-HARLEQUIN
+  page: "Hosts; damage; life cycle"
+  topics: [harlequin-bug, brassica, collards, kale, cabbage]
+  note: "Harlequin bugs suck sap from collards, kale, cabbage, broccoli, mustard, turnip, radish and wild mustards, leaving pale blotches and wilting; heavy infestations can kill plants. Adults overwinter in crop residue and debris."
+  verified: false
+
+- id: NOTE-HB-002
+  source: SRC-WVU-HARLEQUIN
+  page: "Management"
+  topics: [harlequin-bug, brassica, sanitation, weeds, ipm]
+  note: "Destroy brassica residues in fall and control wild mustard weeds. In the South, early trap plantings of mustard, kale, rapeseed or horseradish have been used to draw overwintering bugs, which are destroyed before the main crop is vulnerable."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Onion thrips and white rot (onion, garlic)
+# ---------------------------------------------------------------------------
+- id: NOTE-OT-001
+  source: SRC-UMASS-THRIPS
+  page: "Biology; damage"
+  topics: [onion-thrips, onion, garlic, allium]
+  note: "Onion thrips thrive in hot, dry weather, and heavy rain or overhead watering knocks them back. Onions are most sensitive during bulb formation; thrips also feed on garlic, leeks and some brassicas, and overwinter in residue, weeds, alfalfa, wheat and clover."
+  verified: false
+
+- id: NOTE-OT-002
+  source: SRC-UMASS-THRIPS
+  page: "Cultural management"
+  topics: [onion-thrips, onion, carrot, mulch, sanitation]
+  note: "Clean up onion residue, don't replant last year's onions as sets, and avoid infested transplants. Straw mulch deters thrips, alternating onion rows with carrot rows helps, and onions should be kept away from alfalfa, wheat or clover, which release thrips when cut."
+  verified: false
+
+- id: NOTE-WR-001
+  source: SRC-WSU-WHITEROT
+  page: "Management"
+  topics: [white-rot, onion, garlic, allium, rotation, sanitation]
+  note: "White rot of onion and garlic persists in soil for many years, so don't replant onions or relatives in infested soil more often than every 8 to 10 years. Plant disease-free sets, don't move infested soil, and remove infected plants and their neighbors without composting them."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Root-knot nematodes (Southern sandy soils)
+# ---------------------------------------------------------------------------
+- id: NOTE-RKN-001
+  source: SRC-CLEMSON-RKN
+  page: "HGIC 2216, overview and symptoms"
+  topics: [root-knot-nematode, nematodes, okra, tomato, bush_bean, sandy-soil, soil-test]
+  note: "Root-knot nematodes are most common in sandy soils and are especially damaging to okra, tomatoes, beans and lima beans. Stunting or wilting alone doesn't prove them; check roots for galls or send a soil sample through the county extension office."
+  verified: false
+
+- id: NOTE-RKN-002
+  source: SRC-CLEMSON-RKN
+  page: "HGIC 2216, resistant varieties and rotation"
+  topics: [root-knot-nematode, nematodes, southern_pea, pepper, tomato, sweet_potato, sweet_corn, onion, garlic, rotation]
+  note: "Resistant varieties exist for southern peas, some peppers, tomatoes and sweet potatoes. Growing non-hosts such as corn, onions, garlic, asparagus or strawberries in an infested spot for about three years lowers populations, or move resistant crops into beds where susceptible ones grew."
+  verified: false
+
+- id: NOTE-RKN-003
+  source: SRC-CLEMSON-RKN
+  page: "HGIC 2216, cultural controls"
+  topics: [root-knot-nematode, nematodes, sanitation, timing]
+  note: "Other home-garden controls: a dense planting of certain French or African marigolds grown at least two months then tilled in, summer tilling every 10 days in hot, dry weather, soil solarization under clear plastic for 6 to 12 weeks, and pulling plants and roots right after harvest."
+  verified: false
+
+# ---------------------------------------------------------------------------
+# Okra and sweet potato (Clemson HGIC)
+# ---------------------------------------------------------------------------
+- id: NOTE-OKRA-001
+  source: SRC-CLEMSON-OKRA
+  page: "HGIC 1313, planting and fertility"
+  topics: [okra, timing, ph, nitrogen]
+  note: "Plant okra once soil at 4 inches is at least 65 F (70 to 95 F is ideal), keep pH between 5.8 and 6.5, and avoid extra nitrogen early, which pushes leaves instead of pods."
+  verified: false
+
+- id: NOTE-OKRA-002
+  source: SRC-CLEMSON-OKRA
+  page: "HGIC 1313, crop rotation and pests"
+  topics: [okra, rotation, root-knot-nematode, nematodes, tomato, pepper, squash, sweet_potato]
+  note: "Rotate okra to reduce disease and nematodes, and don't plant it after nematode-susceptible crops such as tomatoes, peppers, squash or sweet potato. Check stunted plants for root galls and remove infected plants with their roots."
+  verified: false
+
+- id: NOTE-SP-001
+  source: SRC-CLEMSON-SWEETPOTATO
+  page: "Soil; planting time"
+  topics: [sweet_potato, timing, sandy-soil]
+  note: "Sweet potatoes do best in well-drained loamy or sandy soil; heavy clay gives small, misshapen roots. Plant after the last frost once soil is above 65 F."
+  verified: false
+
+- id: NOTE-SP-002
+  source: SRC-CLEMSON-SWEETPOTATO
+  page: "Rotation; pests and diseases"
+  topics: [sweet_potato, rotation, root-knot-nematode, nematodes, sweet_corn, disease]
+  note: "Leave two years between sweet potato crops to reduce disease, and following them with corn helps cut root-knot nematodes. Wireworms and root-knot nematodes are the main home-garden pests; avoid transplants with black rot spots on the lower stem."
+  verified: false
+
+# ===========================================================================
+# BATCH 3 (added 2026-11-07): background for the engine's numbers, so the AI can
+# explain where a rate came from
+# ===========================================================================
+- id: NOTE-ENG-001
+  source: SRC-CLEMSON-SOILTEST
+  page: "P and K ratings table"
+  topics: [soil-test, phosphorus, potassium]
+  note: "Clemson rates soil-test P and K as Low, Medium, Sufficient, High or Excessive. Low means adding the nutrient is likely to raise yield; High or Excessive means adding more can cut yield and cause nutrient imbalances."
+  verified: false
+
+- id: NOTE-ENG-002
+  source: SRC-SERA6-FS5
+  page: "Conversions"
+  topics: [soil-test, units]
+  note: "Mehlich-1 is the acid extractant used for P and K in several Southeastern states, including South Carolina and Georgia. Labs that report lb per acre usually assume 2 million lb of soil per acre-furrow slice, so lb/acre divided by 2 gives ppm; confirm with the lab."
+  verified: false
+
+- id: NOTE-ENG-003
+  source: SRC-CLEMSON-FERTVEG
+  page: "Preplant and sidedress tables"
+  topics: [nitrogen, phosphorus, potassium, timing]
+  note: "Clemson's home-garden program puts all needed P and K plus 30 to 40% of the nitrogen down before planting, then the rest of the N 3 to 4 weeks after planting, split into two smaller doses on sandy soil. If the soil test rates P or K High or Excessive, that nutrient is left out."
+  verified: false
+
+- id: NOTE-ENG-004
+  source: SRC-CLEMSON-FERTVEG
+  page: "Liming and pH target"
+  topics: [ph, lime, timing]
+  note: "The optimum pH for most vegetables is 6.0 to 6.5. Test soil at least three months before planting so lime has time to work, and use dolomitic lime when the test also calls for magnesium."
+  verified: false
+
+- id: NOTE-ENG-005
+  source: SRC-UGA-C963
+  page: "Fertilizer for vegetable crop groups"
+  topics: [nitrogen, crop-demand, tomato, cabbage, lettuce, onion, potato, sweet_potato, okra, sweet_corn, southern_pea]
+  note: "UGA groups garden vegetables as heavy feeders (cabbage, lettuce, onions, Irish and sweet potatoes, tomatoes), medium feeders (beans, carrots, sweet corn, cucumbers, eggplant, greens, okra, peas, pepper, squash, watermelon) and light feeders (southern peas). It suggests pH 6.0 to 6.5 for most vegetables but 5.0 to 6.0 for Irish potatoes."
+  verified: false
+
+- id: NOTE-ENG-006
+  source: SRC-UW-NCREDIT
+  page: "Previous crop credits"
+  topics: [legume, nitrogen, bush_bean, snap_pea]
+  note: "After peas, snap beans or lima beans, Wisconsin guidelines credit about 20 lb N per acre to the next crop; after soybeans 40 lb, but no soybean credit on sandy soils. Legume cover crops credit much more, about 50 to 120 lb depending on species and growth."
+  verified: false
+
+- id: NOTE-ENG-007
+  source: SRC-WSU-COMPOST
+  page: "Table 1 worked example; general recommendations"
+  topics: [compost, nitrogen, phosphorus, potassium]
+  note: "In WSU's worked example, a finished compost supplied about 1.3 lb available N, 6.4 lb P2O5 and 11.6 lb K2O per wet ton in the first season, and weighed roughly 1,050 to 1,150 lb per cubic yard. Ask the compost producer for an analysis, since compost varies widely."
+  verified: false
+
+- id: NOTE-ENG-008
+  source: SRC-UCONN-LIME
+  page: "Application"
+  topics: [lime, ph, timing]
+  note: "Ground or pelletized limestone takes about 3 to 9 months to change pH. Don't apply more than 10 lb per 100 sq ft at once when tilling it in, or 5 to 7 lb on the surface; very acid soils may need several applications."
+  verified: false
+
+- id: NOTE-ENG-009
+  source: SRC-DTN-PRICES
+  page: "Retail fertilizer price table"
+  topics: [cost, nitrogen, potassium, synthetic-fertilizer]
+  note: "In DTN's mid-October 2026 survey of retail farm fertilizer prices, urea averaged about $674 per ton and potash about $503 per ton. Garden-center bags usually cost more per pound."
+  verified: false

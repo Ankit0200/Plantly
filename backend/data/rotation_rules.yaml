@@ -1,0 +1,31 @@
+# Crop rotation rules for Soil-Smart Planner.
+
+- id: ROT-01
+  kind: same_family_recent
+  # Clemson HGIC 1330: grow a crop in the same spot no more than once every three years
+  # (two years away). NRCS 328 and WSU suggest three or more; the engine only tracks two
+  # years of history, so 2 is the maximum it can check.
+  years_back: 2
+  severity: warn
+  message: "Avoid planting {crop} ({family} family) here; the same family was grown within the last {years_back} years."
+  source: SRC-CLEMSON-ROTATION
+  verified: false
+
+- id: ROT-02
+  kind: prefer_after
+  after_demand: heavy
+  prefer_demand: fixer
+  severity: suggest
+  # SARE ch. 3: legumes used strategically in a rotation supply N to the crops that follow.
+  message: "Consider planting a legume (nitrogen fixer) after a heavy feeder to replenish soil nitrogen."
+  source: SRC-SARE-ROTATION
+  verified: false
+
+- id: ROT-03
+  kind: problem_history
+  severity: strong_warn
+  # Only apply to problems with rotation_helps: true (see problems.yaml). Rotation breaks
+  # soil- and debris-borne problems; it does little against pests that fly in each year.
+  message: "This bed has a history of {problem}; planting a {family}-family crop here increases risk."
+  source: SRC-SARE-ROTATION
+  verified: false

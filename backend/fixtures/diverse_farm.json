@@ -1,0 +1,119 @@
+{
+  "name": "Sunny Acres Small Farm",
+  "crops_needed": ["tomato", "cabbage", "squash", "bush_bean", "sweet_corn", "carrot", "okra"],
+  "compost_available_cu_yd": 8.0,
+  "compost_price_usd_per_cu_yd": 0,
+  "price_overrides": {},
+  "plots": [
+    {
+      "id": "A",
+      "name": "Front Field",
+      "area_sqft": 21780,
+      "soil_texture": "loam",
+      "soil_test": {
+        "ph": 6.0,
+        "p_ppm": 35,
+        "k_ppm": 95,
+        "organic_matter_pct": 2.8
+      },
+      "crop_two_years_ago": "sweet_corn",
+      "crop_last_year": "tomato",
+      "crop_planned": "bush_bean",
+      "problems": ["tomato-hornworm"],
+      "baseline": {
+        "inputs": [
+          {"product_id": "fert-10-10-10", "amount_lb": 400}
+        ],
+        "pesticide_applications": 8
+      }
+    },
+    {
+      "id": "B",
+      "name": "Side Garden",
+      "area_sqft": 5000,
+      "soil_texture": "sandy",
+      "soil_test": {
+        "ph": 5.8,
+        "p_ppm": 12,
+        "k_ppm": 50,
+        "organic_matter_pct": 1.2
+      },
+      "crop_two_years_ago": "cabbage",
+      "crop_last_year": "carrot",
+      "crop_planned": "squash",
+      "problems": [],
+      "baseline": {
+        "inputs": [
+          {"product_id": "fert-10-10-10", "amount_lb": 80}
+        ],
+        "pesticide_applications": 3
+      }
+    },
+    {
+      "id": "C",
+      "name": "Back Patch",
+      "area_sqft": 3000,
+      "soil_texture": "clay",
+      "soil_test": {
+        "ph": 6.6,
+        "p_ppm": 55,
+        "k_ppm": 150,
+        "organic_matter_pct": 3.2
+      },
+      "crop_two_years_ago": "okra",
+      "crop_last_year": "sweet_corn",
+      "crop_planned": "cabbage",
+      "problems": [],
+      "baseline": {
+        "inputs": [
+          {"product_id": "fert-10-10-10", "amount_lb": 60}
+        ],
+        "pesticide_applications": 1
+      }
+    },
+    {
+      "id": "D",
+      "name": "Hill Plot",
+      "area_sqft": 4000,
+      "soil_texture": "loam",
+      "soil_test": {
+        "ph": 5.2,
+        "p_ppm": 8,
+        "k_ppm": 35,
+        "organic_matter_pct": 1.8
+      },
+      "crop_two_years_ago": "bush_bean",
+      "crop_last_year": "okra",
+      "crop_planned": "sweet_corn",
+      "problems": [],
+      "baseline": {
+        "inputs": [
+          {"product_id": "fert-10-10-10", "amount_lb": 100}
+        ],
+        "pesticide_applications": 0
+      }
+    },
+    {
+      "id": "E",
+      "name": "Creek Bottom",
+      "area_sqft": 2000,
+      "soil_texture": "clay",
+      "soil_test": {
+        "ph": 6.9,
+        "p_ppm": 90,
+        "k_ppm": 210,
+        "organic_matter_pct": 4.5
+      },
+      "crop_two_years_ago": "squash",
+      "crop_last_year": "bush_bean",
+      "crop_planned": "tomato",
+      "problems": ["early-blight"],
+      "baseline": {
+        "inputs": [
+          {"product_id": "fert-10-10-10", "amount_lb": 40}
+        ],
+        "pesticide_applications": 5
+      }
+    }
+  ]
+}

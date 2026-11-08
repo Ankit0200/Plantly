@@ -1,0 +1,293 @@
+# sources.yaml: every source a rule or note can cite.
+# verified: false until a teammate opens the URL and confirms the details.
+# Drafted 2026-11-07 from the live pages and PDFs listed below.
+
+- id: SRC-PLACEHOLDER
+  title: "Placeholder: replace with the extension guide used"
+  publisher: ""
+  year: null
+  url: ""
+  verified: false
+
+# Books and standards
+- id: SRC-SARE-ROTATION
+  title: "Crop Rotation on Organic Farms: A Planning Manual (Mohler and Johnson, eds.)"
+  publisher: "SARE Outreach / NRAES"
+  year: 2009
+  url: "https://www.sare.org/resources/crop-rotation-on-organic-farms/"
+  verified: false
+
+- id: SRC-SARE-BSBC
+  title: "Building Soils for Better Crops, 4th ed. (Magdoff and van Es)"
+  publisher: "SARE Outreach"
+  year: 2021
+  url: "https://www.sare.org/resources/building-soils-for-better-crops/"
+  verified: false
+
+- id: SRC-SARE-MCCP
+  title: "Managing Cover Crops Profitably, 3rd ed."
+  publisher: "SARE Outreach"
+  year: 2007
+  url: "https://www.sare.org/resources/managing-cover-crops-profitably-3rd-edition/"
+  verified: false
+
+- id: SRC-NRCS-328
+  title: "Conservation Practice Standard 328: Conservation Crop Rotation (national, Sept 2014 version)"
+  publisher: "USDA NRCS"
+  year: 2014
+  url: "https://www.nrcs.usda.gov/sites/default/files/2022-09/Conservation_Crop_Rotation_328_CPS.pdf"
+  verified: false
+  # NRCS updated the national standard in 2026; check the notes against the current version:
+  # https://www.nrcs.usda.gov/resources/guides-and-instructions/conservation-crop-rotation-ac-328-conservation-practice-standard
+
+- id: SRC-OSU-EM9235
+  title: "OSU Organic Fertilizer and Cover Crop Calculator: Predicting Plant-available Nitrogen (EM 9235)"
+  publisher: "Oregon State University Extension"
+  year: 2019
+  url: "https://extension.oregonstate.edu/sites/default/files/documents/em9235.pdf"
+  verified: false
+
+# Pest and disease fact sheets
+- id: SRC-UMN-EARLYBLIGHT
+  title: "Early blight in tomato and potato"
+  publisher: "University of Minnesota Extension"
+  year: null
+  url: "https://extension.umn.edu/disease-management/early-blight-tomato-and-potato"
+  verified: false
+
+- id: SRC-ISU-TOMATOBLIGHT
+  title: "How can I prevent blight on my tomatoes?"
+  publisher: "Iowa State University Extension and Outreach"
+  year: null
+  url: "https://yardandgarden.extension.iastate.edu/faq/how-can-i-prevent-blight-my-tomatoes"
+  verified: false
+
+- id: SRC-CSU-EARLYBLIGHT
+  title: "Tomato Early Blight (GardenNotes #718)"
+  publisher: "Colorado State University Extension"
+  year: null
+  url: "https://extension.colostate.edu/resource/tomato-early-blight/"
+  verified: false
+
+- id: SRC-UCIPM-HORNWORM
+  title: "Hornworms (home garden vegetables)"
+  publisher: "UC Statewide IPM Program"
+  year: null
+  url: "https://ipm.ucanr.edu/PMG/GARDEN/VEGES/PESTS/hornworm.html"
+  verified: false
+
+- id: SRC-ILL-HORNWORM
+  title: "Hornworm"
+  publisher: "University of Illinois Extension"
+  year: null
+  url: "https://extension.illinois.edu/gardening/hornworm"
+  verified: false
+
+- id: SRC-UNH-CABBAGEWORM
+  title: "Imported Cabbageworm"
+  publisher: "University of New Hampshire Cooperative Extension"
+  year: null
+  url: "https://extension.unh.edu/resources/files/Resource000551_Rep573.pdf"
+  verified: false
+
+- id: SRC-USU-CABBAGEWORM
+  title: "Imported Cabbageworm (Vegetable IPM)"
+  publisher: "Utah State University Extension"
+  year: null
+  url: "https://extension.usu.edu/pests/ipm/notes_ag/veg-imported-cabbage-worm"
+  verified: false
+
+- id: SRC-UMN-SQUASHBUG
+  title: "Squash bugs"
+  publisher: "University of Minnesota Extension"
+  year: 2026
+  url: "https://extension.umn.edu/garden-and-home/yard-and-garden/yard-and-garden-insects/squash-bugs"
+  verified: false
+
+- id: SRC-NMSU-SQUASHBUG
+  title: "IPM for Squash Bug for Home Gardens and Small-scale Growers (Guide H-183)"
+  publisher: "New Mexico State University"
+  year: null
+  url: "https://pubs.nmsu.edu/_h/H183/index.html"
+  verified: false
+
+- id: SRC-UCONN-SVB
+  title: "Squash Vine Borer (fact sheet, J. E. Allen)"
+  publisher: "UConn Home and Garden Education Center"
+  year: 2013
+  url: "https://homegarden.cahnr.uconn.edu/squash-vine-borer/"
+  verified: false
+
+- id: SRC-UGA-SVB
+  title: "Squash vine borers on gardeners' hit list"
+  publisher: "University of Georgia CAES Field Report"
+  year: null
+  url: "https://fieldreport.caes.uga.edu/news/squash-vine-borers-on-gardeners-hit-list/"
+  verified: false
+
+- id: SRC-CORNELL-MBB
+  title: "Mexican Bean Beetle (Vegetable IPM Fact Sheet)"
+  publisher: "Cornell Integrated Pest Management"
+  year: 2025
+  url: "https://cals.cornell.edu/integrated-pest-management/outreach-education/fact-sheets/mexican-bean-beetle-epilachna-varivestis-vegetable-ipm-fact-sheet"
+  verified: false
+
+# --- Batch 2 (added 2026-11-07): rotation tables, Southern guides, more pests and cover crops ---
+
+- id: SRC-UCONN-ROTATION
+  title: "Having Problems Controlling Vegetable Crop Diseases? Try Rotation"
+  publisher: "UConn Integrated Pest Management"
+  year: null
+  url: "https://ipm.cahnr.uconn.edu/having-problems-controlling-vegetable-crop-diseases-try-rotation"
+  verified: false
+
+- id: SRC-CLEMSON-ROTATION
+  title: "Crop Rotation (HGIC 1330)"
+  publisher: "Clemson Cooperative Extension Home and Garden Information Center"
+  year: null
+  url: "https://hgic.clemson.edu/factsheet/crop-rotation/"
+  verified: false
+
+- id: SRC-WSU-ROTATION
+  title: "Crop Rotation in Home Gardens"
+  publisher: "Washington State University Extension"
+  year: 2015
+  url: "https://wpcdn.web.wsu.edu/extension/uploads/sites/68/2015/08/Crop-Rotation-in-Home-Gardens.pdf"
+  verified: false
+
+- id: SRC-CLEMSON-RKN
+  title: "Root-knot Nematodes in the Vegetable Garden (HGIC 2216)"
+  publisher: "Clemson Cooperative Extension Home and Garden Information Center"
+  year: null
+  url: "https://hgic.clemson.edu/factsheet/root-knot-nematodes-in-the-vegetable-garden/"
+  verified: false
+
+- id: SRC-CLEMSON-OKRA
+  title: "Okra (HGIC 1313)"
+  publisher: "Clemson Cooperative Extension Home and Garden Information Center"
+  year: null
+  url: "https://hgic.clemson.edu/factsheet/okra/"
+  verified: false
+
+- id: SRC-CLEMSON-SWEETPOTATO
+  title: "Sweet Potato"
+  publisher: "Clemson Cooperative Extension Home and Garden Information Center"
+  year: null
+  url: "https://hgic.clemson.edu/factsheet/sweet-potato/"
+  verified: false
+
+- id: SRC-UVM-CUCBEETLE
+  title: "Striped Cucumber Beetle (Ann Hazelrigg)"
+  publisher: "University of Vermont Extension"
+  year: null
+  url: "https://www.uvm.edu/news/extension/striped-cucumber-beetle"
+  verified: false
+
+- id: SRC-UMN-FLEABEETLE
+  title: "Flea beetles"
+  publisher: "University of Minnesota Extension"
+  year: null
+  url: "https://extension.umn.edu/yard-and-garden-insects/flea-beetles"
+  verified: false
+
+- id: SRC-WVU-HARLEQUIN
+  title: "Harlequin Bug"
+  publisher: "West Virginia University Extension"
+  year: null
+  url: "https://extension.wvu.edu/lawn-gardening-pests/pests/harlequin-bug"
+  verified: false
+
+- id: SRC-UMASS-THRIPS
+  title: "Onion Thrips (vegetable fact sheet)"
+  publisher: "UMass Amherst Center for Agriculture, Food and the Environment"
+  year: null
+  url: "https://www.umass.edu/agriculture-food-environment/vegetable/fact-sheets/onion-thrips"
+  verified: false
+
+- id: SRC-WSU-WHITEROT
+  title: "Onions, Garlic: White rot (HortSense)"
+  publisher: "Washington State University Extension"
+  year: null
+  url: "https://hortsense.cahnrs.wsu.edu/fact-sheet/onions-garlic-white-rot/"
+  verified: false
+
+- id: SRC-EORGANIC-BUCKWHEAT
+  title: "Buckwheat for Cover Cropping in Organic Farming (adapted from Managing Cover Crops Profitably)"
+  publisher: "eOrganic / Extension Foundation"
+  year: null
+  url: "https://eorganic.org/node/467"
+  verified: false
+
+# --- Batch 3 (added 2026-11-07): engine numbers (soil test, fertilizer, credits, prices) ---
+
+- id: SRC-CLEMSON-SOILTEST
+  title: "Interpreting Routine Soil Tests"
+  publisher: "Clemson Cooperative Extension (Land-Grant Press)"
+  year: null
+  url: "https://lgpress.clemson.edu/publication/interpreting-routine-soil-tests/"
+  verified: false
+
+- id: SRC-CLEMSON-FERTVEG
+  title: "Fertilizing Vegetables"
+  publisher: "Clemson Cooperative Extension Home and Garden Information Center"
+  year: null
+  url: "https://hgic.clemson.edu/factsheet/fertilizing-vegetables/"
+  verified: false
+
+- id: SRC-CLEMSON-PH
+  title: "Changing the pH of Your Soil"
+  publisher: "Clemson Cooperative Extension Home and Garden Information Center"
+  year: null
+  url: "https://hgic.clemson.edu/factsheet/changing-the-ph-of-your-soil/"
+  verified: false
+
+- id: SRC-SERA6-FS5
+  title: "SERA-6 Fact Sheet 5: Mehlich-1 extraction (soil test methods for the Southern region)"
+  publisher: "SERA-6 / UGA Agricultural and Environmental Services Laboratories"
+  year: null
+  url: "https://aesl.ces.uga.edu/sera6/FACT/SERA-6-FS-5.pdf"
+  verified: false
+
+- id: SRC-UGA-C963
+  title: "Vegetable Gardening in Georgia (C 963)"
+  publisher: "University of Georgia Cooperative Extension"
+  year: null
+  url: "https://fieldreport.caes.uga.edu/publications/C963"
+  verified: false
+
+- id: SRC-UW-NCREDIT
+  title: "Nutrient FastFacts (L025): nitrogen credits from previous crops"
+  publisher: "University of Wisconsin-Madison"
+  year: null
+  url: "https://corn.aae.wisc.edu/Management/pdfs/L025_FastFacts.pdf"
+  verified: false
+
+- id: SRC-WSU-COMPOST
+  title: "Recommended Compost Best Management Practices Guide for Farmers (working draft)"
+  publisher: "Washington State University Extension"
+  year: 2016
+  url: "https://wpcdn.web.wsu.edu/extension/uploads/sites/68/2016/01/2016-WSU-Recommended-Compost-BMP-guide-for-farmers-NEW-_1_22_16-Copy.pdf"
+  verified: false
+
+- id: SRC-UCONN-LIME
+  title: "Liming Soils"
+  publisher: "UConn Extension"
+  year: 2013
+  url: "https://publications.extension.uconn.edu/2013/07/15/liming-soils"
+  verified: false
+
+- id: SRC-DTN-PRICES
+  title: "DTN Retail Fertilizer Trends, survey of Oct 12-16, 2026"
+  publisher: "DTN/Progressive Farmer"
+  year: 2026
+  url: "https://www.dtnpf.com/agriculture/web/ag/crops/article/2026/10/21/uan32-uan28-anhydrous-lead-prices"
+  verified: false
+
+# --- Engine (added 2026-11-07): numbers the grower types in from their own lab report ---
+
+- id: SRC-GROWER-LAB-REPORT
+  title: "The grower's own soil test report (lab lime recommendation)"
+  publisher: "Grower's soil testing lab"
+  year: null
+  url: ""
+  verified: true   # the number comes straight from the grower's report, confirmed on the intake screen

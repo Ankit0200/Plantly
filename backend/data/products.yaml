@@ -1,0 +1,64 @@
+# Fertilizer and amendment products available for recommendations.
+#
+# Analyses: the grade on the bag defines the N-P2O5-K2O percentages, so these are facts.
+# Prices: urea and potash are converted from DTN's national average RETAIL FARM prices for
+# Oct 12-16, 2026 (urea $674/ton, potash $503/ton -> per 50-lb bag = $/ton x 50 / 2000).
+# Garden-center bag prices are usually higher; replace with a local quote and its date.
+# DTN does not track triple superphosphate, 10-10-10 or garden lime: those prices are
+# still placeholders.
+
+- id: fert-10-10-10
+  name: "10-10-10 granular"
+  type: synthetic
+  role: null
+  n_pct: 10
+  p2o5_pct: 10
+  k2o_pct: 10
+  bag_lb: 50
+  price_usd_per_bag: 20     # PLACEHOLDER: get a local quote
+  verified: false
+
+- id: urea-46-0-0
+  name: "Urea 46-0-0"
+  type: synthetic
+  role: topup_n
+  n_pct: 46
+  p2o5_pct: 0
+  k2o_pct: 0
+  bag_lb: 50
+  price_usd_per_bag: 16.85  # DTN Oct 2026: $674/ton retail farm price
+  verified: false
+
+- id: tsp-0-46-0
+  name: "Triple superphosphate 0-46-0"
+  type: synthetic
+  role: topup_p
+  n_pct: 0
+  p2o5_pct: 46
+  k2o_pct: 0
+  bag_lb: 50
+  price_usd_per_bag: 30     # PLACEHOLDER: not in DTN survey, get a local quote
+  verified: false
+
+- id: mop-0-0-60
+  name: "Muriate of potash 0-0-60"
+  type: synthetic
+  role: topup_k
+  n_pct: 0
+  p2o5_pct: 0
+  k2o_pct: 60
+  bag_lb: 50
+  price_usd_per_bag: 12.58  # DTN Oct 2026: $503/ton retail farm price
+  verified: false
+
+- id: ag-lime
+  name: "Agricultural lime"
+  type: mineral             # was "organic", which is wrong for ground limestone.
+                            # If the loader rejects "mineral", add it to the allowed types.
+  role: lime
+  n_pct: 0
+  p2o5_pct: 0
+  k2o_pct: 0
+  bag_lb: 50
+  price_usd_per_bag: 5      # PLACEHOLDER: get a local quote
+  verified: false

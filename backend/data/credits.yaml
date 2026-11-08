@@ -1,0 +1,33 @@
+# Amendment credits that reduce fertilizer needs.
+#
+# Compost: values from the WSU compost guide's worked example (one finished compost,
+# about 1.3 lb available N, 6.4 lb P2O5 and 11.6 lb K2O per wet ton in the first season;
+# bulk density about 1,150 lb per cubic yard = 0.575 wet ton/cu yd).
+#   N:    1.3 x 0.575 = 0.75 lb available N per cu yd
+#   P2O5: 6.4 x 0.575 = 3.7 lb per cu yd
+#   K2O: 11.6 x 0.575 = 6.7 lb per cu yd
+# Cross-check: OSU EM 9235 puts first-season N from finished compost at 0-10% of total N,
+# which works out to roughly 0.5-1 lb per cu yd. A real compost analysis beats both.
+#
+# Compost cap: SARE (Crop Rotation on Organic Farms, ch. 3) warns that manure-based compost
+# above about 10 tons/acre a year builds up excess phosphorus. 10 wet tons/acre at 0.575
+# ton/cu yd = ~17 cu yd/acre = ~0.4 cu yd per 1000 sq ft.
+#
+# Previous legume: UW Nutrient FastFacts (L025) credits 20 lb N/acre after peas, snap beans
+# or lima beans = 0.46 lb N per 1000 sq ft. (Its 40 lb soybean credit does not apply on
+# sandy soils.) Legume COVER crops credit far more (50-120 lb N/acre) and need their own row.
+
+- id: CRED-COMPOST
+  kind: compost
+  n_lb_available_per_cu_yd: 0.75
+  p2o5_lb_per_cu_yd: 3.7
+  k2o_lb_per_cu_yd: 6.7
+  max_cu_yd_per_1000sqft: 0.4       # derived from SARE's ~10 tons/acre P-buildup warning
+  source: SRC-WSU-COMPOST
+  verified: false
+
+- id: CRED-LEGUME
+  kind: previous_legume
+  n_lb_per_1000sqft: 0.46           # 20 lb N/acre after peas, snap beans or lima beans
+  source: SRC-UW-NCREDIT
+  verified: false

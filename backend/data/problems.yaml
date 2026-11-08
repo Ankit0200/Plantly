@@ -1,0 +1,117 @@
+# Pest and disease problems keyed to botanical families.
+#
+# NEW FIELD rotation_helps: true when the problem survives between seasons in the soil or
+# crop debris of the same spot, so moving the crop helps. false for mobile pests that fly
+# or walk in each year (SARE Crop Rotation on Organic Farms, ch. 3 insect section; Clemson
+# HGIC 1330). ROT-03 should only fire when rotation_helps is true.
+# Code change needed: add `rotation_helps: bool = True` to the Problem model and check it
+# in the ROT-03 step of rotation.py.
+
+- id: early-blight
+  name: Early Blight
+  kind: disease
+  affects_families: [nightshade]
+  rotation_helps: true          # fungus overwinters in debris and soil; rotate 2+ years
+  source: SRC-UMN-EARLYBLIGHT
+  verified: false
+
+- id: tomato-hornworm
+  name: Tomato Hornworm
+  kind: pest
+  affects_families: [nightshade]
+  rotation_helps: false         # adults are strong-flying moths; manage by handpicking and tilling
+  source: SRC-UCIPM-HORNWORM
+  verified: false
+
+- id: cabbage-worms
+  name: Cabbage Worms
+  kind: pest
+  affects_families: [brassica]
+  rotation_helps: false         # butterflies fly in each season; use row covers
+  source: SRC-UNH-CABBAGEWORM
+  verified: false
+
+- id: squash-bugs
+  name: Squash Bugs
+  kind: pest
+  affects_families: [cucurbit]
+  rotation_helps: false         # adults overwinter in debris and fly; cleanup matters more
+  source: SRC-UMN-SQUASHBUG
+  verified: false
+
+- id: squash-vine-borer
+  name: Squash Vine Borer
+  kind: pest
+  affects_families: [cucurbit]
+  rotation_helps: true          # overwinters in soil where squash grew last year (UGA)
+  source: SRC-UGA-SVB
+  verified: false
+
+- id: mexican-bean-beetle
+  name: Mexican Bean Beetle
+  kind: pest
+  affects_families: [legume]
+  rotation_helps: false         # adults overwinter in debris and fly to new plantings
+  source: SRC-CORNELL-MBB
+  verified: false
+
+# --- Added from batch 2 notes ---
+
+- id: cucumber-beetle
+  name: Cucumber Beetle
+  kind: pest
+  affects_families: [cucurbit]
+  rotation_helps: false         # adults overwinter in debris and fly in; spreads bacterial wilt
+  source: SRC-UVM-CUCBEETLE
+  verified: false
+
+- id: flea-beetle
+  name: Flea Beetles
+  kind: pest
+  affects_families: [brassica, nightshade]
+  rotation_helps: false         # overwinter in leaf litter and hedgerows
+  source: SRC-UMN-FLEABEETLE
+  verified: false
+
+- id: harlequin-bug
+  name: Harlequin Bug
+  kind: pest
+  affects_families: [brassica]
+  rotation_helps: false         # overwinters in residue and debris; cleanup and trap crops
+  source: SRC-WVU-HARLEQUIN
+  verified: false
+
+- id: onion-thrips
+  name: Onion Thrips
+  kind: pest
+  affects_families: [allium]
+  rotation_helps: false         # migrate in from weeds and nearby crops
+  source: SRC-UMASS-THRIPS
+  verified: false
+
+- id: white-rot
+  name: White Rot
+  kind: disease
+  affects_families: [allium]
+  rotation_helps: true          # long-lived in soil; keep alliums out 8-10 years
+  source: SRC-WSU-WHITEROT
+  verified: false
+
+- id: southern-blight
+  name: Southern Blight
+  kind: disease
+  # Attacks 500+ species across most families; grasses (sweet corn) are the best partners.
+  affects_families: [nightshade, brassica, cucurbit, legume, allium, aster, carrot, mallow, morning_glory]
+  rotation_helps: true
+  source: SRC-CLEMSON-ROTATION
+  verified: false
+
+- id: root-knot-nematode
+  name: Root-Knot Nematode
+  kind: pest
+  # Most vegetables are hosts; corn, onions and garlic are non-hosts (Clemson HGIC 2216).
+  # Resistant varieties exist for southern peas, some peppers, tomatoes and sweet potatoes.
+  affects_families: [nightshade, brassica, cucurbit, legume, aster, carrot, mallow, morning_glory]
+  rotation_helps: true
+  source: SRC-CLEMSON-RKN
+  verified: false

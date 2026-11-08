@@ -1,0 +1,46 @@
+import type { PlotPlan } from '../types'
+
+interface Props {
+  plots: PlotPlan[]
+}
+
+export default function CostTable({ plots }: Props) {
+  const totalBaseline = plots.reduce((s, p) => s + p.baseline_cost_usd, 0)
+  const totalPlan = plots.reduce((s, p) => s + p.plan_cost_usd, 0)
+
+  return (
+    <table className="cost-table">
+      <thead>
+        <tr>
+          <th>Plot</th>
+          <th>Last Season</th>
+          <th>Plan</th>
+          <th>Difference</th>
+        </tr>
+      </thead>
+      <tbody>
+        {plots.map(p => {
+          const diff = p.plan_cost_usd - p.baseline_cost_usd
+          return (
+            <tr key={p.plot_id}>
+              <td>{p.plot_name || p.plot_id}</td>
+              <td>${p.baseline_cost_usd.toFixed(2)}</td>
+              <td>${p.plan_cost_usd.toFixed(2)}</td>
+              <td className={diff > 0 ? 'cost-more' : 'cost-less'}>${diff.toFixed(2)}</td>
+            </tr>
+          )
+        })}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td><strong>Total</strong></td>
+          <td><strong>${totalBaseline.toFixed(2)}</strong></td>
+          <td><strong>${totalPlan.toFixed(2)}</strong></td>
+          <td className={(totalPlan - totalBaseline) > 0 ? 'cost-more' : 'cost-less'}>
+            <strong>${(totalPlan - totalBaseline).toFixed(2)}</strong>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  )
+}
