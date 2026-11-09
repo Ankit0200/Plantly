@@ -1,5 +1,6 @@
 """Flask app — /api routes only."""
 
+import base64
 import json
 import os
 import traceback
@@ -16,23 +17,26 @@ if _env_file.exists():
         if _sep and not _key.strip().startswith("#"):
             os.environ.setdefault(_key.strip(), _value.strip().strip('"').strip("'"))
 
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, send_file
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from models import (db, User, Farm, PlotModel, SoilReport, PlanRecord,
                     Conversation, Message, Event, PestReport, Notification,
-                    ImplementedItem, ItemChange, farm_to_grower, save_grower_to_farm)
+                    ImplementedItem, ItemChange, MessageAttachment, farm_to_grower, save_grower_to_farm)
 from events import log_event, UI_EVENT_TYPES
 from engine.soil_engine import load_data, build_plan, check_grower
 from ai.ai_tools import load_notes, ToolBox, TOOLS
-from ai.chat import chat, chat_client, SYSTEM_PROMPT, IMPLEMENTED_SYSTEM_EXTRA
+from ai.chat import chat, chat_client, chat_provider, SYSTEM_PROMPT, IMPLEMENTED_SYSTEM_EXTRA, PHOTO_SYSTEM_EXTRA
 from ai.gemini import GEMINI_MODEL, gemini_client, gemini_key
 from geo import load_centroids, miles_between, neighbors_within
 
 app = Flask(__name__, instance_relative_config=True)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "dev-secret-change-me")
-app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///" + os.path.join(app.instance_path, "plantly.db")
+# DATABASE_URL lets tests (tests/conftest.py) use an in-memory database. It must be set before this module
+# is imported: Flask-SQLAlchemy creates the engine in init_app below, so changing the config later has no effect.
+app.config["SQLALCHEMY_DATABASE_URI"] = (os.environ.get("DATABASE_URL")
+                                         or "sqlite:///" + os.path.join(app.instance_path, "plantly.db"))
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 app.config["SESSION_COOKIE_HTTPONLY"] = True
 app.config["SESSION_COOKIE_SAMESITE"] = "Lax"
@@ -40,6 +44,9 @@ if os.environ.get("FLASK_ENV") == "production":
     app.config["SESSION_COOKIE_SECURE"] = True
 
 os.makedirs(app.instance_path, exist_ok=True)
+# Whole-request cap (photos are capped at 8 MB in plan_chat; this leaves room for the form fields).
+app.config["MAX_CONTENT_LENGTH"] = 10 * 1024 * 1024
+app.config["UPLOAD_DIR"] = os.path.join(app.instance_path, "uploads")
 
 db.init_app(app)
 
@@ -56,6 +63,11 @@ def load_user(user_id):
 @login_manager.unauthorized_handler
 def unauthorized():
     return jsonify({"error": "Login required"}), 401
+
+
+@app.errorhandler(413)
+def too_large(_err):
+    return jsonify({"error": "Photo is too large (max 8 MB)."}), 413
 
 
 # ------------------------------------------------------------------ data
@@ -594,6 +606,54 @@ def get_plan(plan_id):
     })
 
 
+# ------------------------------------------------------------------ chat photos
+MAX_PHOTO_BYTES = 8 * 1024 * 1024
+PHOTO_EXT = {"image/jpeg": ".jpg", "image/png": ".png", "image/webp": ".webp", "image/heic": ".heic"}
+PHOTOS_REPLAYED = 3  # only the most recent photos are re-sent to the model, to keep each turn affordable
+PHOTO_ONLY_TEXT = "Please look at this photo of my crop."
+
+
+def _sniff_image(data: bytes) -> str | None:
+    """The real image type from the file's first bytes (the client's content-type is not trusted)."""
+    if data[:3] == b"\xff\xd8\xff":
+        return "image/jpeg"
+    if data[:8] == b"\x89PNG\r\n\x1a\n":
+        return "image/png"
+    if data[:4] == b"RIFF" and data[8:12] == b"WEBP":
+        return "image/webp"
+    if data[4:12] in (b"ftypheic", b"ftypheix", b"ftypmif1", b"ftypheif"):
+        return "image/heic"
+    return None
+
+
+def _image_block(data: bytes, mime: str) -> dict:
+    """Claude-style image block; Claude takes it as is and ai/gemini.py converts it for Gemini."""
+    return {"type": "image", "source": {"type": "base64", "media_type": mime,
+                                        "data": base64.b64encode(data).decode("ascii")}}
+
+
+def _chat_history(messages: list) -> list:
+    """DB messages -> chat-loop messages. Photo turns become [image, text] blocks for the most recent
+    PHOTOS_REPLAYED photos; older photos are replaced by a short note so long chats stay affordable."""
+    atts = {a.message_id: a for a in MessageAttachment.query.filter(
+        MessageAttachment.message_id.in_([m.id for m in messages])).all()} if messages else {}
+    replay = {m.id for m in messages if m.id in atts}
+    replay = set(sorted(replay)[-PHOTOS_REPLAYED:])
+    out = []
+    for m in messages:
+        att = atts.get(m.id)
+        if not att:
+            out.append({"role": m.role, "content": m.content})
+            continue
+        path = Path(app.config["UPLOAD_DIR"]) / att.path
+        if m.id in replay and path.exists():
+            out.append({"role": m.role, "content": [_image_block(path.read_bytes(), att.mime_type),
+                                                    {"type": "text", "text": m.content}]})
+        else:
+            out.append({"role": m.role, "content": f"[Photo shared earlier] {m.content}"})
+    return out
+
+
 @app.post("/api/plans/<int:plan_id>/chat")
 @login_required
 def plan_chat(plan_id):
@@ -601,32 +661,57 @@ def plan_chat(plan_id):
     if not p:
         return jsonify({"error": "Not found"}), 404
 
-    body = request.get_json()
-    message_text = body.get("message", "").strip()
-    conversation_id = body.get("conversation_id")
-    if not message_text:
+    # JSON for text-only messages; multipart/form-data when a photo is attached.
+    photo, photo_mime = None, None
+    if request.content_type and "multipart" in request.content_type:
+        body = request.form
+        f = request.files.get("image")
+        if f:
+            photo = f.read(MAX_PHOTO_BYTES + 1)
+            if len(photo) > MAX_PHOTO_BYTES:
+                return jsonify({"error": "Photo is too large (max 8 MB)."}), 413
+            photo_mime = _sniff_image(photo)
+            if not photo_mime:
+                return jsonify({"error": "Please upload a JPEG, PNG, WEBP or HEIC photo."}), 400
+            if photo_mime == "image/heic" and chat_provider() == "anthropic":
+                return jsonify({"error": "HEIC photos aren't supported with the current AI provider. "
+                                         "Please send a JPEG or PNG."}), 400
+    else:
+        body = request.get_json(silent=True) or {}
+    message_text = (body.get("message") or "").strip()
+    conversation_id = body.get("conversation_id") or None
+    if not message_text and not photo:
         return jsonify({"error": "message is required"}), 400
+    if not message_text:
+        message_text = PHOTO_ONLY_TEXT
 
     # Get or create conversation
-    context = body.get("context", "plan")
+    context = body.get("context") or "plan"
     if conversation_id:
         convo = Conversation.query.filter_by(id=conversation_id, plan_id=plan_id,
                                              user_id=current_user.id).first()
         if not convo:
             return jsonify({"error": "Not found"}), 404
     else:
-        convo = Conversation(user_id=current_user.id, plan_id=plan_id,
-                             title=message_text[:60], context=context)
+        title = "Photo question" if photo and message_text == PHOTO_ONLY_TEXT else message_text[:60]
+        convo = Conversation(user_id=current_user.id, plan_id=plan_id, title=title, context=context)
         db.session.add(convo)
         db.session.flush()
         if context == "implemented":
             log_event("impl_chat_opened", {"plan_id": plan_id}, plan_id=plan_id)
 
-    # Rebuild message history from DB
+    # Rebuild message history from DB (earlier photos included), then add this turn
     existing = Message.query.filter_by(conversation_id=convo.id)\
         .order_by(Message.created_at).all()
-    chat_messages = [{"role": m.role, "content": m.content} for m in existing]
-    chat_messages.append({"role": "user", "content": message_text})
+    chat_messages = _chat_history(existing)
+    has_photo = bool(photo) or any(isinstance(m["content"], list) or
+                                   str(m["content"]).startswith("[Photo shared earlier]")
+                                   for m in chat_messages)
+    if photo:
+        chat_messages.append({"role": "user", "content": [_image_block(photo, photo_mime),
+                                                          {"type": "text", "text": message_text}]})
+    else:
+        chat_messages.append({"role": "user", "content": message_text})
 
     # Save user message
     user_msg = Message(conversation_id=convo.id, role="user", content=message_text)
@@ -650,6 +735,8 @@ def plan_chat(plan_id):
                           "specific rates or costs.")
         if context == "implemented":
             extra_system += IMPLEMENTED_SYSTEM_EXTRA
+        if has_photo:
+            extra_system += PHOTO_SYSTEM_EXTRA
 
         # Override the chat tools to use saved plan_json
         impl_items = [_serialize_item(i) for i in
@@ -665,9 +752,24 @@ def plan_chat(plan_id):
             unsupported_numbers=result.get("unsupported_numbers", []),
         )
         db.session.add(asst_msg)
+
+        # Store the photo only once the reply succeeded, so a failed turn leaves no orphan file.
+        attachment = None
+        if photo:
+            db.session.flush()  # assigns user_msg.id
+            rel = Path(str(current_user.id)) / "chat" / f"{uuid.uuid4().hex}{PHOTO_EXT[photo_mime]}"
+            dest = Path(app.config["UPLOAD_DIR"]) / rel
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_bytes(photo)
+            attachment = MessageAttachment(message_id=user_msg.id, user_id=current_user.id,
+                                           path=rel.as_posix(), mime_type=photo_mime, size=len(photo))
+            db.session.add(attachment)
         db.session.commit()
 
         log_event("chat_question", {"question": message_text, "plan_id": plan_id}, plan_id=plan_id)
+        if photo:
+            log_event("chat_photo", {"plan_id": plan_id, "size": len(photo), "mime": photo_mime},
+                      plan_id=plan_id)
 
         return jsonify({
             "conversation_id": convo.id,
@@ -675,6 +777,7 @@ def plan_chat(plan_id):
             "tools_used": result.get("tools_used", []),
             "unsupported_numbers": result.get("unsupported_numbers", []),
             "stale": stale,
+            "attachment_id": attachment.id if attachment else None,
         })
     except Exception:
         traceback.print_exc()
@@ -682,10 +785,21 @@ def plan_chat(plan_id):
         return jsonify({"error": "Internal server error"}), 500
 
 
+@app.get("/api/attachments/<int:attachment_id>")
+@login_required
+def get_attachment(attachment_id):
+    """A chat photo, only for the user who sent it (anyone else gets the same 404 as a missing id)."""
+    att = MessageAttachment.query.filter_by(id=attachment_id, user_id=current_user.id).first()
+    path = Path(app.config["UPLOAD_DIR"]) / att.path if att else None
+    if not att or not path.exists():
+        return jsonify({"error": "Not found"}), 404
+    return send_file(path, mimetype=att.mime_type, max_age=3600)
+
+
 def _chat_on_saved_plan(messages, grower, saved_plan_json, extra_system="",
                         implemented_items=None):
     """Chat using a saved plan snapshot — get_plan returns the saved plan, not a live rebuild."""
-    from ai.chat import MODEL, MAX_TOOL_ROUNDS, _block, unsupported_numbers
+    from ai.chat import MODEL, MAX_TOOL_ROUNDS, _block, final_round, unsupported_numbers
 
     client = chat_client()
     box = ToolBox(grower, DATA, NOTES, implemented_items=implemented_items)
@@ -695,9 +809,9 @@ def _chat_on_saved_plan(messages, grower, saved_plan_json, extra_system="",
     convo, trace = list(messages), []
     system = SYSTEM_PROMPT + extra_system
 
-    for _ in range(MAX_TOOL_ROUNDS + 1):
+    for round_no in range(MAX_TOOL_ROUNDS + 1):
         response = client.messages.create(model=MODEL, max_tokens=1500, system=system,
-                                          tools=TOOLS, messages=convo)
+                                          tools=TOOLS, messages=convo, **final_round(round_no))
         blocks = [_block(b) for b in response.content]
         convo.append({"role": "assistant", "content": blocks})
         if response.stop_reason != "tool_use":

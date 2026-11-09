@@ -74,8 +74,7 @@ function Hero({ onGetStarted }: Props) {
           <h1 className="hero-title">Grow smarter,<br />spend less.</h1>
           {/* Spec §10.1 fallback: the 66%/80% figures are not documented by the engine yet. */}
           <p className="hero-sub">
-            Research-backed soil plans that help you cut unnecessary fertilizer costs.
-            No guesswork — every recommendation traces to a university source.
+            Grow on evidence, not estimates. Research-backed soil plans from 40+ datasets and research that help you cut unnecessary fertilizer costs.
           </p>
           <button type="button" className="hero-cta cta-shine" onClick={onGetStarted}>
             Try Now — It's Free <span className="hero-cta-arrow" aria-hidden="true">→</span>
@@ -89,8 +88,12 @@ function Hero({ onGetStarted }: Props) {
           <p className="metric"><strong>$36B</strong><span>Total Market</span></p>
           <p className="metric"><strong>$9.6B</strong><span>Servicable Market</span></p>
         </div>
+        {/* Names must stay in backend/data/sources.yaml */}
+        <p className="metric metric-sources">
+          <span>Sources</span>Cornell, UMass Amherst, NC State, University of Georgia, USDA…
+        </p>
         <a className="metric metric-link" href="#research">
-          <strong>150+</strong><span>Datasets &amp; research sources</span>
+          <strong>40+</strong><span>Datasets &amp; research sources</span>
         </a>
         <p className="hero-footnote">*Estimates</p>
       </div>

@@ -16,7 +16,7 @@ import re
 from ai.ai_tools import TOOLS, ToolBox
 
 MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-5-5")
-MAX_TOOL_ROUNDS = 6
+MAX_TOOL_ROUNDS = 10  # photo questions look up the plan, problems, practices and notes before answering
 
 SYSTEM_PROMPT = """You are the assistant inside Plantly, a season planner for small vegetable growers. \
 You help one grower understand and adjust their plan for their plots. Their plot data is already loaded; \
@@ -42,9 +42,18 @@ answer only from the notes it returns.
 - If a tool returns an error, explain it in plain words and ask the grower for the missing or corrected value.
 
 HOW TO ANSWER
-- Write for a grower, not a scientist: plain words, 2 to 6 sentences or a short list.
+- Write for a grower, not a scientist: plain words, short. Aim for under 120 words; the grower reads on a phone.
+- Format in simple Markdown so it is easy to scan. Use only: "**Bold label**" lines as section headings, \
+"- " bullets, "1. " numbered steps, and **bold** for the one key word or amount. No tables, no # headings, \
+no long paragraphs.
+- A one- or two-sentence answer needs no headings. Anything longer uses this shape (leave out a section that \
+doesn't apply):
+  **What's happening** - one or two bullets.
+  **Why** - one or two bullets.
+  **What to do** - up to 4 numbered steps, each one short line starting with a verb.
+- Each bullet or step is one short sentence. Don't repeat what the grower said back to them.
 - Name the plot and crop, and give units (lb, cu yd, $).
-- End answers that use data with "Source:" and the source title and link from the tool result. \
+- End answers that use data with a last line "Source: <title> (<link>)" from the tool result. \
 If that source or row has verified: false, add "(not yet checked by our team)".
 - The plan avoids synthetic chemicals where it can. Recommend the plan's prevention steps. Never recommend a \
 pesticide product or spray rate; if asked, say the plan focuses on prevention and suggest their county \
@@ -75,11 +84,48 @@ Never give amounts or rates that no tool returned.
 - If the answer suggests a new step (e.g. extra side-dressing), offer to rerun the plan with run_what_if \
 so any new amount comes from the engine."""
 
+PHOTO_SYSTEM_EXTRA = """
+
+PHOTOS FROM THE GROWER
+The grower can attach photos of their crops. Answer a photo with this shape, keeping each section to one or \
+two bullets: **What I see**, **Most likely**, **How to confirm**, **What to do** (up to 4 numbered steps), then \
+the Source line. Still under about 150 words. When a message includes a photo:
+- First say briefly what you can see (which plant part; symptoms such as spots, yellowing, holes, wilting, \
+insects, deformity). Do not name a cause before describing the evidence.
+- Use get_plan and get_implemented_items to learn which crops and plots this grower has. If it is unclear \
+which plot or crop the photo shows, ask. If the crop in the photo is not in their plan, say so and answer \
+from the photo and Plantly's library; do not keep searching. Keep lookups few and focused.
+- Then give the most likely cause and up to two alternatives, using honest confidence words ("most likely", \
+"possibly"). Say what would confirm it (look under the leaves, check the stem base, check soil moisture, \
+look for insects at dusk). A photo alone cannot confirm a diagnosis.
+- Ground it in Plantly's data: call lookup_data on "problems" (filter by the crop's family) to see whether it \
+matches a problem in the library. If it does, use lookup_data on "practices" and search_notes for prevention \
+and management, and cite the sources they return. If it does not match, say it is outside Plantly's research \
+library and suggest the county extension office or a plant diagnostic lab.
+- Nutrient-looking symptoms (e.g. yellowing): relate them to the plan's soil test and feeding schedule from \
+get_plan. Any amount, rate or cost must come from get_plan or run_what_if, never from you.
+- Never name a pesticide product or rate unless a tool returned it; if one is used, tell them to follow the label.
+- If the identified pest is in the problems library, suggest they use "Report a pest" so nearby growers \
+are alerted.
+- "Is this healthy?" questions: say what looks normal, what (if anything) looks off, and what to watch for.
+- If the photo is blurry, too dark, too far away, or not a plant, say so and ask for a clearer photo \
+(the whole plant plus a close-up of the problem, in daylight).
+- This is planning support, not a certified diagnosis."""
+
+
+def final_round(round_no: int) -> dict:
+    """On the last allowed round, forbid more tool calls so the model answers with what it has already looked
+    up, instead of the grower getting "couldn't finish looking that up"."""
+    return {"tool_choice": {"type": "none"}} if round_no == MAX_TOOL_ROUNDS else {}
+
+
+def chat_provider() -> str:
+    """"anthropic" when CHAT_PROVIDER=anthropic (or, by default, when ANTHROPIC_API_KEY is set); else "gemini"."""
+    return os.environ.get("CHAT_PROVIDER") or ("anthropic" if os.environ.get("ANTHROPIC_API_KEY") else "gemini")
+
 
 def chat_client():
-    """Claude when CHAT_PROVIDER=anthropic (or, by default, when ANTHROPIC_API_KEY is set); otherwise Gemini."""
-    provider = os.environ.get("CHAT_PROVIDER") or ("anthropic" if os.environ.get("ANTHROPIC_API_KEY") else "gemini")
-    if provider == "anthropic":
+    if chat_provider() == "anthropic":
         import anthropic
         return anthropic.Anthropic()
     from ai.gemini import GeminiChat
@@ -97,9 +143,9 @@ def chat(messages: list, grower: dict, data: dict, notes: list | None = None,
     convo, trace = list(messages), []
     system = SYSTEM_PROMPT + system_extra
 
-    for _ in range(MAX_TOOL_ROUNDS + 1):
+    for round_no in range(MAX_TOOL_ROUNDS + 1):
         response = client.messages.create(model=model, max_tokens=1500, system=system,
-                                          tools=TOOLS, messages=convo)
+                                          tools=TOOLS, messages=convo, **final_round(round_no))
         blocks = [_block(b) for b in response.content]
         convo.append({"role": "assistant", "content": blocks})
         if response.stop_reason != "tool_use":
@@ -150,8 +196,13 @@ def unsupported_numbers(reply: str, trace: list, messages: list,
     for t in trace:
         seen |= _numbers(t["output"])
     for m in messages:
-        if isinstance(m.get("content"), str):
-            seen |= _numbers(m["content"])
+        content = m.get("content")
+        if isinstance(content, str):
+            seen |= _numbers(content)
+        elif isinstance(content, list):  # a photo turn: text blocks alongside the image
+            for b in content:
+                if isinstance(b, dict) and b.get("type") == "text":
+                    seen |= _numbers(b.get("text") or "")
     # Numbers from implemented items (planned and actual) are supported
     for item in (implemented_items or []):
         for field in ("quantity", "cost_usd", "actual_quantity"):

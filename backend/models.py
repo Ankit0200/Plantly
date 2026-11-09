@@ -105,6 +105,19 @@ class Message(db.Model):
     created_at = db.Column(db.DateTime, default=_utcnow)
 
 
+class MessageAttachment(db.Model):
+    """A photo the grower attached to a chat message. A separate table (not a column on messages) because
+    the app only runs db.create_all(), which adds new tables to an existing database but never alters old ones."""
+    __tablename__ = "message_attachments"
+    id = db.Column(db.Integer, primary_key=True)
+    message_id = db.Column(db.Integer, db.ForeignKey("messages.id"), nullable=False, index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False, index=True)
+    path = db.Column(db.String(500), nullable=False)  # relative to the upload folder
+    mime_type = db.Column(db.String(50), nullable=False)
+    size = db.Column(db.Integer, nullable=False)
+    created_at = db.Column(db.DateTime, default=_utcnow)
+
+
 class Event(db.Model):
     __tablename__ = "events"
     id = db.Column(db.Integer, primary_key=True)

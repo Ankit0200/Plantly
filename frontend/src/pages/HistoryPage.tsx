@@ -4,6 +4,7 @@ import { getPlans, getPlan, getHistory, postPlanChat } from '../api'
 import { cropEmoji } from '../cropIcons'
 import PlanSummary from '../components/PlanSummary'
 import PlotCard from '../components/PlotCard'
+import ChatText from '../components/ChatText'
 import type { HistoryItem } from '../types'
 
 interface Props {
@@ -121,7 +122,7 @@ export default function HistoryPage({ referenceData, onRegenerate }: Props) {
             <div className="convo-messages">
               {activeConvo.messages.map((m, i) => (
                 <div key={i} className={`chat-msg chat-${m.role}`}>
-                  {m.content}
+                  {m.role === 'assistant' ? <ChatText text={m.content} /> : m.content}
                 </div>
               ))}
             </div>

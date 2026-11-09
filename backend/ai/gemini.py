@@ -7,6 +7,7 @@ Needs GEMINI_API_KEY (or GOOGLE_API_KEY) in the environment.
 """
 from __future__ import annotations
 
+import base64
 import os
 from types import SimpleNamespace
 
@@ -38,9 +39,11 @@ class GeminiChat:
         self._ids = 0
         self.messages = self
 
-    def create(self, *, system: str, tools: list, messages: list, max_tokens: int, **_ignored):
+    def create(self, *, system: str, tools: list, messages: list, max_tokens: int,
+               tool_choice: dict | None = None, **_ignored):
         from google.genai import types
 
+        no_tools = (tool_choice or {}).get("type") == "none"  # final round: answer, don't call tools
         config = types.GenerateContentConfig(
             system_instruction=system,
             max_output_tokens=max_tokens,
@@ -48,6 +51,8 @@ class GeminiChat:
                 types.FunctionDeclaration(name=t["name"], description=t["description"],
                                           parameters_json_schema=t["input_schema"])
                 for t in tools])],
+            tool_config=types.ToolConfig(function_calling_config=types.FunctionCallingConfig(mode="NONE"))
+            if no_tools else None,
         )
         resp = self._client.models.generate_content(model=GEMINI_MODEL, contents=self._contents(messages),
                                                     config=config)
@@ -92,6 +97,10 @@ class GeminiChat:
                         name=names.get(b["tool_use_id"], ""), response={key: b["content"]})))
                 elif b.get("type") == "text" and b.get("text"):
                     parts.append(types.Part(text=b["text"]))
+                elif b.get("type") == "image":  # Claude-style base64 image block (a grower's crop photo)
+                    src = b["source"]
+                    parts.append(types.Part.from_bytes(data=base64.b64decode(src["data"]),
+                                                       mime_type=src["media_type"]))
             if parts:
                 out.append(types.Content(role=role, parts=parts))
         return out

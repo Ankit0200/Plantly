@@ -207,6 +207,7 @@ button.text-link:hover { background: none; }
 }
 .metric strong { font-size: var(--fs-h3); font-weight: 900; }
 .metric span { font-size: var(--fs-eyebrow); font-weight: 700; }
+.metric-sources { font-size: var(--fs-small); font-weight: 700; text-align: center; }
 .metric-link { text-decoration: none; transition: border-color var(--dur-fast) ease; }
 .metric-link:hover { border-color: var(--green); }
 .hero-footnote {
@@ -250,6 +251,7 @@ button.text-link:hover { background: none; }
     background: none;
     padding-bottom: var(--space-4);
   }
+  .metric-sources { grid-column: 2; grid-row: 1; justify-self: center; max-width: 32rem; }
   .metric-link { grid-column: 3; grid-row: 1; max-width: 16rem; }
   .hero-footnote {
     grid-column: 1;

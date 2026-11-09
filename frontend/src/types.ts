@@ -277,6 +277,7 @@ export interface PlanChatResponse {
   tools_used: ToolUsage[];
   unsupported_numbers: number[];
   stale: boolean;
+  attachment_id?: number | null;  // id of the photo sent with this message, if any
 }
 
 export interface HistoryItem {

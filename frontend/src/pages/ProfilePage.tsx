@@ -1,6 +1,10 @@
 import { useState, useEffect, useRef } from 'react'
 import type { AuthUser, ImplementedItemData, ImplementedSummary, PendingItemChange } from '../types'
 import { getAllImplemented, removeImplemented, updateProfile, getPlans, postPlanChat, updateImplementedActual, postEvent } from '../api'
+import { MAX_PHOTO_BYTES, shrinkPhoto } from '../photo'
+import ChatText from '../components/ChatText'
+
+const PHOTO_PROMPTS = ["What's wrong with this crop?", 'Is this healthy?', 'What should I do about it?']
 
 interface Props {
   user: AuthUser
@@ -24,6 +28,7 @@ interface PlanInfo {
 interface ChatMsg {
   role: string
   content: string
+  imageUrl?: string  // a photo the grower sent with this message
 }
 
 export default function ProfilePage({ user, onUserUpdate }: Props) {
@@ -43,6 +48,37 @@ export default function ProfilePage({ user, onUserUpdate }: Props) {
   const [chatLoading, setChatLoading] = useState(false)
   const [pendingChanges, setPendingChanges] = useState<PendingItemChange[]>([])
   const chatEndRef = useRef<HTMLDivElement>(null)
+  // Photo waiting to be sent with the next message
+  const [photo, setPhoto] = useState<{ blob: Blob; url: string } | null>(null)
+  const [photoError, setPhotoError] = useState('')
+  const [photoLoading, setPhotoLoading] = useState(false)
+  const photoInputRef = useRef<HTMLInputElement>(null)
+  const photoUrlsRef = useRef<string[]>([])  // object URLs to release when the chat closes
+
+  const releasePhotoUrls = () => {
+    photoUrlsRef.current.forEach(u => URL.revokeObjectURL(u))
+    photoUrlsRef.current = []
+  }
+  useEffect(() => releasePhotoUrls, [])
+
+  const attachPhoto = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    e.target.value = '' // let the same file be picked again
+    if (!file) return
+    setPhotoError('')
+    if (!file.type.startsWith('image/') && !/\.(heic|heif)$/i.test(file.name)) {
+      setPhotoError('Please choose a photo (JPEG, PNG, WEBP or HEIC).')
+      return
+    }
+    const blob = await shrinkPhoto(file)
+    if (blob.size > MAX_PHOTO_BYTES) {
+      setPhotoError('That photo is too large (max 8 MB). Try a smaller one.')
+      return
+    }
+    const url = URL.createObjectURL(blob)
+    photoUrlsRef.current.push(url)
+    setPhoto({ blob, url })
+  }
 
   useEffect(() => {
     getAllImplemented().then(data => {
@@ -134,6 +170,9 @@ export default function ProfilePage({ user, onUserUpdate }: Props) {
     setChatMessages([])
     setPendingChanges([])
     setChatInput('')
+    setPhoto(null)
+    setPhotoError('')
+    releasePhotoUrls()
     postEvent('impl_chat_opened', { plan_id: planId }, planId).catch(() => {})
   }
 
@@ -142,16 +181,23 @@ export default function ProfilePage({ user, onUserUpdate }: Props) {
     setChatConvoId(undefined)
     setChatMessages([])
     setPendingChanges([])
+    setPhoto(null)
+    setPhotoError('')
+    releasePhotoUrls()
   }
 
-  const sendChat = async () => {
-    if (!chatInput.trim() || !chatPlanId || chatLoading) return
-    const msg = chatInput.trim()
+  const sendChat = async (prompt?: string) => {
+    const msg = (prompt ?? chatInput).trim()
+    if ((!msg && !photo) || !chatPlanId || chatLoading) return
+    const sentPhoto = photo
     setChatInput('')
-    setChatMessages(prev => [...prev, { role: 'user', content: msg }])
+    setPhoto(null)
+    setPhotoError('')
+    setChatMessages(prev => [...prev, { role: 'user', content: msg, imageUrl: sentPhoto?.url }])
     setChatLoading(true)
+    setPhotoLoading(!!sentPhoto)
     try {
-      const res = await postPlanChat(chatPlanId, msg, chatConvoId, 'implemented')
+      const res = await postPlanChat(chatPlanId, msg, chatConvoId, 'implemented', sentPhoto?.blob)
       setChatConvoId(res.conversation_id)
       setChatMessages(prev => [...prev, { role: 'assistant', content: res.reply }])
       for (const tu of res.tools_used || []) {
@@ -179,10 +225,14 @@ export default function ProfilePage({ user, onUserUpdate }: Props) {
           } catch { /* ignore parse errors */ }
         }
       }
-    } catch {
-      setChatMessages(prev => [...prev, { role: 'assistant', content: 'Sorry, something went wrong.' }])
+    } catch (err: unknown) {
+      // Show the server's reason for a rejected photo (too large, wrong type); otherwise a generic error.
+      const e = err as { status?: number; body?: { error?: string } }
+      const reason = e.status === 400 || e.status === 413 ? e.body?.error : undefined
+      setChatMessages(prev => [...prev, { role: 'assistant', content: reason || 'Sorry, something went wrong.' }])
     } finally {
       setChatLoading(false)
+      setPhotoLoading(false)
     }
   }
 
@@ -321,16 +371,20 @@ export default function ProfilePage({ user, onUserUpdate }: Props) {
                       <div className="impl-chat-messages">
                         {chatMessages.length === 0 && (
                           <p className="chat-hint">
-                            Log what you actually did, ask about emergencies (heavy rain, frost, pests), or get help with your plan.
+                            Log what you actually did, ask about emergencies (heavy rain, frost, pests), get help with your plan,
+                            or send a photo of a crop that looks wrong.
                           </p>
                         )}
                         {chatMessages.map((m, i) => (
                           <div key={i} className={`chat-msg chat-${m.role}`}>
-                            {m.content}
+                            {m.imageUrl && <img className="chat-photo" src={m.imageUrl} alt="Photo you sent" />}
+                            {m.role === 'assistant' ? <ChatText text={m.content} /> : m.content}
                           </div>
                         ))}
                         {chatLoading && (
-                          <div className="chat-msg chat-assistant chat-loading">Thinking...</div>
+                          <div className="chat-msg chat-assistant chat-loading">
+                            {photoLoading ? 'Looking at your photo…' : 'Thinking...'}
+                          </div>
                         )}
                         <div ref={chatEndRef} />
                       </div>
@@ -353,17 +407,43 @@ export default function ProfilePage({ user, onUserUpdate }: Props) {
                         </div>
                       ))}
 
+                      {photo && (
+                        <div className="chat-photo-pending">
+                          <div className="chat-photo-preview">
+                            <img src={photo.url} alt="Photo to send" />
+                            <button type="button" className="chat-photo-remove" onClick={() => setPhoto(null)}
+                              aria-label="Remove photo">&times;</button>
+                          </div>
+                          <div className="chat-photo-prompts">
+                            {PHOTO_PROMPTS.map(p => (
+                              <button key={p} type="button" className="chat-photo-prompt"
+                                onClick={() => sendChat(p)} disabled={chatLoading}>{p}</button>
+                            ))}
+                          </div>
+                          <p className="chat-photo-note">Photos are sent to our AI provider to analyze and stored with your account.</p>
+                        </div>
+                      )}
+                      {photoError && <p className="chat-photo-error" role="alert">{photoError}</p>}
+
                       <div className="impl-chat-input">
+                        <button type="button" className="chat-attach-btn" onClick={() => photoInputRef.current?.click()}
+                          disabled={chatLoading} aria-label="Attach a photo" title="Attach a photo">
+                          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                            <path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2z" />
+                            <circle cx="12" cy="13" r="4" />
+                          </svg>
+                        </button>
+                        <input ref={photoInputRef} type="file" accept="image/*,.heic,.heif" hidden onChange={attachPhoto} />
                         <input
                           type="text"
                           value={chatInput}
                           onChange={e => setChatInput(e.target.value)}
                           onKeyDown={e => e.key === 'Enter' && sendChat()}
-                          placeholder="e.g. 'I used 40 lb of urea' or 'We had heavy rain'"
+                          placeholder={photo ? 'Ask about this photo…' : "e.g. 'I used 40 lb of urea' or 'We had heavy rain'"}
                           disabled={chatLoading}
                           aria-label="Chat message"
                         />
-                        <button onClick={sendChat} disabled={chatLoading || !chatInput.trim()}>
+                        <button onClick={() => sendChat()} disabled={chatLoading || (!chatInput.trim() && !photo)}>
                           Send
                         </button>
                       </div>
