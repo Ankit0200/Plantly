@@ -1,14 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
-import type { Grower, Plan, ReferenceData, AuthUser, Season } from './types'
+import type { Grower, Plan, ReferenceData, AuthUser } from './types'
+import { defaultSeason } from './types'
 import { getReference, getDemoGrover, postPlan, postCheck, authMe, authLogout, getFarm, saveFarm } from './api'
-
-function defaultSeason(): Season {
-  const m = new Date().getMonth() // 0-11
-  if (m >= 1 && m <= 3) return 'spring'   // Feb-Apr
-  if (m >= 4 && m <= 6) return 'summer'   // May-Jul
-  if (m >= 7 && m <= 9) return 'fall'     // Aug-Oct
-  return 'winter'                          // Nov-Jan
-}
 import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import IntakePage from './pages/IntakePage'
@@ -102,8 +95,8 @@ export default function App() {
     setErrors([])
   }, [])
 
-  const onRegenerate = useCallback(async (growerJson: Record<string, unknown>) => {
-    setGrower(growerJson as Grower)
+  const onRegenerate = useCallback((g: Grower) => {
+    setGrower(g)
     setTab('planner')
     setStep('confirm')
     setErrors([])
@@ -132,7 +125,7 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <span className="app-logo-emoji">🌱</span>
+        <img className="app-logo-mark" src="/images/plantly-mark.svg" alt="" />
         <h1>Plantly</h1>
         <div className="header-user">
           <NotificationBell onOpenPestReport={() => setShowPestReport(true)} />
@@ -218,6 +211,7 @@ export default function App() {
       <nav className="bottom-nav">
         <button
           className={tab === 'planner' ? 'active' : ''}
+          aria-current={tab === 'planner' ? 'page' : undefined}
           onClick={() => setTab('planner')}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
@@ -225,6 +219,7 @@ export default function App() {
         </button>
         <button
           className={tab === 'history' ? 'active' : ''}
+          aria-current={tab === 'history' ? 'page' : undefined}
           onClick={() => setTab('history')}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
@@ -232,6 +227,7 @@ export default function App() {
         </button>
         <button
           className={tab === 'profile' ? 'active' : ''}
+          aria-current={tab === 'profile' ? 'page' : undefined}
           onClick={() => setTab('profile')}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
@@ -239,6 +235,7 @@ export default function App() {
         </button>
         <button
           className={tab === 'data-status' ? 'active' : ''}
+          aria-current={tab === 'data-status' ? 'page' : undefined}
           onClick={() => setTab('data-status')}
         >
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 20V10M18 20V4M6 20v-4"/></svg>

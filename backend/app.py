@@ -7,6 +7,15 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+# Load backend/.env (gitignored) before the ai modules read their settings. Variables already set in the
+# shell win, so a key exported in the terminal overrides the file.
+_env_file = Path(__file__).parent / ".env"
+if _env_file.exists():
+    for _line in _env_file.read_text(encoding="utf-8").splitlines():
+        _key, _sep, _value = _line.partition("=")
+        if _sep and not _key.strip().startswith("#"):
+            os.environ.setdefault(_key.strip(), _value.strip().strip('"').strip("'"))
+
 from flask import Flask, jsonify, request
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -17,7 +26,8 @@ from models import (db, User, Farm, PlotModel, SoilReport, PlanRecord,
 from events import log_event, UI_EVENT_TYPES
 from engine.soil_engine import load_data, build_plan, check_grower
 from ai.ai_tools import load_notes, ToolBox, TOOLS
-from ai.chat import chat, SYSTEM_PROMPT, IMPLEMENTED_SYSTEM_EXTRA
+from ai.chat import chat, chat_client, SYSTEM_PROMPT, IMPLEMENTED_SYSTEM_EXTRA
+from ai.gemini import GEMINI_MODEL, gemini_client, gemini_key
 from geo import load_centroids, miles_between, neighbors_within
 
 app = Flask(__name__, instance_relative_config=True)
@@ -350,11 +360,9 @@ def recommend():
     if not grower or not plan_result:
         return jsonify({"error": "grower and plan are required"}), 400
     try:
-        from google import genai
-        api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-        if not api_key:
+        if not gemini_key():
             return jsonify({"error": "GEMINI_API_KEY not set"}), 500
-        client = genai.Client(api_key=api_key)
+        client = gemini_client()
         crop_info = {c["id"]: {"name": c["name"], "family": c["family"], "n_demand": c.get("n_demand", "medium")}
                      for c in DATA["crops"].values()}
         problem_info = {p["id"]: p["name"] for p in DATA["problems"].values()}
@@ -421,7 +429,7 @@ Return ONLY valid JSON, no markdown, in this exact format:
     }}
   ]
 }}"""
-        resp = client.models.generate_content(model="gemini-3-flash-preview", contents=prompt)
+        resp = client.models.generate_content(model=GEMINI_MODEL, contents=prompt)
         response_text = resp.text
         if "```json" in response_text:
             response_text = response_text.split("```json")[1].split("```")[0]
@@ -469,11 +477,9 @@ def explain_line():
     if not line:
         return jsonify({"error": "line is required"}), 400
     try:
-        from google import genai
-        api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-        if not api_key:
+        if not gemini_key():
             return jsonify({"error": "GEMINI_API_KEY not set"}), 500
-        client = genai.Client(api_key=api_key)
+        client = gemini_client()
         rule_id = line.get("rule_id", "")
         source_id = line.get("source_id", "")
         source_info = DATA["sources"].get(source_id, {})
@@ -506,7 +512,7 @@ def explain_line():
 {chr(10).join(f"- {n}" for n in relevant_notes) if relevant_notes else "None"}
 
 Reply with ONLY the bullet points. Use • for bullets. Keep it simple."""
-        resp = client.models.generate_content(model="gemini-3-flash-preview", contents=prompt)
+        resp = client.models.generate_content(model=GEMINI_MODEL, contents=prompt)
         return jsonify({"explanation": resp.text})
     except Exception:
         traceback.print_exc()
@@ -679,10 +685,9 @@ def plan_chat(plan_id):
 def _chat_on_saved_plan(messages, grower, saved_plan_json, extra_system="",
                         implemented_items=None):
     """Chat using a saved plan snapshot — get_plan returns the saved plan, not a live rebuild."""
-    import anthropic
     from ai.chat import MODEL, MAX_TOOL_ROUNDS, _block, unsupported_numbers
 
-    client = anthropic.Anthropic()
+    client = chat_client()
     box = ToolBox(grower, DATA, NOTES, implemented_items=implemented_items)
     # Override _current_plan to return saved snapshot
     box._plan = saved_plan_json

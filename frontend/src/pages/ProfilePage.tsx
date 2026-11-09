@@ -8,10 +8,10 @@ interface Props {
 }
 
 const CATEGORY_META: Record<string, { label: string; icon: string; color: string }> = {
-  rotation:        { label: 'Rotation',        icon: '\u{1F504}', color: 'var(--gold, #ffc800)' },
-  soil:            { label: 'Soil Prep',       icon: '\u{1F9EA}', color: 'var(--purple, #a560e8)' },
-  feeding:         { label: 'Feeding',         icon: '\u{1F331}', color: 'var(--green, #58cc02)' },
-  pest_prevention: { label: 'Pest Prevention', icon: '\u{1F41B}', color: 'var(--red, #ff4b4b)' },
+  rotation:        { label: 'Rotation',        icon: '\u{1F504}', color: 'var(--gold)' },
+  soil:            { label: 'Soil Prep',       icon: '\u{1F9EA}', color: 'var(--purple)' },
+  feeding:         { label: 'Feeding',         icon: '\u{1F331}', color: 'var(--green)' },
+  pest_prevention: { label: 'Pest Prevention', icon: '\u{1F41B}', color: 'var(--red)' },
 }
 
 interface PlanInfo {
@@ -32,7 +32,6 @@ export default function ProfilePage({ user, onUserUpdate }: Props) {
   const [zipCode, setZipCode] = useState(user.zip_code || '')
   const [zipSaving, setZipSaving] = useState(false)
   const [zipMsg, setZipMsg] = useState('')
-  const [expandedWhy, setExpandedWhy] = useState<number | null>(null)
   // Track which items the user has marked as "done"
   const [doneItems, setDoneItems] = useState<Set<number>>(new Set())
 

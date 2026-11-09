@@ -1,8 +1,7 @@
 import type {
   Grower, Plan, ReferenceData, DataStatus, ChatMessage, ChatResponse,
   IntakeResponse, AuthUser, PlanSummaryItem, SavedPlanDetail, PlanChatResponse,
-  HistoryItem, NotificationsResponse, ImplementedItemData, ImplementedSummary,
-  PendingItemChange
+  HistoryItem, NotificationsResponse, ImplementedItemData, ImplementedSummary
 } from './types';
 
 const BASE = '/api';

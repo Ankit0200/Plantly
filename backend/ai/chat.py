@@ -5,7 +5,7 @@
     result["tools_used"]            # what it looked up, for a "Looked up: ..." line in the UI
     result["unsupported_numbers"]   # numbers in the answer that no tool returned (should be empty)
 
-Needs:  pip install anthropic   and   ANTHROPIC_API_KEY in the environment.
+Needs either ANTHROPIC_API_KEY (Claude) or GEMINI_API_KEY (Gemini, via ai/gemini.py); see chat_client().
 """
 from __future__ import annotations
 
@@ -76,14 +76,23 @@ Never give amounts or rates that no tool returned.
 so any new amount comes from the engine."""
 
 
+def chat_client():
+    """Claude when CHAT_PROVIDER=anthropic (or, by default, when ANTHROPIC_API_KEY is set); otherwise Gemini."""
+    provider = os.environ.get("CHAT_PROVIDER") or ("anthropic" if os.environ.get("ANTHROPIC_API_KEY") else "gemini")
+    if provider == "anthropic":
+        import anthropic
+        return anthropic.Anthropic()
+    from ai.gemini import GeminiChat
+    return GeminiChat()
+
+
 def chat(messages: list, grower: dict, data: dict, notes: list | None = None,
          client=None, model: str = MODEL, implemented_items: list | None = None,
          system_extra: str = "") -> dict:
     """Run one chat turn. `messages` is the conversation so far as [{"role", "content"}], ending with the
     grower's new message. Claude may call tools several times before it answers."""
     if client is None:
-        import anthropic
-        client = anthropic.Anthropic()
+        client = chat_client()
     box = ToolBox(grower, data, notes, implemented_items=implemented_items)
     convo, trace = list(messages), []
     system = SYSTEM_PROMPT + system_extra

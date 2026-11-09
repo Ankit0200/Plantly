@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import type { PlanSummaryItem, SavedPlanDetail, ReferenceData } from '../types'
+import type { Grower, PlanSummaryItem, SavedPlanDetail, ReferenceData } from '../types'
 import { getPlans, getPlan, getHistory, postPlanChat } from '../api'
 import { cropEmoji } from '../cropIcons'
 import PlanSummary from '../components/PlanSummary'
@@ -8,7 +8,7 @@ import type { HistoryItem } from '../types'
 
 interface Props {
   referenceData: ReferenceData | null
-  onRegenerate: (growerJson: Record<string, unknown>) => void
+  onRegenerate: (grower: Grower) => void
 }
 
 export default function HistoryPage({ referenceData, onRegenerate }: Props) {

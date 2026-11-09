@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import type { ReferenceData, AuthUser } from '../types'
 import { postPestReport, updateProfile } from '../api'
+import { useDialog } from '../useDialog'
 
 interface Props {
   user: AuthUser
@@ -19,6 +20,8 @@ export default function PestReportModal({ user, referenceData, onClose, onUserUp
   const [error, setError] = useState('')
 
   const needsZip = !user.zip_code
+  const dialog = useRef<HTMLDivElement>(null)
+  useDialog(dialog, true, onClose)
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -66,15 +69,15 @@ export default function PestReportModal({ user, referenceData, onClose, onUserUp
 
   return (
     <div className="modal-overlay" onClick={e => e.target === e.currentTarget && onClose()}>
-      <div className="modal-card">
+      <div className="modal-card" ref={dialog} tabIndex={-1} role="dialog" aria-modal="true" aria-labelledby="pest-report-title">
         <div className="modal-header">
-          <h2>Report a Pest</h2>
+          <h2 id="pest-report-title">Report a Pest</h2>
           <button className="modal-close" onClick={onClose} aria-label="Close">&times;</button>
         </div>
         <form onSubmit={submit}>
           {needsZip && (
             <label>
-              Your ZIP Code <span style={{ fontWeight: 400, color: 'var(--text-muted)' }}>(required for pest alerts)</span>
+              Your ZIP Code <span className="label-hint">(required for pest alerts)</span>
               <input
                 type="text"
                 value={zipCode}
@@ -95,7 +98,7 @@ export default function PestReportModal({ user, referenceData, onClose, onUserUp
             </select>
           </label>
           <label>
-            Affected crop <span style={{ fontWeight: 400, color: 'var(--text-muted)' }}>(optional)</span>
+            Affected crop <span className="label-hint">(optional)</span>
             <select value={cropId} onChange={e => setCropId(e.target.value)}>
               <option value="">None</option>
               {referenceData?.crops.map(c => (
@@ -104,7 +107,7 @@ export default function PestReportModal({ user, referenceData, onClose, onUserUp
             </select>
           </label>
           <label>
-            Note <span style={{ fontWeight: 400, color: 'var(--text-muted)' }}>(optional)</span>
+            Note <span className="label-hint">(optional)</span>
             <input
               type="text"
               value={note}
