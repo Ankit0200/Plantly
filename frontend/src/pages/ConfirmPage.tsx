@@ -40,26 +40,27 @@ export default function ConfirmPage({ grower, errors, referenceData, loading, on
     }
   }, [grower, setErrors])
 
+  // Wrapper that clears errors whenever grower data changes
+  const updateGrower = useCallback((updater: Grower | ((prev: Grower | null) => Grower | null)) => {
+    setErrors([])
+    setGrower(updater)
+  }, [setGrower, setErrors])
+
   const addPlot = useCallback(() => {
     if (grower.plots.length >= 5) return
-    setGrower({ ...grower, plots: [...grower.plots, emptyPlot(grower.plots.length)] })
-  }, [grower, setGrower])
+    updateGrower({ ...grower, plots: [...grower.plots, emptyPlot(grower.plots.length)] })
+  }, [grower, updateGrower])
 
   const removePlot = useCallback((index: number) => {
-    setGrower({ ...grower, plots: grower.plots.filter((_, i) => i !== index) })
-  }, [grower, setGrower])
+    updateGrower({ ...grower, plots: grower.plots.filter((_, i) => i !== index) })
+  }, [grower, updateGrower])
 
   const updatePlot = useCallback((index: number, plot: Plot) => {
-    setGrower({ ...grower, plots: grower.plots.map((p, i) => i === index ? plot : p) })
-  }, [grower, setGrower])
+    updateGrower({ ...grower, plots: grower.plots.map((p, i) => i === index ? plot : p) })
+  }, [grower, updateGrower])
 
   const displayArea = (sqft: number) => `${sqft}`
   const areaUnit = 'sq ft'
-
-  // Check for null fields that need attention
-  const hasNulls = grower.plots.some(p =>
-    !p.crop_planned || !p.soil_texture || p.soil_test.ph === 0
-  )
 
   return (
     <div className="confirm-page">
@@ -75,15 +76,9 @@ export default function ConfirmPage({ grower, errors, referenceData, loading, on
         </div>
       )}
 
-      {hasNulls && (
-        <div className="warning">
-          Some fields are empty or null. Fill them in before generating the plan.
-        </div>
-      )}
-
       <GrowerForm
         grower={grower}
-        setGrower={setGrower as React.Dispatch<React.SetStateAction<Grower>>}
+        setGrower={updateGrower as React.Dispatch<React.SetStateAction<Grower>>}
         crops={referenceData?.crops ?? []}
       />
 
@@ -115,7 +110,7 @@ export default function ConfirmPage({ grower, errors, referenceData, loading, on
         <button
           className="build-btn"
           onClick={() => onConfirm(grower)}
-          disabled={loading || errors.length > 0}
+          disabled={loading}
         >
           {loading ? 'Building plan...' : 'Generate Plan'}
         </button>

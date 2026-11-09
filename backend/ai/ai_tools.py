@@ -59,6 +59,9 @@ TOOLS = [
                 "price_overrides": {
                     "type": "object", "additionalProperties": {"type": "number"},
                     "description": "Price per bag by product id, e.g. {\"urea-46-0-0\": 25}."},
+                "season": {
+                    "type": "string", "enum": ["spring", "summer", "fall", "winter"],
+                    "description": "Planning season. Use for 'what if I plant this in fall instead?'"},
             },
         },
     },
@@ -92,11 +95,25 @@ TOOLS = [
         },
     },
     {
+        "name": "get_my_implemented",
+        "description": (
+            "Get the list of plan steps the farmer has decided to implement. "
+            "Each item shows the plan, plot, category, text, quantity, cost, and when they selected it. "
+            "Use to answer questions like 'What did I decide to do?' or 'What am I implementing for Plot A?'"),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "plot_id": {"type": "string", "description": "Optional: filter to a specific plot id."},
+            },
+        },
+    },
+    {
         "name": "search_notes",
         "description": (
             "Search the team's research notes (short summaries of extension guides, each with its source) for "
             "background questions: how rotation fights disease, why compost helps, how a pest spreads, what "
-            "soil-test levels mean. Answer only from the notes returned and cite their sources."),
+            "soil-test levels mean, or emergencies like heavy rain, flooding, drought, frost, hail, disease "
+            "after wet weather. Answer only from the notes returned and cite their sources."),
         "input_schema": {
             "type": "object",
             "properties": {
@@ -104,6 +121,39 @@ TOOLS = [
                 "limit": {"type": "integer", "minimum": 1, "maximum": 8},
             },
             "required": ["query"],
+        },
+    },
+    {
+        "name": "get_implemented_items",
+        "description": (
+            "Get the farmer's implemented (ticked) items for a specific plan, including any recorded actual "
+            "values (actual_quantity, actual_unit, actual_date, actual_note). Use this in implemented-plan "
+            "chats to see what the farmer committed to and what they actually did."),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "plan_id": {"type": "integer", "description": "The plan ID to get implemented items for."},
+                "plot_id": {"type": "string", "description": "Optional: filter to a specific plot id."},
+            },
+            "required": ["plan_id"],
+        },
+    },
+    {
+        "name": "propose_item_update",
+        "description": (
+            "Propose an update to a farmer's implemented item with what they actually did. This does NOT save "
+            "anything — it returns a pending change for the farmer to confirm or cancel in the UI. "
+            "Use when the farmer tells you they used a different amount, date, or has a note about what they did."),
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "item_id": {"type": "integer", "description": "The implemented item ID to update."},
+                "actual_quantity": {"type": "number", "description": "The actual quantity the farmer used."},
+                "actual_unit": {"type": "string", "description": "The unit for the actual quantity."},
+                "actual_date": {"type": "string", "description": "When they did it (YYYY-MM-DD)."},
+                "actual_note": {"type": "string", "description": "A short note (max 300 chars) about what they did."},
+            },
+            "required": ["item_id"],
         },
     },
 ]
@@ -121,11 +171,13 @@ class ToolError(Exception):
 
 
 class ToolBox:
-    def __init__(self, grower: dict, data: dict, notes: list | None = None):
+    def __init__(self, grower: dict, data: dict, notes: list | None = None,
+                 implemented_items: list | None = None):
         self.grower, self.data = grower, data
         self.notes = notes if notes is not None else data.get("notes", [])
         self._plan = None
         self._index = _NoteIndex(self.notes)
+        self.implemented_items = implemented_items or []
 
     # ------------------------------------------------------------------ dispatch
     def run(self, name: str, args: dict) -> tuple[str, bool]:
@@ -145,7 +197,7 @@ class ToolBox:
         return _compact(self._current_plan())
 
     def _tool_run_what_if(self, keep_planned_crop_for=(), plot_changes=(), compost_available_cu_yd=None,
-                          price_overrides=None):
+                          price_overrides=None, season=None):
         grower = copy.deepcopy(self.grower)
         plots = {p["id"]: p for p in grower["plots"]}
         unknown = [pid for pid in list(keep_planned_crop_for) + [c.get("plot_id") for c in plot_changes]
@@ -163,6 +215,8 @@ class ToolBox:
             grower["compost_available_cu_yd"] = compost_available_cu_yd
         if price_overrides:
             grower.setdefault("price_overrides", {}).update(price_overrides)
+        if season:
+            grower["season"] = season
         errors = check_grower(grower, self.data)
         if errors:
             raise ToolError("That change can't be planned: " + "; ".join(errors))
@@ -217,6 +271,57 @@ class ToolBox:
              "source": {k: self.data["sources"].get(n["source"], {}).get(k) for k in ("id", "title", "url", "verified")}}
             for n in hits]}
 
+    def _tool_get_my_implemented(self, plot_id=None):
+        items = self.implemented_items
+        if plot_id:
+            items = [i for i in items if i.get("plot_id") == plot_id]
+        if not items:
+            msg = f"No implemented items for plot '{plot_id}'." if plot_id else "No implemented items yet."
+            return {"items": [], "message": msg}
+        return {"count": len(items), "items": items}
+
+    def _tool_get_implemented_items(self, plan_id, plot_id=None):
+        items = [i for i in self.implemented_items if i.get("plan_id") == plan_id]
+        if plot_id:
+            items = [i for i in items if i.get("plot_id") == plot_id]
+        if not items:
+            msg = f"No implemented items for plan {plan_id}."
+            if plot_id:
+                msg += f" (plot '{plot_id}')"
+            return {"items": [], "message": msg}
+        return {"count": len(items), "items": items}
+
+    def _tool_propose_item_update(self, item_id, actual_quantity=None, actual_unit=None,
+                                   actual_date=None, actual_note=None):
+        item = next((i for i in self.implemented_items if i.get("id") == item_id), None)
+        if not item:
+            raise ToolError(f"No implemented item with id {item_id}.")
+        if actual_note and len(actual_note) > 300:
+            raise ToolError("actual_note must be 300 characters or fewer.")
+        changes = {}
+        if actual_quantity is not None:
+            changes["actual_quantity"] = actual_quantity
+        if actual_unit is not None:
+            changes["actual_unit"] = actual_unit
+        if actual_date is not None:
+            changes["actual_date"] = actual_date
+        if actual_note is not None:
+            changes["actual_note"] = actual_note
+        if not changes:
+            raise ToolError("Provide at least one field to update: actual_quantity, actual_unit, actual_date, or actual_note.")
+        return {
+            "pending_change": {
+                "item_id": item_id,
+                "plot_id": item.get("plot_id"),
+                "plot_name": item.get("plot_name"),
+                "text": item.get("text"),
+                "planned_quantity": item.get("quantity"),
+                "planned_unit": item.get("unit"),
+                **changes,
+            },
+            "message": "Show this to the farmer for confirmation. Do NOT save it yourself.",
+        }
+
     # ------------------------------------------------------------------ helpers
     def _current_plan(self):
         if self._plan is None:
@@ -268,8 +373,8 @@ class _NoteIndex:
     """BM25-style keyword search over source_notes.yaml. Topics count double."""
 
     def __init__(self, notes: list):
-        self.notes = notes
-        self.docs = [Counter(_tokens(n["note"]) + 2 * _tokens(" ".join(n.get("topics", [])))) for n in notes]
+        self.notes = [n for n in notes if "note" in n]
+        self.docs = [Counter(_tokens(n["note"]) + 2 * _tokens(" ".join(n.get("topics", [])))) for n in self.notes]
         self.avg = sum(sum(d.values()) for d in self.docs) / max(len(self.docs), 1)
         df = Counter(t for d in self.docs for t in d)
         self.idf = {t: math.log(1 + (len(self.docs) - n + 0.5) / (n + 0.5)) for t, n in df.items()}

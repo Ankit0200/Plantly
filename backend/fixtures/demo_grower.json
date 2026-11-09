@@ -1,45 +1,22 @@
 {
   "name": "Demo Market Garden",
-  "crops_needed": ["tomato", "bush_bean", "cabbage", "squash", "onion"],
-  "compost_available_cu_yd": 3.0,
+  "season": "summer",
+  "crops_needed": ["tomato", "bush_bean"],
+  "compost_available_cu_yd": 1.0,
   "compost_price_usd_per_cu_yd": 0,
   "price_overrides": {},
   "plots": [
     {
       "id": "A",
-      "name": "Plot A",
-      "area_sqft": 10890,
-      "soil_texture": "loam",
-      "soil_test": {"ph": 6.4, "p_ppm": 45, "k_ppm": 120, "organic_matter_pct": 2.5},
-      "crop_two_years_ago": "pepper",
-      "crop_last_year": "tomato",
-      "crop_planned": "tomato",
-      "problems": ["early-blight"],
-      "baseline": {"inputs": [{"product_id": "fert-10-10-10", "amount_lb": 250}], "pesticide_applications": 6}
-    },
-    {
-      "id": "B",
-      "name": "Plot B",
+      "name": "Main Bed",
       "area_sqft": 2500,
       "soil_texture": "sandy",
       "soil_test": {"ph": 5.4, "p_ppm": 18, "k_ppm": 60, "organic_matter_pct": 1.5},
       "crop_two_years_ago": "tomato",
       "crop_last_year": "bush_bean",
-      "crop_planned": "cabbage",
-      "problems": ["cabbage-worms"],
+      "crop_planned": "tomato",
+      "problems": ["early-blight"],
       "baseline": {"inputs": [{"product_id": "fert-10-10-10", "amount_lb": 50}], "pesticide_applications": 4}
-    },
-    {
-      "id": "C",
-      "name": "Plot C",
-      "area_sqft": 1000,
-      "soil_texture": "clay",
-      "soil_test": {"ph": 6.8, "p_ppm": 110, "k_ppm": 200, "organic_matter_pct": 4.0},
-      "crop_two_years_ago": "bush_bean",
-      "crop_last_year": "squash",
-      "crop_planned": "squash",
-      "problems": ["squash-bugs"],
-      "baseline": {"inputs": [{"product_id": "fert-10-10-10", "amount_lb": 30}], "pesticide_applications": 5}
     }
   ]
 }

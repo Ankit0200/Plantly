@@ -1,16 +1,12 @@
 """Extract a grower JSON from free-form text or an uploaded soil report.
 
-Calls Claude to parse the input into the exact shape of demo_grower.json.
+Calls Gemini to parse the input into the exact shape of demo_grower.json.
 """
 from __future__ import annotations
 
 import base64
 import json
 import os
-
-import anthropic
-
-MODEL = os.environ.get("CLAUDE_MODEL", "claude-sonnet-4-20250514")
 
 
 def _build_extraction_prompt(data: dict) -> str:
@@ -70,56 +66,175 @@ Return ONLY valid JSON matching this exact structure (no markdown, no explanatio
 Plot IDs should be sequential letters: A, B, C, etc."""
 
 
-def extract_grower(text: str | None, file_data: bytes | None,
-                   file_type: str | None, data: dict) -> dict:
-    """Call Claude to extract a grower JSON from text or a document/image."""
-    api_key = os.environ.get("ANTHROPIC_API_KEY")
+def _build_chat_system(data: dict) -> str:
+    crop_names = {c["id"]: c["name"] for c in data["crops"].values()}
+    problem_names = {p["id"]: p["name"] for p in data["problems"].values()}
+
+    return f"""You are a farm planning assistant. You collect just 3 things, one at a time.
+
+## STRICT RULES:
+- Ask exactly ONE question per message. Keep replies to 1-2 sentences.
+- After the user answers, acknowledge briefly and ask the next question.
+- Use sensible defaults for everything else.
+
+## Question order — ask these one at a time:
+1. "Do you have a soil test report? If yes, share the numbers: pH, phosphorus (P), potassium (K), organic matter %. If not, just say 'no' and I'll use typical defaults."
+2. "What did you grow in the last 2-3 seasons?" (accept whatever they say — last year and two years ago)
+3. "What do you want to plant this season?"
+
+That's it. After question 3, you have enough. Output the JSON immediately.
+
+## Defaults (fill in automatically — do NOT ask the user):
+- Farm name: null
+- Plot name: "Plot A"
+- Plot size: 5000 sq ft
+- Soil texture: loam
+- If no soil test: pH 6.5, P 30 ppm, K 100 ppm, OM 3.0%
+- Problems: empty
+- Baseline inputs: empty, pesticide apps: 0
+- Compost: 0
+- crops_needed: same as crop_planned across plots
+
+## Match user's crop names to these IDs:
+{json.dumps(crop_names, indent=2)}
+
+## Match pest/disease names to these IDs (only if the user mentions them):
+{json.dumps(problem_names, indent=2)}
+
+## When you have enough data:
+When the user says they're done or you have sufficient info, respond with EXACTLY this format:
+
+READY_TO_PLAN
+```json
+<the complete grower JSON in the exact format below>
+```
+
+The JSON format:
+{{
+  "name": "string or null",
+  "crops_needed": ["crop_id", ...],
+  "compost_available_cu_yd": number or 0,
+  "compost_price_usd_per_cu_yd": number or 0,
+  "price_overrides": {{}},
+  "plots": [
+    {{
+      "id": "A",
+      "name": "string",
+      "area_sqft": number,
+      "soil_texture": "sandy|loam|clay",
+      "soil_test": {{
+        "ph": number,
+        "p_ppm": number,
+        "k_ppm": number,
+        "organic_matter_pct": number or null,
+        "lab_lime_lb_per_1000sqft": number or null
+      }},
+      "crop_two_years_ago": "crop_id or null",
+      "crop_last_year": "crop_id or null",
+      "crop_planned": "crop_id",
+      "problems": ["problem_id", ...],
+      "baseline": {{
+        "inputs": [{{"product_id": "string", "amount_lb": number}}, ...],
+        "pesticide_applications": number or 0
+      }}
+    }}
+  ]
+}}
+
+Use null for anything you couldn't determine. Do NOT output JSON until the user is ready."""
+
+
+def intake_chat(messages: list, data: dict) -> dict:
+    """Multi-turn conversational intake. Returns reply text, and optionally extracted grower JSON."""
+    from google import genai
+
+    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
     if not api_key:
-        raise ValueError("ANTHROPIC_API_KEY environment variable not set.")
+        raise ValueError("GEMINI_API_KEY environment variable not set.")
 
-    client = anthropic.Anthropic(api_key=api_key)
-    system_prompt = _build_extraction_prompt(data)
+    client = genai.Client(api_key=api_key)
+    system_prompt = _build_chat_system(data)
 
-    content = []
-    if file_data:
-        if file_type and file_type.startswith("image/"):
-            media_type = file_type
-            content.append({
-                "type": "image",
-                "source": {
-                    "type": "base64",
-                    "media_type": media_type,
-                    "data": base64.b64encode(file_data).decode(),
-                },
-            })
-        elif file_type == "application/pdf":
-            content.append({
-                "type": "document",
-                "source": {
-                    "type": "base64",
-                    "media_type": "application/pdf",
-                    "data": base64.b64encode(file_data).decode(),
-                },
-            })
-        else:
-            # Try as text
-            content.append({"type": "text", "text": file_data.decode("utf-8", errors="replace")})
+    # Convert messages to Gemini format
+    gemini_messages = []
+    for m in messages:
+        role = "user" if m["role"] == "user" else "model"
+        gemini_messages.append({"role": role, "parts": [{"text": m["content"]}]})
 
-    if text:
-        content.append({"type": "text", "text": f"Extract the farm data from this:\n\n{text}"})
-    elif not content:
-        raise ValueError("No input provided")
-    else:
-        content.append({"type": "text", "text": "Extract the farm data from this document."})
-
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=4096,
-        system=system_prompt,
-        messages=[{"role": "user", "content": content}],
+    response = client.models.generate_content(
+        model="gemini-3-flash-preview",
+        contents=gemini_messages,
+        config=genai.types.GenerateContentConfig(
+            system_instruction=system_prompt,
+            max_output_tokens=2048,
+        ),
     )
 
-    response_text = response.content[0].text
+    reply_text = response.text
+
+    # Check if Gemini produced the final JSON
+    grower = None
+    if "READY_TO_PLAN" in reply_text:
+        try:
+            json_text = reply_text
+            if "```json" in json_text:
+                json_text = json_text.split("```json")[1].split("```")[0]
+            elif "```" in json_text:
+                json_text = json_text.split("```")[1].split("```")[0]
+            grower = json.loads(json_text.strip())
+            # Clean the reply to just the text before READY_TO_PLAN
+            clean_reply = reply_text.split("READY_TO_PLAN")[0].strip()
+            if clean_reply:
+                reply_text = clean_reply + "\n\nI've got everything I need! Let me set up your plan."
+            else:
+                reply_text = "Great, I've got everything I need! Let me set up your plan."
+        except (json.JSONDecodeError, IndexError):
+            pass  # Not valid JSON yet, keep chatting
+
+    return {"reply": reply_text, "grower": grower}
+
+
+def extract_grower(text: str | None, file_data: bytes | None,
+                   file_type: str | None, data: dict) -> dict:
+    """Call Gemini to extract a grower JSON from text or a document/image."""
+    from google import genai
+
+    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
+    if not api_key:
+        raise ValueError("GEMINI_API_KEY environment variable not set.")
+
+    client = genai.Client(api_key=api_key)
+    system_prompt = _build_extraction_prompt(data)
+
+    parts = []
+
+    if file_data:
+        if file_type and (file_type.startswith("image/") or file_type == "application/pdf"):
+            parts.append(genai.types.Part.from_bytes(
+                data=file_data,
+                mime_type=file_type,
+            ))
+        else:
+            # Try as text
+            parts.append(file_data.decode("utf-8", errors="replace"))
+
+    if text:
+        parts.append(f"Extract the farm data from this:\n\n{text}")
+    elif not parts:
+        raise ValueError("No input provided")
+    else:
+        parts.append("Extract the farm data from this document.")
+
+    response = client.models.generate_content(
+        model="gemini-3-flash-preview",
+        contents=parts,
+        config=genai.types.GenerateContentConfig(
+            system_instruction=system_prompt,
+            max_output_tokens=4096,
+        ),
+    )
+
+    response_text = response.text
 
     # Parse JSON from response
     json_text = response_text

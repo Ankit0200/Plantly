@@ -5,24 +5,30 @@ import { postExplainLine } from '../api'
 interface Props {
   line: PlanLine
   plotContext?: Record<string, unknown>
+  cached?: string
+  onLoaded?: (text: string) => void
 }
 
-export default function WhyPanel({ line, plotContext }: Props) {
-  const [explanation, setExplanation] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+export default function WhyPanel({ line, plotContext, cached, onLoaded }: Props) {
+  const [explanation, setExplanation] = useState<string | null>(cached ?? null)
+  const [loading, setLoading] = useState(!cached)
   const [error, setError] = useState(false)
 
   useEffect(() => {
+    if (cached) return
     setLoading(true)
     setError(false)
     postExplainLine(
       line as unknown as Record<string, unknown>,
       plotContext ?? {}
     )
-      .then(res => setExplanation(res.explanation))
+      .then(res => {
+        setExplanation(res.explanation)
+        onLoaded?.(res.explanation)
+      })
       .catch(() => setError(true))
       .finally(() => setLoading(false))
-  }, [line, plotContext])
+  }, [line, plotContext, cached])
 
   return (
     <div className="why-panel">
@@ -34,9 +40,11 @@ export default function WhyPanel({ line, plotContext }: Props) {
         </div>
       )}
       {explanation && (
-        <div className="why-explanation" dangerouslySetInnerHTML={{
-          __html: explanation.replace(/•/g, '</p><p>•').replace(/^<\/p>/, '') + '</p>'
-        }} />
+        <div className="why-explanation">
+          {explanation.split('\n').map((l, i) => (
+            <p key={i}>{l}</p>
+          ))}
+        </div>
       )}
     </div>
   )

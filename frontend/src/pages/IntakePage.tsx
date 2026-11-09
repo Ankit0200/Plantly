@@ -1,6 +1,6 @@
-import { useState, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import type { Grower, ReferenceData } from '../types'
-import { postIntake } from '../api'
+import { postIntakeChat, postIntake } from '../api'
 
 interface Props {
   onComplete: (draft: Grower, errors: string[]) => void
@@ -8,20 +8,25 @@ interface Props {
   referenceData: ReferenceData | null
 }
 
+interface Message {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+const STARTERS = [
+  "I have my soil test results ready",
+  "I don't have a soil test, just use defaults",
+  "I grew tomatoes last year and want to try something new",
+]
+
 function emptyGrower(): Grower {
   return {
     name: '',
     plots: [{
-      id: 'A',
-      name: 'Plot A',
-      area_sqft: 1000,
-      soil_texture: 'loam',
+      id: 'A', name: 'Plot A', area_sqft: 1000, soil_texture: 'loam',
       soil_test: { ph: 6.5, p_ppm: 30, k_ppm: 100, organic_matter_pct: 3.0 },
-      crop_two_years_ago: null,
-      crop_last_year: '',
-      crop_planned: '',
-      problems: [],
-      baseline: { inputs: [], pesticide_applications: 0 },
+      crop_two_years_ago: null, crop_last_year: '', crop_planned: '',
+      problems: [], baseline: { inputs: [], pesticide_applications: 0 },
     }],
     crops_needed: [],
     compost_available_cu_yd: 0,
@@ -30,36 +35,51 @@ function emptyGrower(): Grower {
   }
 }
 
-export default function IntakePage({ onComplete, onLoadDemo }: Props) {
-  const [text, setText] = useState('')
-  const [file, setFile] = useState<File | null>(null)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
+function isSoilTestQuestion(text: string): boolean {
+  const lower = text.toLowerCase()
+  return (lower.includes('soil test') || lower.includes('soil report'))
+    && (lower.includes('?') || lower.includes('share') || lower.includes('have'))
+}
 
-  const handleSubmit = useCallback(async () => {
-    if (!text && !file) {
-      setError('Enter a description or upload a soil report')
-      return
-    }
+export default function IntakePage({ onComplete, onLoadDemo }: Props) {
+  const [messages, setMessages] = useState<Message[]>([])
+  const [input, setInput] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [file, setFile] = useState<File | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const endRef = useRef<HTMLDivElement>(null)
+  const started = messages.length > 0
+
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages])
+
+  const send = useCallback(async (text?: string) => {
+    const msg = text || input.trim()
+    if (!msg || loading) return
+
+    const userMsg: Message = { role: 'user', content: msg }
+    const next = [...messages, userMsg]
+    setMessages(next)
+    setInput('')
     setLoading(true)
-    setError('')
+
     try {
-      const formData = new FormData()
-      if (text) formData.append('text', text)
-      if (file) formData.append('file', file)
-      const result = await postIntake(formData)
-      onComplete(result.draft, result.errors)
-    } catch (err: unknown) {
-      const e = err as { body?: { error?: string } }
-      setError(e.body?.error || 'Failed to process input')
+      const res = await postIntakeChat(next)
+      const updated = [...next, { role: 'assistant' as const, content: res.reply }]
+      setMessages(updated)
+
+      if (res.grower) {
+        setTimeout(() => {
+          onComplete(res.grower!, res.errors || [])
+        }, 1500)
+      }
+    } catch {
+      setMessages([...next, { role: 'assistant', content: 'Sorry, something went wrong. Try again?' }])
     } finally {
       setLoading(false)
     }
-  }, [text, file, onComplete])
-
-  const handleManualEntry = useCallback(() => {
-    onComplete(emptyGrower(), [])
-  }, [onComplete])
+  }, [input, messages, loading, onComplete])
 
   const handleFileUpload = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0]
@@ -72,69 +92,108 @@ export default function IntakePage({ onComplete, onLoadDemo }: Props) {
           const data = JSON.parse(ev.target?.result as string)
           onComplete(data, [])
         } catch {
-          setError('Invalid JSON file')
+          setMessages(prev => [...prev, { role: 'assistant', content: 'That JSON file seems invalid. Try again?' }])
         }
       }
       reader.readAsText(f)
-    } else {
-      setFile(f)
+      return
     }
+
+    setFile(f)
+    setLoading(true)
+    const formData = new FormData()
+    formData.append('file', f)
+
+    setMessages(prev => [...prev, { role: 'user', content: `📎 Uploaded: ${f.name}` }])
+
+    postIntake(formData)
+      .then(result => {
+        setMessages(prev => [...prev,
+          { role: 'assistant', content: `Got it! I extracted your soil data from the report. Taking you to review it now.` },
+        ])
+        setTimeout(() => onComplete(result.draft, result.errors), 1200)
+      })
+      .catch(() => {
+        setMessages(prev => [...prev,
+          { role: 'assistant', content: 'I had trouble reading that file. Could you type in the numbers instead? I need pH, P (ppm), K (ppm), and organic matter %.' },
+        ])
+      })
+      .finally(() => { setLoading(false); setFile(null) })
   }, [onComplete])
+
+  // Check if the last assistant message is asking about soil test
+  const lastAssistantMsg = [...messages].reverse().find(m => m.role === 'assistant')
+  const showUpload = lastAssistantMsg && isSoilTestQuestion(lastAssistantMsg.content)
 
   return (
     <div className="intake-page">
-      <h2>Start Your Season Plan</h2>
-      <p className="intake-subtitle">
-        Describe your farm and plots, or upload a soil test report. We'll extract the data for you to review.
-      </p>
-
-      <div className="intake-actions">
-        <button onClick={onLoadDemo} className="build-btn">Load Demo Farm</button>
-        <button onClick={handleManualEntry}>Manual Entry</button>
-      </div>
-
-      <div className="intake-divider">
-        <span>or let AI extract your data</span>
-      </div>
-
-      <div className="intake-form">
-        <label>
-          Describe your farm
-          <textarea
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder={"I have a quarter-acre plot with loam soil. pH is 6.2, phosphorus 45 ppm, potassium 120 ppm. I grew tomatoes last year and want to plant cabbage this season. I've had some early blight issues..."}
-            rows={6}
-          />
-        </label>
-
-        <div className="intake-upload">
-          <label className="file-upload">
-            {file ? file.name : 'Upload soil report (PDF, image, or JSON)'}
-            <input
-              type="file"
-              accept=".pdf,.png,.jpg,.jpeg,.json"
-              onChange={handleFileUpload}
-              hidden
-            />
-          </label>
-          {file && <button onClick={() => setFile(null)}>Clear</button>}
+      <div className="intake-header">
+        <h2>Plan Your Season</h2>
+        <div className="intake-quick-actions">
+          <button onClick={onLoadDemo}>Load Demo Farm</button>
+          <button onClick={() => onComplete(emptyGrower(), [])}>Manual Entry</button>
         </div>
-
-        {error && <div className="error-box"><p>{error}</p></div>}
-
-        <button
-          className="build-btn"
-          onClick={handleSubmit}
-          disabled={loading || (!text && !file)}
-        >
-          {loading ? 'AI is extracting...' : 'Extract Farm Data'}
-        </button>
       </div>
 
-      <p className="intake-note">
-        Requires ANTHROPIC_API_KEY on the backend. Crop and problem IDs are matched to our database.
-      </p>
+      {!started ? (
+        <div className="intake-welcome">
+          <div className="intake-bot-msg">
+            <p>Hi! I just need 3 things to build your plan:</p>
+            <p><strong>1.</strong> Soil test results &nbsp; <strong>2.</strong> What you grew recently &nbsp; <strong>3.</strong> What you want to plant</p>
+          </div>
+          <div className="intake-starters">
+            {STARTERS.map((s, i) => (
+              <button key={i} className="starter-btn" onClick={() => send(s)}>
+                {s}
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        <div className="intake-chat">
+          <div className="intake-messages">
+            {messages.map((m, i) => (
+              <div key={i} className={`intake-msg intake-${m.role}`}>
+                {m.content}
+              </div>
+            ))}
+            {loading && <div className="intake-msg intake-assistant intake-typing">Thinking…</div>}
+
+            {showUpload && !loading && (
+              <div className="intake-upload-prompt">
+                <label className="upload-inline-btn">
+                  📄 Upload soil test (PDF or image)
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept=".pdf,.png,.jpg,.jpeg"
+                    onChange={handleFileUpload}
+                    hidden
+                  />
+                </label>
+                <span className="upload-or">or type the numbers below</span>
+              </div>
+            )}
+
+            <div ref={endRef} />
+          </div>
+        </div>
+      )}
+
+      <div className="intake-input-row">
+        <input
+          type="text"
+          value={input}
+          onChange={e => setInput(e.target.value)}
+          onKeyDown={e => e.key === 'Enter' && send()}
+          placeholder={started ? "Type your answer…" : "Tell me about your farm…"}
+          aria-label="Message"
+          disabled={loading}
+        />
+        <button onClick={() => send()} disabled={loading || !input.trim()}>Send</button>
+      </div>
+
+      {file && <p className="intake-file-note">Processing {file.name}…</p>}
     </div>
   )
 }

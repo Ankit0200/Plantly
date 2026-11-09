@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Plot, CropRef, ProblemRef, ProductRef } from '../types'
+import CropSelect from './CropSelect'
 
 interface Props {
   plot: Plot
@@ -16,6 +17,12 @@ interface Props {
 }
 
 const SQFT_PER_ACRE = 43_560
+
+const TEXTURE_OPTIONS = [
+  { value: 'sandy', label: '🏖️ Sandy', desc: 'drains fast' },
+  { value: 'loam', label: '🌿 Loam', desc: 'balanced' },
+  { value: 'clay', label: '🧱 Clay', desc: 'holds water' },
+]
 
 export default function PlotForm({
   plot, crops, problems, products,
@@ -67,10 +74,17 @@ export default function PlotForm({
 
   return (
     <div className="plot-form">
-      <div className="plot-header" onClick={() => setOpen(!open)}>
-        <h3>{open ? '▼' : '▶'} {plot.name}</h3>
+      <div className="plot-header">
+        <button
+          type="button"
+          className="plot-header-toggle"
+          onClick={() => setOpen(!open)}
+          aria-expanded={open}
+        >
+          <h3>{open ? '▼' : '▶'} {plot.name}</h3>
+        </button>
         {canRemove && (
-          <button onClick={(e) => { e.stopPropagation(); onRemove() }}>Remove</button>
+          <button onClick={(e) => { e.stopPropagation(); onRemove() }} aria-label={`Remove ${plot.name}`}>Remove</button>
         )}
       </div>
 
@@ -78,7 +92,7 @@ export default function PlotForm({
         <div className="plot-fields">
           <div className="form-row">
             <label>
-              Name
+              Plot name
               <input value={plot.name} onChange={e => update({ name: e.target.value })} />
             </label>
             <label>
@@ -90,21 +104,29 @@ export default function PlotForm({
                 onChange={e => setArea(e.target.value)}
               />
             </label>
-            <label>
-              Soil texture
-              <select
-                value={plot.soil_texture}
-                onChange={e => update({ soil_texture: e.target.value as Plot['soil_texture'] })}
-              >
-                <option value="sandy">Sandy</option>
-                <option value="loam">Loam</option>
-                <option value="clay">Clay</option>
-              </select>
-            </label>
           </div>
 
-          <fieldset>
-            <legend>Soil test</legend>
+          {/* Soil texture as visual pills */}
+          <div className="texture-picker">
+            <span className="texture-label">Soil type</span>
+            <div className="texture-options">
+              {TEXTURE_OPTIONS.map(t => (
+                <button
+                  key={t.value}
+                  type="button"
+                  className={`texture-pill ${plot.soil_texture === t.value ? 'selected' : ''}`}
+                  aria-pressed={plot.soil_texture === t.value}
+                  onClick={() => update({ soil_texture: t.value as Plot['soil_texture'] })}
+                >
+                  {t.label}
+                  <span className="texture-desc">{t.desc}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <fieldset className="soil-test-card">
+            <legend>🧪 Soil test results</legend>
             <div className="form-row">
               <label>pH <input type="number" step="0.1" value={plot.soil_test.ph} onChange={e => updateSoil('ph', Number(e.target.value))} /></label>
               <label>P (ppm) <input type="number" value={plot.soil_test.p_ppm} onChange={e => updateSoil('p_ppm', Number(e.target.value))} /></label>
@@ -113,48 +135,59 @@ export default function PlotForm({
             </div>
           </fieldset>
 
-          <div className="form-row">
-            <label>
-              Crop 2 years ago
-              <select value={plot.crop_two_years_ago ?? ''} onChange={e => update({ crop_two_years_ago: e.target.value || null })}>
-                <option value="">— none —</option>
-                {crops.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-            </label>
-            <label>
-              Crop last year
-              <select value={plot.crop_last_year} onChange={e => update({ crop_last_year: e.target.value })}>
-                <option value="">— select —</option>
-                {crops.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-            </label>
-            <label>
-              Crop planned
-              <select value={plot.crop_planned} onChange={e => update({ crop_planned: e.target.value })}>
-                <option value="">— select —</option>
-                {crops.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
-            </label>
+          {/* Crop history as visual selectors */}
+          <div className="section-card crop-history">
+            <h4>🕐 Crop history</h4>
+            <div className="crop-history-row">
+              <div className="crop-history-item">
+                <span className="crop-history-label">2 years ago</span>
+                <CropSelect
+                  crops={crops}
+                  value={plot.crop_two_years_ago ?? ''}
+                  onChange={v => update({ crop_two_years_ago: v || null })}
+                  placeholder="— none —"
+                  allowEmpty
+                />
+              </div>
+              <div className="crop-history-item">
+                <span className="crop-history-label">Last year</span>
+                <CropSelect
+                  crops={crops}
+                  value={plot.crop_last_year}
+                  onChange={v => update({ crop_last_year: v })}
+                />
+              </div>
+              <div className="crop-history-item">
+                <span className="crop-history-label">This season</span>
+                <CropSelect
+                  crops={crops}
+                  value={plot.crop_planned}
+                  onChange={v => update({ crop_planned: v })}
+                />
+              </div>
+            </div>
           </div>
 
+          {/* Problems as visual toggles */}
           <fieldset>
-            <legend>Problems</legend>
-            <div className="crop-checkboxes">
+            <legend>🐛 Pest & disease problems</legend>
+            <div className="problem-chips">
               {problems.map(p => (
-                <label key={p.id}>
-                  <input
-                    type="checkbox"
-                    checked={plot.problems.includes(p.id)}
-                    onChange={() => toggleProblem(p.id)}
-                  />
-                  {p.name}
-                </label>
+                <button
+                  key={p.id}
+                  type="button"
+                  className={`problem-chip ${plot.problems.includes(p.id) ? 'selected' : ''}`}
+                  aria-pressed={plot.problems.includes(p.id)}
+                  onClick={() => toggleProblem(p.id)}
+                >
+                  {plot.problems.includes(p.id) ? '✓ ' : ''}{p.name}
+                </button>
               ))}
             </div>
           </fieldset>
 
           <fieldset>
-            <legend>Last season baseline</legend>
+            <legend>📦 Last season inputs</legend>
             {plot.baseline.inputs.map((inp, i) => (
               <div key={i} className="form-row">
                 <select value={inp.product_id} onChange={e => updateBaselineInput(i, 'product_id', e.target.value)}>
@@ -168,7 +201,7 @@ export default function PlotForm({
               </div>
             ))}
             <button onClick={addBaselineInput}>+ Add input</button>
-            <label>
+            <label style={{ marginTop: '0.5rem' }}>
               Pesticide applications
               <input
                 type="number"

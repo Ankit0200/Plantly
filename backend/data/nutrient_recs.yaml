@@ -1,111 +1,591 @@
-# Nutrient recommendations (lb per 1000 sq ft) by soil test level and crop demand.
+# Nutrient recommendations (lb per 1000 sq ft) by soil test level and crop.
 #
-# Source: Clemson HGIC "Fertilizing Vegetables" (home garden, Mehlich-1 state).
-# Clemson's rule: add all recommended P and K before planting unless the soil test
-# rates that nutrient High or Excessive, in which case add none.
-#   P needed  -> 9 lb triple superphosphate (0-46-0) per 1000 sq ft = 4.1 lb P2O5
-#   K needed  -> 6.5 lb muriate of potash (0-0-60) per 1000 sq ft = 3.9 lb K2O
-#   (When both P and K are needed Clemson uses 10 lb 10-10-10 + 8.5 lb 0-46-0 + 5 lb 0-0-60,
-#    about 4.9 lb P2O5 and 4.0 lb K2O; the single-nutrient rates are used here.)
+# Source: Southeastern U.S. 2024 Vegetable Crop Handbook (Southeastern Vegetable Extension
+# Workers, incl. UGA), Table 2 "Total recommended" rows, bareground production unless noted.
+# The handbook gives lb/acre for soil test Low / Medium / High / Very High; values here are
+# lb/acre / 43.56, rounded to 2 decimals. Each row keeps the lb/acre numbers in a comment.
 #
-# Clemson's home-garden guide does not vary P and K by crop, so all four demand groups
-# share the same numbers. Commercial guides do vary by crop; switch to them later if needed.
-# Level names follow soil_test_levels.yaml (very_low = Clemson Low ... very_high = Excessive).
+# Levels: the handbook has 4 ratings, the engine has 5. very_low and low both use the Low rate.
+# Ratings must come from a Mehlich-1 lab scale (UGA): see soil_test_levels.yaml.
+# Some crops keep a small P or K rate at Very High (starter/maintenance); that is in the table.
+#
+# N is NOT in this file. The handbook's N range per crop is noted on each P2O5 row so it can
+# be moved into crops.yaml (n_min / n_max). The handbook says N rates should follow local
+# recommendations.
 
 # --- P2O5 recommendations ---
-- id: NUT-P2O5-HEAVY
+
+- id: NUT-P2O5-tomato
   nutrient: P2O5
-  n_demand: heavy
+  crop: tomato
+  # Table 2 row: Tomato, bareground, sandy loams and loamy sands. lb/acre L/M/H/VH = 200/150/100/0
+  # N range for this crop: 80-90 lb/acre
+  # Note: Loam/clay bareground row: K2O 250/150/100/0, N 75-80. Plasticulture: N 130-210, K2O 420/345/275/50.
   lb_per_1000sqft:
-    very_low: 4.1
-    low: 4.1
-    medium: 4.1
-    high: 0
-    very_high: 0
-  source: SRC-CLEMSON-FERTVEG
+    very_low: 4.59
+    low: 4.59
+    medium: 3.44
+    high: 2.3
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
   verified: false
 
-- id: NUT-P2O5-MEDIUM
+- id: NUT-P2O5-pepper
   nutrient: P2O5
-  n_demand: medium
+  crop: pepper
+  # Table 2 row: Pepper, bareground. lb/acre L/M/H/VH = 200/150/100/0
+  # N range for this crop: 100-130 lb/acre
+  # Note: Plasticulture: N 100-185, P2O5 320/250/100/0, K2O 350/250/100/40.
   lb_per_1000sqft:
-    very_low: 4.1
-    low: 4.1
-    medium: 4.1
-    high: 0
-    very_high: 0
-  source: SRC-CLEMSON-FERTVEG
+    very_low: 4.59
+    low: 4.59
+    medium: 3.44
+    high: 2.3
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
   verified: false
 
-- id: NUT-P2O5-LIGHT
+- id: NUT-P2O5-eggplant
   nutrient: P2O5
-  n_demand: light
+  crop: eggplant
+  # Table 2 row: Eggplant, bareground. lb/acre L/M/H/VH = 250/150/100/0
+  # N range for this crop: 100-200 lb/acre
   lb_per_1000sqft:
-    very_low: 4.1
-    low: 4.1
-    medium: 4.1
-    high: 0
-    very_high: 0
-  source: SRC-CLEMSON-FERTVEG
+    very_low: 5.74
+    low: 5.74
+    medium: 3.44
+    high: 2.3
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
   verified: false
 
-- id: NUT-P2O5-FIXER
+- id: NUT-P2O5-potato
   nutrient: P2O5
-  n_demand: fixer
+  crop: potato
+  # Table 2 row: Irish potato, sandy loams and loamy sands. lb/acre L/M/H/VH = 200/150/100/50
+  # N range for this crop: 150-180 lb/acre
+  # Note: Loams and silt loams row: N 100-150, P2O5 110/90/70/50, K2O 200/150/50/50.
   lb_per_1000sqft:
-    very_low: 4.1
-    low: 4.1
-    medium: 4.1
+    very_low: 4.59
+    low: 4.59
+    medium: 3.44
+    high: 2.3
+    very_high: 1.15
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-cabbage
+  nutrient: P2O5
+  crop: cabbage
+  # Table 2 row: Brussels sprouts, cabbage, cauliflower. lb/acre L/M/H/VH = 200/100/50/0
+  # N range for this crop: 100-175 lb/acre
+  # Note: A UGA county extension page gives 160/110/60/0 for P2O5 and K2O and N 175-225 on Coastal Plain soils; the regional table is used for consistency.
+  lb_per_1000sqft:
+    very_low: 4.59
+    low: 4.59
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-broccoli
+  nutrient: P2O5
+  crop: broccoli
+  # Table 2 row: Broccoli. lb/acre L/M/H/VH = 200/100/50/0
+  # N range for this crop: 125-175 lb/acre
+  lb_per_1000sqft:
+    very_low: 4.59
+    low: 4.59
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-collards
+  nutrient: P2O5
+  crop: collards
+  # Table 2 row: Collards, kale, and mustard. lb/acre L/M/H/VH = 150/100/50/0
+  # N range for this crop: 75-80 lb/acre
+  lb_per_1000sqft:
+    very_low: 3.44
+    low: 3.44
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-kale
+  nutrient: P2O5
+  crop: kale
+  # Table 2 row: Collards, kale, and mustard. lb/acre L/M/H/VH = 150/100/50/0
+  # N range for this crop: 75-80 lb/acre
+  lb_per_1000sqft:
+    very_low: 3.44
+    low: 3.44
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-squash
+  nutrient: P2O5
+  crop: squash
+  # Table 2 row: Summer squash. lb/acre L/M/H/VH = 150/100/50/0
+  # N range for this crop: 100-130 lb/acre
+  # Note: Winter squash/pumpkin bareground: N 80-100, K2O 200/150/100/0.
+  lb_per_1000sqft:
+    very_low: 3.44
+    low: 3.44
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-cucumber
+  nutrient: P2O5
+  crop: cucumber
+  # Table 2 row: Cucumber, bareground. lb/acre L/M/H/VH = 150/100/50/25
+  # N range for this crop: 80-160 lb/acre
+  # Note: Plasticulture: N 120-150, K2O 150/100/50/25.
+  lb_per_1000sqft:
+    very_low: 3.44
+    low: 3.44
+    medium: 2.3
+    high: 1.15
+    very_high: 0.57
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-watermelon
+  nutrient: P2O5
+  crop: watermelon
+  # Table 2 row: Watermelon (nonirrigated, irrigated and plasticulture rows agree on P and K). lb/acre L/M/H/VH = 150/100/50/0
+  # N range for this crop: 75-150 lb/acre
+  # Note: N: nonirrigated 75-90, irrigated 100-150, plasticulture 125-150.
+  lb_per_1000sqft:
+    very_low: 3.44
+    low: 3.44
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-bush_bean
+  nutrient: P2O5
+  crop: bush_bean
+  # Table 2 row: Snap bean. lb/acre L/M/H/VH = 80/60/40/20
+  # N range for this crop: 40-80 lb/acre
+  lb_per_1000sqft:
+    very_low: 1.84
+    low: 1.84
+    medium: 1.38
+    high: 0.92
+    very_high: 0.46
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-southern_pea
+  nutrient: P2O5
+  crop: southern_pea
+  # Table 2 row: Southernpea. lb/acre L/M/H/VH = 100/50/0/0
+  # N range for this crop: 20 lb/acre
+  lb_per_1000sqft:
+    very_low: 2.3
+    low: 2.3
+    medium: 1.15
+    high: 0.0
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-snap_pea
+  nutrient: P2O5
+  crop: snap_pea
+  # Table 2 row: Garden/English pea (closest row to snap pea). lb/acre L/M/H/VH = 120/80/40/0
+  # N range for this crop: 40-60 lb/acre
+  lb_per_1000sqft:
+    very_low: 2.75
+    low: 2.75
+    medium: 1.84
+    high: 0.92
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-onion
+  nutrient: P2O5
+  crop: onion
+  # Table 2 row: Onion, bulb. lb/acre L/M/H/VH = 200/100/50/0
+  # N range for this crop: 125-175 lb/acre
+  lb_per_1000sqft:
+    very_low: 4.59
+    low: 4.59
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-garlic
+  nutrient: P2O5
+  crop: garlic
+  lb_per_1000sqft:   # PLACEHOLDER: not in Table 2
+    very_low: 3.67
+    low: 3.67
+    medium: 1.84
     high: 0
     very_high: 0
-  source: SRC-CLEMSON-FERTVEG
+  source: SRC-PLACEHOLDER
+  verified: false
+  # Garlic is not in Table 2. Placeholder until the handbook's garlic chapter or another guide is checked.
+
+- id: NUT-P2O5-sweet_corn
+  nutrient: P2O5
+  crop: sweet_corn
+  # Table 2 row: Sweet corn. lb/acre L/M/H/VH = 160/120/80/20
+  # N range for this crop: 110-155 lb/acre
+  lb_per_1000sqft:
+    very_low: 3.67
+    low: 3.67
+    medium: 2.75
+    high: 1.84
+    very_high: 0.46
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-lettuce
+  nutrient: P2O5
+  crop: lettuce
+  # Table 2 row: Endive, escarole, leaf and romaine lettuce. lb/acre L/M/H/VH = 200/150/100/0
+  # N range for this crop: 75-150 lb/acre
+  lb_per_1000sqft:
+    very_low: 4.59
+    low: 4.59
+    medium: 3.44
+    high: 2.3
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-carrot
+  nutrient: P2O5
+  crop: carrot
+  # Table 2 row: Carrot. lb/acre L/M/H/VH = 150/100/50/0
+  # N range for this crop: 90-120 lb/acre
+  lb_per_1000sqft:
+    very_low: 3.44
+    low: 3.44
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-okra
+  nutrient: P2O5
+  crop: okra
+  # Table 2 row: Okra. lb/acre L/M/H/VH = 250/150/100/0
+  # N range for this crop: 100-200 lb/acre
+  lb_per_1000sqft:
+    very_low: 5.74
+    low: 5.74
+    medium: 3.44
+    high: 2.3
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-P2O5-sweet_potato
+  nutrient: P2O5
+  crop: sweet_potato
+  # Table 2 row: Sweetpotato. lb/acre L/M/H/VH = 200/100/50/0
+  # N range for this crop: 50-80 lb/acre
+  lb_per_1000sqft:
+    very_low: 4.59
+    low: 4.59
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
   verified: false
 
 # --- K2O recommendations ---
-- id: NUT-K2O-HEAVY
+
+- id: NUT-K2O-tomato
   nutrient: K2O
-  n_demand: heavy
+  crop: tomato
+  # Table 2 row: Tomato, bareground, sandy loams and loamy sands. lb/acre L/M/H/VH = 300/200/100/0
   lb_per_1000sqft:
-    very_low: 3.9
-    low: 3.9
-    medium: 3.9
-    high: 0
-    very_high: 0
-  source: SRC-CLEMSON-FERTVEG
+    very_low: 6.89
+    low: 6.89
+    medium: 4.59
+    high: 2.3
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
   verified: false
 
-- id: NUT-K2O-MEDIUM
+- id: NUT-K2O-pepper
   nutrient: K2O
-  n_demand: medium
+  crop: pepper
+  # Table 2 row: Pepper, bareground. lb/acre L/M/H/VH = 200/150/100/0
   lb_per_1000sqft:
-    very_low: 3.9
-    low: 3.9
-    medium: 3.9
-    high: 0
-    very_high: 0
-  source: SRC-CLEMSON-FERTVEG
+    very_low: 4.59
+    low: 4.59
+    medium: 3.44
+    high: 2.3
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
   verified: false
 
-- id: NUT-K2O-LIGHT
+- id: NUT-K2O-eggplant
   nutrient: K2O
-  n_demand: light
+  crop: eggplant
+  # Table 2 row: Eggplant, bareground. lb/acre L/M/H/VH = 250/150/100/0
   lb_per_1000sqft:
-    very_low: 3.9
-    low: 3.9
-    medium: 3.9
-    high: 0
-    very_high: 0
-  source: SRC-CLEMSON-FERTVEG
+    very_low: 5.74
+    low: 5.74
+    medium: 3.44
+    high: 2.3
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
   verified: false
 
-- id: NUT-K2O-FIXER
+- id: NUT-K2O-potato
   nutrient: K2O
-  n_demand: fixer
+  crop: potato
+  # Table 2 row: Irish potato, sandy loams and loamy sands. lb/acre L/M/H/VH = 300/200/100/50
   lb_per_1000sqft:
-    very_low: 3.9
-    low: 3.9
-    medium: 3.9
+    very_low: 6.89
+    low: 6.89
+    medium: 4.59
+    high: 2.3
+    very_high: 1.15
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-cabbage
+  nutrient: K2O
+  crop: cabbage
+  # Table 2 row: Brussels sprouts, cabbage, cauliflower. lb/acre L/M/H/VH = 200/100/50/0
+  lb_per_1000sqft:
+    very_low: 4.59
+    low: 4.59
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-broccoli
+  nutrient: K2O
+  crop: broccoli
+  # Table 2 row: Broccoli. lb/acre L/M/H/VH = 200/100/50/0
+  lb_per_1000sqft:
+    very_low: 4.59
+    low: 4.59
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-collards
+  nutrient: K2O
+  crop: collards
+  # Table 2 row: Collards, kale, and mustard. lb/acre L/M/H/VH = 150/100/50/0
+  lb_per_1000sqft:
+    very_low: 3.44
+    low: 3.44
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-kale
+  nutrient: K2O
+  crop: kale
+  # Table 2 row: Collards, kale, and mustard. lb/acre L/M/H/VH = 150/100/50/0
+  lb_per_1000sqft:
+    very_low: 3.44
+    low: 3.44
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-squash
+  nutrient: K2O
+  crop: squash
+  # Table 2 row: Summer squash. lb/acre L/M/H/VH = 150/100/50/0
+  lb_per_1000sqft:
+    very_low: 3.44
+    low: 3.44
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-cucumber
+  nutrient: K2O
+  crop: cucumber
+  # Table 2 row: Cucumber, bareground. lb/acre L/M/H/VH = 200/150/100/25
+  lb_per_1000sqft:
+    very_low: 4.59
+    low: 4.59
+    medium: 3.44
+    high: 2.3
+    very_high: 0.57
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-watermelon
+  nutrient: K2O
+  crop: watermelon
+  # Table 2 row: Watermelon (nonirrigated, irrigated and plasticulture rows agree on P and K). lb/acre L/M/H/VH = 200/150/100/0
+  lb_per_1000sqft:
+    very_low: 4.59
+    low: 4.59
+    medium: 3.44
+    high: 2.3
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-bush_bean
+  nutrient: K2O
+  crop: bush_bean
+  # Table 2 row: Snap bean. lb/acre L/M/H/VH = 80/60/40/20
+  lb_per_1000sqft:
+    very_low: 1.84
+    low: 1.84
+    medium: 1.38
+    high: 0.92
+    very_high: 0.46
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-southern_pea
+  nutrient: K2O
+  crop: southern_pea
+  # Table 2 row: Southernpea. lb/acre L/M/H/VH = 100/50/0/0
+  lb_per_1000sqft:
+    very_low: 2.3
+    low: 2.3
+    medium: 1.15
+    high: 0.0
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-snap_pea
+  nutrient: K2O
+  crop: snap_pea
+  # Table 2 row: Garden/English pea (closest row to snap pea). lb/acre L/M/H/VH = 120/80/40/0
+  lb_per_1000sqft:
+    very_low: 2.75
+    low: 2.75
+    medium: 1.84
+    high: 0.92
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-onion
+  nutrient: K2O
+  crop: onion
+  # Table 2 row: Onion, bulb. lb/acre L/M/H/VH = 200/100/50/0
+  lb_per_1000sqft:
+    very_low: 4.59
+    low: 4.59
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-garlic
+  nutrient: K2O
+  crop: garlic
+  lb_per_1000sqft:   # PLACEHOLDER: not in Table 2
+    very_low: 3.67
+    low: 3.67
+    medium: 1.84
     high: 0
     very_high: 0
-  source: SRC-CLEMSON-FERTVEG
+  source: SRC-PLACEHOLDER
+  verified: false
+  # Garlic is not in Table 2. Placeholder until the handbook's garlic chapter or another guide is checked.
+
+- id: NUT-K2O-sweet_corn
+  nutrient: K2O
+  crop: sweet_corn
+  # Table 2 row: Sweet corn. lb/acre L/M/H/VH = 160/120/80/20
+  lb_per_1000sqft:
+    very_low: 3.67
+    low: 3.67
+    medium: 2.75
+    high: 1.84
+    very_high: 0.46
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-lettuce
+  nutrient: K2O
+  crop: lettuce
+  # Table 2 row: Endive, escarole, leaf and romaine lettuce. lb/acre L/M/H/VH = 200/150/100/0
+  lb_per_1000sqft:
+    very_low: 4.59
+    low: 4.59
+    medium: 3.44
+    high: 2.3
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-carrot
+  nutrient: K2O
+  crop: carrot
+  # Table 2 row: Carrot. lb/acre L/M/H/VH = 150/100/50/0
+  lb_per_1000sqft:
+    very_low: 3.44
+    low: 3.44
+    medium: 2.3
+    high: 1.15
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-okra
+  nutrient: K2O
+  crop: okra
+  # Table 2 row: Okra. lb/acre L/M/H/VH = 250/150/100/0
+  lb_per_1000sqft:
+    very_low: 5.74
+    low: 5.74
+    medium: 3.44
+    high: 2.3
+    very_high: 0.0
+  source: SRC-SE-VEG-HANDBOOK
+  verified: false
+
+- id: NUT-K2O-sweet_potato
+  nutrient: K2O
+  crop: sweet_potato
+  # Table 2 row: Sweetpotato. lb/acre L/M/H/VH = 300/200/150/120
+  lb_per_1000sqft:
+    very_low: 6.89
+    low: 6.89
+    medium: 4.59
+    high: 3.44
+    very_high: 2.75
+  source: SRC-SE-VEG-HANDBOOK
   verified: false

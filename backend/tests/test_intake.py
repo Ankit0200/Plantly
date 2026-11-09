@@ -1,9 +1,8 @@
-"""Tests for /api/intake using a mocked Claude client."""
+"""Tests for /api/intake using a mocked Gemini client."""
 import json
 import os
 from pathlib import Path
 from unittest.mock import patch, MagicMock
-from types import SimpleNamespace as NS
 
 import pytest
 
@@ -34,12 +33,12 @@ VALID_DRAFT = {
 }
 
 
-def _mock_anthropic(draft_json):
-    """Create a mock anthropic.Anthropic that returns the given draft as Claude's response."""
+def _mock_genai_client(draft_json):
+    """Create a mock genai.Client that returns the given draft as Gemini's response."""
     mock_client = MagicMock()
     mock_response = MagicMock()
-    mock_response.content = [NS(type="text", text=json.dumps(draft_json))]
-    mock_client.messages.create.return_value = mock_response
+    mock_response.text = json.dumps(draft_json)
+    mock_client.models.generate_content.return_value = mock_response
     return mock_client
 
 
@@ -50,9 +49,9 @@ def data():
 
 def test_valid_extraction(data):
     from ai.intake import extract_grower
-    mock = _mock_anthropic(VALID_DRAFT)
-    with patch("ai.intake.anthropic.Anthropic", return_value=mock):
-        with patch.dict(os.environ, {"ANTHROPIC_API_KEY": "test-key"}):
+    mock_client = _mock_genai_client(VALID_DRAFT)
+    with patch("google.genai.Client", return_value=mock_client):
+        with patch.dict(os.environ, {"GEMINI_API_KEY": "test-key"}):
             result = extract_grower("I have a 5000 sq ft plot", None, None, data)
     assert result["name"] == "Test Farm"
     assert result["plots"][0]["crop_planned"] == "cabbage"
@@ -63,9 +62,9 @@ def test_extraction_with_bad_crop_returns_errors(data):
     from engine.soil_engine import check_grower
     bad_draft = json.loads(json.dumps(VALID_DRAFT))
     bad_draft["plots"][0]["crop_planned"] = "tomatoes"  # invalid ID
-    mock = _mock_anthropic(bad_draft)
-    with patch("ai.intake.anthropic.Anthropic", return_value=mock):
-        with patch.dict(os.environ, {"ANTHROPIC_API_KEY": "test-key"}):
+    mock_client = _mock_genai_client(bad_draft)
+    with patch("google.genai.Client", return_value=mock_client):
+        with patch.dict(os.environ, {"GEMINI_API_KEY": "test-key"}):
             result = extract_grower("My plot grows tomatoes", None, None, data)
     errors = check_grower(result, data)
     assert any("tomatoes" in e for e in errors)
@@ -74,6 +73,7 @@ def test_extraction_with_bad_crop_returns_errors(data):
 def test_no_api_key_raises(data):
     from ai.intake import extract_grower
     with patch.dict(os.environ, {}, clear=True):
-        os.environ.pop("ANTHROPIC_API_KEY", None)
-        with pytest.raises(ValueError, match="ANTHROPIC_API_KEY"):
+        os.environ.pop("GEMINI_API_KEY", None)
+        os.environ.pop("GOOGLE_API_KEY", None)
+        with pytest.raises(ValueError, match="GEMINI_API_KEY"):
             extract_grower("test", None, None, data)

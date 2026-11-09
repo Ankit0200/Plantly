@@ -15,3 +15,7 @@ venv/
 backend/soil-smart-engine/
 backend/data/soil-smart-data/
 *.tsbuildinfo
+backend/instance/
+sample_soil_report*
+soil-report-samples/
+SKILL.md

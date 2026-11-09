@@ -29,3 +29,10 @@
   message: "This bed has a history of {problem}; planting a {family}-family crop here increases risk."
   source: SRC-SARE-ROTATION
   verified: false
+
+- id: SEASON-01
+  kind: out_of_season
+  severity: warn
+  message: "{crop} is a {crop_type}-season crop and isn't planted in {season} here. Plant it in {valid_seasons}."
+  source: SRC-UGA-C963
+  verified: false

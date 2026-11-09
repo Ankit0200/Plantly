@@ -444,6 +444,7 @@
   note: "Squash bugs mainly attack squash and pumpkins. Females lay clusters of about 20 bronze eggs on leaf undersides, often in the V between veins, and the eggs hatch in about 10 days, so crush egg clusters while scouting."
   verified: false
 
+
 - id: NOTE-SB-002
   source: SRC-UMN-SQUASHBUG
   page: "Cultural controls"
@@ -912,6 +913,7 @@
 - id: NOTE-ENG-006
   source: SRC-UW-NCREDIT
   page: "Previous crop credits"
+
   topics: [legume, nitrogen, bush_bean, snap_pea]
   note: "After peas, snap beans or lima beans, Wisconsin guidelines credit about 20 lb N per acre to the next crop; after soybeans 40 lb, but no soybean credit on sandy soils. Legume cover crops credit much more, about 50 to 120 lb depending on species and growth."
   verified: false
@@ -936,3 +938,90 @@
   topics: [cost, nitrogen, potassium, synthetic-fertilizer]
   note: "In DTN's mid-October 2026 survey of retail farm fertilizer prices, urea averaged about $674 per ton and potash about $503 per ton. Garden-center bags usually cost more per pound."
   verified: false
+ 
+# --- Batch 4 (added 2026-11-08): emergency / weather event notes ---
+
+- id: NOTE-EMER-001
+  source: SRC-SARE-BSBC-NITROGEN
+  page: "Ch. 12, Nitrogen Leaching"
+  topics: [nitrogen, heavy-rain, sandy, leaching]
+  note: "Nitrate nitrogen is very mobile in soil water and leaches easily after heavy rain, especially in sandy soils. Sandy soils lose nitrogen faster than clay because water drains through them quickly. After heavy rain, a side-dressing of nitrogen may be needed to replace what washed out."
+  verified: false
+
+- id: NOTE-EMER-002
+  source: SRC-SARE-BSBC-NITROGEN
+  page: "Ch. 12, Denitrification"
+  topics: [nitrogen, flooding, waterlogged, clay]
+  note: "When soil stays waterlogged for several days, soil bacteria convert nitrate to gas (denitrification) and it escapes into the air. Clay and compacted soils lose more nitrogen this way because they stay saturated longer. After the soil drains, test or side-dress to replace lost nitrogen."
+  verified: false
+
+- id: NOTE-EMER-003
+  source: SRC-UGA-VEGGUIDE
+  page: "Watering and Irrigation"
+  topics: [flooding, waterlogged, vegetable, crop-damage]
+  note: "Most vegetable crops cannot survive standing water for more than 24 to 48 hours. Roots need oxygen, and waterlogged soil cuts it off. After flooding, check for wilting even when the soil is wet — that signals root damage. Replant if plants don't recover within a few days."
+  verified: false
+
+- id: NOTE-EMER-004
+  source: SRC-UGA-VEGGUIDE
+  page: "Watering and Irrigation"
+  topics: [flooding, food-safety, vegetable]
+  note: "Floodwater may carry sewage, chemicals, or animal waste. Discard leafy greens and root crops that were submerged. Fruiting crops (tomatoes, peppers, squash) above the water line can be eaten if washed and cooked, but wait until the next planting for anything that touched floodwater directly."
+  verified: false
+
+- id: NOTE-EMER-005
+  source: SRC-CLEMSON-IRRIGATE
+  page: "Vegetable Water Needs"
+  topics: [drought, irrigation, vegetable, water-stress]
+  note: "Most vegetables need about 1 inch of water per week from rain or irrigation. During drought, prioritize water for crops at flowering or fruiting stage — water stress at those times cuts yield the most. Sandy soils need watering more often (every 2-3 days) because they hold less water than clay."
+  verified: false
+
+- id: NOTE-EMER-006
+  source: SRC-CLEMSON-IRRIGATE
+  page: "Mulching and Water Conservation"
+  topics: [drought, mulch, water-stress]
+  note: "A 2-to-3-inch layer of organic mulch (straw, leaves, wood chips) cuts water loss from the soil surface by 50% or more. During drought, mulch keeps roots cooler and reduces the need to irrigate as often."
+  verified: false
+
+- id: NOTE-EMER-007
+  source: SRC-NCSU-FROSTCHART
+  page: "Frost Tolerance Table"
+  topics: [frost, freeze, cold-hardy, vegetable]
+  note: "Hardy crops like kale, collards, and spinach tolerate temperatures down to about 20°F. Semi-hardy crops (lettuce, cabbage, broccoli) handle light frost to about 28°F. Tender crops (tomato, pepper, squash, bean) are damaged or killed by any frost below 32°F."
+  verified: false
+
+- id: NOTE-EMER-008
+  source: SRC-NCSU-FROSTCHART
+  page: "Frost Protection Methods"
+  topics: [frost, freeze, row-cover, protection]
+  note: "Floating row covers add 4 to 8 degrees of frost protection. For a late spring frost, cover tender crops in the evening and remove the cover the next morning. Containers of water placed near plants release heat overnight and help protect nearby foliage."
+  verified: false
+
+- id: NOTE-EMER-009
+  source: SRC-NCSU-EARLYBLIGHT
+  page: "Conditions and Management"
+  topics: [early-blight, tomato, wet-weather, disease, leaf-disease]
+  note: "Early blight is favored by warm temperatures above 80°F and moderate to heavy rainfall. Spores spread by wind and water splash from soil to lower leaves. Mulch, trellising for air flow, and removing infected lower leaves are the main prevention steps."
+  verified: false
+
+- id: NOTE-EMER-010
+  source: SRC-CLEMSON-TOMDIS
+  page: "Septoria Leaf Spot; Late Blight"
+  topics: [septoria, late-blight, tomato, wet-weather, disease, leaf-disease]
+  note: "Septoria leaf spot thrives between 68 and 77°F with high humidity and frequent rain. Late blight can defoliate plants in 14 days during cool wet weather. Both spread through water splash. Crop rotation (3 years away from tomato family), removing debris, and drip irrigation reduce risk."
+  verified: false
+
+- id: NOTE-EMER-011
+  source: SRC-CLEMSON-TOMDIS
+  page: "General Disease Management"
+  topics: [disease, wet-weather, vegetable, prevention]
+  note: "After prolonged wet weather, check all crops for leaf spots, wilting, or fuzzy growth. Improve air flow by pruning lower leaves and widening spacing. Avoid working in the garden when foliage is wet, because touching wet leaves spreads fungal spores between plants."
+  verified: false
+
+- id: NOTE-EMER-012
+  source: SRC-SARE-BSBC-NITROGEN
+  page: "Ch. 9, Soil Organic Matter"
+  topics: [hail, crop-damage, recovery]
+  note: "After hail strips leaves or breaks stems, plants lose the ability to photosynthesize and feed themselves. If more than half the foliage is gone on a fruiting crop, it may not recover enough to produce. Side-dress with a light nitrogen application to help regrowth if the growing season is long enough."
+  verified: false
+ 

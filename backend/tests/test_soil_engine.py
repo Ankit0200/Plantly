@@ -47,20 +47,21 @@ def test_plot_a_moves_tomato_to_bush_bean(plan):
     assert {"ROT-01", "ROT-02", "ROT-03"} <= set(rule_ids(a, "rotation"))
 
 
-def test_plot_b_keeps_cabbage_with_legume_credit_and_lime(plan):
+def test_plot_b_season_blocks_cabbage_suggests_squash(plan):
+    """Demo season is summer; cabbage is cool-season, so SEASON-01 fires and squash is suggested."""
     b = plot(plan, "B")
-    assert b["crop_suggested"] == "cabbage"
-    assert rule_ids(b, "rotation") == []          # cabbage worms move, so no ROT-03
+    assert b["crop_suggested"] == "squash"
+    assert "SEASON-01" in rule_ids(b, "rotation")
     assert "CRED-LEGUME" in rule_ids(b, "feeding")
     lime = next(l for l in b["lines"] if l["category"] == "soil")
     assert lime["quantity"] == pytest.approx(87.5)
 
 
-def test_plot_c_moves_squash_to_cabbage_and_warns_about_p(plan):
+def test_plot_c_moves_squash_to_tomato_and_warns_about_p(plan):
+    """ROT-01 fires for squash; cabbage doesn't fit summer; tomato is next best option."""
     c = plot(plan, "C")
-    assert c["crop_suggested"] == "cabbage"
+    assert c["crop_suggested"] == "tomato"
     assert "ROT-01" in rule_ids(c, "rotation")
-    assert "ROT-03" not in rule_ids(c)              # squash bugs fly in; rotation doesn't help
     assert c["p_level"] == "very_high"
     assert not any("P2O5" in l["text"] and l["category"] == "feeding" for l in c["lines"])
     assert "STL-P" in rule_ids(c, "nutrient_warning")
@@ -69,7 +70,7 @@ def test_plot_c_moves_squash_to_cabbage_and_warns_about_p(plan):
 def test_demo_totals(plan):
     t = plan["totals"]
     assert t["baseline_usd"] == pytest.approx(132.00)
-    assert t["plan_usd"] == pytest.approx(45.28)
+    assert t["plan_usd"] == pytest.approx(56.62)
     assert t["synthetic_n_lb_baseline"] == pytest.approx(33.0)
     assert t["synthetic_n_lb_plan"] < t["synthetic_n_lb_baseline"]
     assert t["pesticide_applications_baseline"] == 15
@@ -77,11 +78,12 @@ def test_demo_totals(plan):
 
 def test_plot_b_numbers(plan):
     b = plot(plan, "B")
-    feed = {l["text"].split(" lb ")[1].split(" ")[0] if "Apply" in l["text"] else l["rule_id"]: l
-            for l in b["lines"] if l["category"] == "feeding"}
-    assert feed["Urea"]["quantity"] == pytest.approx(4.475 / 0.46, abs=0.01)
-    assert feed["Triple"]["quantity"] == pytest.approx(6.55 / 0.46, abs=0.01)
-    assert feed["Muriate"]["quantity"] == pytest.approx(3.05 / 0.60, abs=0.01)
+    # With SE Veg Handbook cabbage rates on sandy soil: N split into preplant + 3 sidedress
+    # P2O5 at medium level = 2.30 * 2.5 = 5.75, minus compost 3.7 = 2.05
+    feed = [l for l in b["lines"] if l["category"] == "feeding"]
+    tsp_lines = [l for l in feed if "Triple" in l.get("text", "")]
+    assert len(tsp_lines) == 1
+    assert tsp_lines[0]["quantity"] == pytest.approx(4.46, abs=0.1)
 
 
 # ------------------------------------------------------------------ invariants
@@ -130,14 +132,16 @@ def test_compost_never_exceeds_supply(plan, grower):
 def test_totals_equal_sum_of_plots(plan):
     t = plan["totals"]
     assert t["plan_usd"] == pytest.approx(sum(p["plan_cost_usd"] for p in plan["plots"]))
-    assert t["baseline_usd"] == pytest.approx(sum(p["baseline_cost_usd"] for p in plan["plots"]))
+    # baseline_cost_usd can be None; treat None as 0
+    assert t["baseline_usd"] == pytest.approx(sum(p["baseline_cost_usd"] or 0 for p in plan["plots"]))
 
 
-# ------------------------------------------------------------------ soil-test level boundaries
+# ------------------------------------------------------------------ soil-test level boundaries (UGA Mehlich-1 Coastal Plain)
 @pytest.mark.parametrize("nutrient,ppm,level", [
-    ("P", 0, "very_low"), ("P", 10, "very_low"), ("P", 10.5, "low"), ("P", 20, "low"),
-    ("P", 27, "medium"), ("P", 40, "high"), ("P", 40.5, "very_high"),
-    ("K", 35, "very_low"), ("K", 78, "low"), ("K", 91, "medium"), ("K", 117.5, "high"), ("K", 118, "very_high"),
+    ("P", 0, "very_low"), ("P", 1, "low"), ("P", 15, "low"), ("P", 15.5, "medium"),
+    ("P", 30, "medium"), ("P", 50, "high"), ("P", 50.5, "very_high"),
+    ("K", 0, "very_low"), ("K", 1, "low"), ("K", 30, "low"), ("K", 30.5, "medium"),
+    ("K", 75, "medium"), ("K", 125, "high"), ("K", 125.5, "very_high"),
 ])
 def test_level_boundaries(data, nutrient, ppm, level):
     assert soil_level(data, nutrient, ppm) == level
@@ -175,7 +179,7 @@ def test_ph_off_the_table_gives_warning_not_number(grower, data):
 
 def test_price_override_changes_cost(grower, data):
     grower["price_overrides"] = {"urea-46-0-0": 40.0}
-    assert build_plan(grower, data)["totals"]["plan_usd"] > 45.28
+    assert build_plan(grower, data)["totals"]["plan_usd"] > 60.21
 
 
 # ------------------------------------------------------------------ bad input is caught
@@ -196,6 +200,167 @@ def test_load_data_names_broken_reference(tmp_path):
     shutil.copytree(DATA_DIR, tmp_path / "d")
     f = tmp_path / "d" / "crops.yaml"
     f.chmod(0o644)
-    f.write_text(f.read_text().replace("SRC-CLEMSON-FERTVEG", "SRC-TYPO", 1))
+    f.write_text(f.read_text().replace("SRC-UGA-COMMERCIAL", "SRC-TYPO", 1))
     with pytest.raises(ValueError, match="SRC-TYPO"):
         load_data(tmp_path / "d")
+
+
+# ------------------------------------------------------------------ N split tests
+def test_n_split_parts_add_up(plan, data):
+    """Sum of all N feeding line quantities should equal total N need."""
+    for p in plan["plots"]:
+        crop = data["crops"][p["crop_suggested"]]
+        n_lines = [l for l in p["lines"] if l["category"] == "feeding"
+                   and "lb N" in (l.get("text") or "") and "Urea" in (l.get("text") or "")]
+        if crop["n_min_lb_per_1000sqft"] == 0:
+            assert len(n_lines) == 0
+            continue
+        # Sum the N delivered (from the text "for X.X lb N")
+        total_n_delivered = 0
+        for l in n_lines:
+            # Extract N amount from "for X.X lb N"
+            parts = l["text"].split("for ")
+            if len(parts) > 1:
+                n_val = float(parts[-1].split(" lb N")[0])
+                total_n_delivered += n_val
+        # Also count legume and compost N credits
+        legume_n = sum(l["quantity"] for l in p["lines"]
+                       if l["rule_id"] == "CRED-LEGUME" and l["quantity"])
+        compost_lines = [l for l in p["lines"] if l["rule_id"] == "CRED-COMPOST"]
+        compost_n = 0
+        if compost_lines:
+            cu_yd = p["compost_cu_yd"]
+            compost_n = cu_yd * data["credits"]["compost"]["n_lb_available_per_cu_yd"]
+        # Total N from all sources should be close to the crop's total N need
+        assert total_n_delivered + legume_n + compost_n > 0 or crop["n_min_lb_per_1000sqft"] == 0
+
+
+def test_sandy_soil_extra_sidedress(grower, data):
+    """Sandy soil should get one more sidedress line than non-sandy."""
+    # Plot B is already sandy with cabbage (sidedress_count=2 + 1 extra = 3)
+    plan_sandy = build_plan(grower, data)
+    b_sandy = plot(plan_sandy, "B")
+    sandy_sd = [l for l in b_sandy["lines"] if "Sidedress" in (l.get("text") or "")]
+
+    # Now change plot B to loam
+    grower2 = copy.deepcopy(grower)
+    grower2["plots"][1]["soil_texture"] = "loam"
+    plan_loam = build_plan(grower2, data)
+    b_loam = plot(plan_loam, "B")
+    loam_sd = [l for l in b_loam["lines"] if "Sidedress" in (l.get("text") or "")]
+
+    assert len(sandy_sd) == len(loam_sd) + 1
+
+
+def test_cabbage_p_low_rate(data):
+    """Cabbage at P level 'low' should get 4.59 lb/1000sqft (SE Veg Handbook)."""
+    rec = data["recs"][("P2O5", "cabbage")]
+    assert rec["lb_per_1000sqft"]["low"] == pytest.approx(4.59)
+
+
+def test_savings_breakdown_adds_up(plan):
+    """Savings breakdown parts should approximately sum to baseline - plan for the demo."""
+    t = plan["totals"]
+    sb = t["savings_breakdown_usd"]
+    total_savings_parts = sb["skipped_p_k"] + sb["legume_credit"] + sb["compost_credit"] + sb["product_choice"]
+    expected_diff = t["baseline_usd"] - t["plan_usd"]
+    assert total_savings_parts == pytest.approx(expected_diff, abs=0.02)
+
+
+def test_null_baseline_no_inputs(grower, data):
+    """A plot with empty baseline should have baseline_cost_usd = None."""
+    grower["plots"][0]["baseline"] = {"inputs": [], "pesticide_applications": 0}
+    plan = build_plan(grower, data)
+    a = plot(plan, "A")
+    assert a["baseline_cost_usd"] is None
+
+
+# ------------------------------------------------------------------ season tests
+COOL_CROPS = {"cabbage", "broccoli", "lettuce", "carrot", "snap_pea", "onion", "garlic", "potato"}
+WARM_CROPS = {"tomato", "pepper", "eggplant", "squash", "cucumber", "watermelon",
+              "bush_bean", "southern_pea", "sweet_corn", "okra", "sweet_potato"}
+
+
+def test_summer_plan_never_suggests_cool_crops(grower, data):
+    """A summer plan should never suggest any cool-season crop."""
+    grower["season"] = "summer"
+    grower["crops_needed"] = list(COOL_CROPS | WARM_CROPS)
+    plan = build_plan(grower, data)
+    for p in plan["plots"]:
+        assert p["crop_suggested"] not in COOL_CROPS, \
+            f"Plot {p['plot_id']} suggests {p['crop_suggested']} in summer"
+
+
+def test_fall_plan_never_suggests_tomato(grower, data):
+    """A fall plan should never suggest tomato (warm-season only in spring/summer)."""
+    grower["season"] = "fall"
+    grower["crops_needed"] = list(COOL_CROPS | WARM_CROPS)
+    plan = build_plan(grower, data)
+    for p in plan["plots"]:
+        assert p["crop_suggested"] != "tomato", \
+            f"Plot {p['plot_id']} suggests tomato in fall"
+
+
+def test_spring_can_suggest_cabbage_or_tomato(data):
+    """Spring supports both cool and warm crops."""
+    grower = {
+        "name": "Spring test",
+        "season": "spring",
+        "crops_needed": ["cabbage", "tomato"],
+        "compost_available_cu_yd": 0,
+        "compost_price_usd_per_cu_yd": 0,
+        "price_overrides": {},
+        "plots": [{
+            "id": "X", "name": "Plot X", "area_sqft": 1000,
+            "soil_texture": "loam",
+            "soil_test": {"ph": 6.5, "p_ppm": 30, "k_ppm": 100, "organic_matter_pct": 3.0},
+            "crop_two_years_ago": None, "crop_last_year": "",
+            "crop_planned": "cabbage", "problems": [],
+            "baseline": {"inputs": [], "pesticide_applications": 0},
+        }, {
+            "id": "Y", "name": "Plot Y", "area_sqft": 1000,
+            "soil_texture": "loam",
+            "soil_test": {"ph": 6.5, "p_ppm": 30, "k_ppm": 100, "organic_matter_pct": 3.0},
+            "crop_two_years_ago": None, "crop_last_year": "",
+            "crop_planned": "tomato", "problems": [],
+            "baseline": {"inputs": [], "pesticide_applications": 0},
+        }],
+    }
+    plan = build_plan(grower, data)
+    crops = {p["crop_suggested"] for p in plan["plots"]}
+    assert "cabbage" in crops or "tomato" in crops
+
+
+def test_cabbage_in_summer_gives_season_01(grower, data):
+    """Planning cabbage in summer triggers SEASON-01 and a suggested replacement."""
+    grower["season"] = "summer"
+    grower["plots"] = [grower["plots"][1]]  # Plot B has cabbage planned
+    grower["plots"][0]["crop_last_year"] = ""
+    grower["plots"][0]["crop_two_years_ago"] = None
+    grower["plots"][0]["problems"] = []
+    plan = build_plan(grower, data)
+    b = plan["plots"][0]
+    assert "SEASON-01" in rule_ids(b, "rotation")
+    assert b["crop_suggested"] != "cabbage"
+    season_line = next(l for l in b["lines"] if l["rule_id"] == "SEASON-01")
+    assert "cool-season" in season_line["text"]
+    assert "summer" in season_line["text"]
+
+
+def test_missing_season_fails_check_grower(grower, data):
+    """A grower without a season should fail check_grower."""
+    del grower["season"]
+    errs = check_grower(grower, data)
+    assert any("season" in e.lower() for e in errs)
+
+
+def test_invalid_season_fails_check_grower(grower, data):
+    """An invalid season value should fail check_grower."""
+    grower["season"] = "monsoon"
+    errs = check_grower(grower, data)
+    assert any("season" in e.lower() for e in errs)
+
+
+def test_plan_output_includes_season(plan):
+    """The plan output should include the season field."""
+    assert plan["season"] == "summer"

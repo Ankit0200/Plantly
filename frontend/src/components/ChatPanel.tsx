@@ -55,7 +55,7 @@ export default function ChatPanel({ grower }: Props) {
     <div className="chat-panel">
       <div className="chat-header">
         <strong>Chat</strong>
-        <button onClick={() => setOpen(false)}>✕</button>
+        <button onClick={() => setOpen(false)} aria-label="Close chat">✕</button>
       </div>
 
       <div className="chat-messages">
@@ -91,6 +91,7 @@ export default function ChatPanel({ grower }: Props) {
           onChange={e => setInput(e.target.value)}
           onKeyDown={e => e.key === 'Enter' && send()}
           placeholder="Ask a question…"
+          aria-label="Chat message"
           disabled={loading}
         />
         <button onClick={send} disabled={loading || !input.trim()}>Send</button>

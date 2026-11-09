@@ -6,21 +6,25 @@
 #            Broccoli and garlic are not listed in C963; see comments on those rows.
 # target_ph: Clemson HGIC "Fertilizing Vegetables": optimum 6.0-6.5 for most vegetables;
 #            the top of the range (6.5) is used as the liming target. Exceptions noted per row.
-# n_need_lb_per_1000sqft: Clemson HGIC "Fertilizing Vegetables" home-garden program,
-#            about 1.0 lb N preplant (6.5 lb calcium nitrate) + 1.55 lb N sidedress
-#            (10 lb calcium nitrate) = ~2.55 lb N per 1000 sq ft. Clemson gives one rate
-#            for all vegetables, so heavy and medium feeders share it.
-#            LEGUMES: 0 lb N is a planner assumption (they fix their own N), NOT a sourced
-#            value. UGA C963 still lists beans as medium and southern peas as light feeders.
-#            Decide as a team and record the decision here.
+# N split fields (replacing single n_need_lb_per_1000sqft):
+#   n_min_lb_per_1000sqft / n_max_lb_per_1000sqft: range converted from lb/acre / 43.56
+#   preplant_n_fraction: fraction of total N applied at planting (0 to 1)
+#   sidedress_count: number of sidedress applications after planting
+# N rates sourced from UGA Commercial Vegetable Production recommendations per crop.
+# LEGUMES: 0 lb N is a planner assumption (they fix their own N).
 
 - id: tomato
   name: Tomato
   family: nightshade
   n_demand: heavy
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 3.44
+  n_max_lb_per_1000sqft: 4.59
+  preplant_n_fraction: 0.33
+  sidedress_count: 3
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, summer]
+  type: warm
   verified: false
 
 - id: pepper
@@ -28,8 +32,13 @@
   family: nightshade
   n_demand: medium          # UGA C963 medium feeder
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 2.75
+  n_max_lb_per_1000sqft: 3.67
+  preplant_n_fraction: 0.33
+  sidedress_count: 2
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, summer]
+  type: warm
   verified: false
 
 - id: eggplant
@@ -37,8 +46,13 @@
   family: nightshade
   n_demand: medium          # UGA C963 medium feeder
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 2.75
+  n_max_lb_per_1000sqft: 3.67
+  preplant_n_fraction: 0.33
+  sidedress_count: 2
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, summer]
+  type: warm
   verified: false
 
 - id: potato
@@ -46,8 +60,13 @@
   family: nightshade
   n_demand: heavy           # UGA C963 heavy feeder (Irish potato)
   target_ph: 6.0            # UGA C963: pH 5.0-6.0 for Irish potatoes
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-UGA-C963
+  n_min_lb_per_1000sqft: 3.44
+  n_max_lb_per_1000sqft: 4.59
+  preplant_n_fraction: 0.5
+  sidedress_count: 1
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring]
+  type: cool
   verified: false
 
 - id: cabbage
@@ -55,8 +74,13 @@
   family: brassica
   n_demand: heavy
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 4.02
+  n_max_lb_per_1000sqft: 5.17
+  preplant_n_fraction: 0.4
+  sidedress_count: 2
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, fall]
+  type: cool
   verified: false
 
 - id: broccoli
@@ -64,8 +88,13 @@
   family: brassica
   n_demand: heavy           # not in UGA C963; SARE Table 3.1 lists broccoli as high demand
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 3.44
+  n_max_lb_per_1000sqft: 4.59
+  preplant_n_fraction: 0.4
+  sidedress_count: 2
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, fall]
+  type: cool
   verified: false
 
 - id: collards
@@ -73,8 +102,13 @@
   family: brassica
   n_demand: medium          # UGA C963 "greens"
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 2.30
+  n_max_lb_per_1000sqft: 3.44
+  preplant_n_fraction: 0.4
+  sidedress_count: 2
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, fall, winter]
+  type: cool
   verified: false
 
 - id: kale
@@ -82,8 +116,13 @@
   family: brassica
   n_demand: medium          # UGA C963 "greens"
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 2.30
+  n_max_lb_per_1000sqft: 3.44
+  preplant_n_fraction: 0.4
+  sidedress_count: 2
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, fall, winter]
+  type: cool
   verified: false
 
 - id: squash
@@ -91,8 +130,13 @@
   family: cucurbit
   n_demand: medium
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 2.30
+  n_max_lb_per_1000sqft: 3.44
+  preplant_n_fraction: 0.33
+  sidedress_count: 2
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, summer]
+  type: warm
   verified: false
 
 - id: cucumber
@@ -100,8 +144,13 @@
   family: cucurbit
   n_demand: medium
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 2.30
+  n_max_lb_per_1000sqft: 3.44
+  preplant_n_fraction: 0.33
+  sidedress_count: 2
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, summer]
+  type: warm
   verified: false
 
 - id: watermelon
@@ -109,8 +158,13 @@
   family: cucurbit
   n_demand: medium
   target_ph: 6.0            # SARE Building Soils ch. 20: watermelon prefers pH 5-6
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 2.75
+  n_max_lb_per_1000sqft: 3.67
+  preplant_n_fraction: 0.33
+  sidedress_count: 2
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, summer]
+  type: warm
   verified: false
 
 - id: bush_bean
@@ -118,8 +172,13 @@
   family: legume
   n_demand: fixer
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 0.0   # planner assumption, see header
+  n_min_lb_per_1000sqft: 0
+  n_max_lb_per_1000sqft: 0
+  preplant_n_fraction: 0
+  sidedress_count: 0
   source: SRC-PLACEHOLDER
+  plant_seasons: [spring, summer]
+  type: warm
   verified: false
 
 - id: southern_pea
@@ -127,8 +186,13 @@
   family: legume
   n_demand: fixer
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 0.0   # planner assumption, see header
+  n_min_lb_per_1000sqft: 0
+  n_max_lb_per_1000sqft: 0
+  preplant_n_fraction: 0
+  sidedress_count: 0
   source: SRC-PLACEHOLDER
+  plant_seasons: [summer]
+  type: warm
   verified: false
 
 - id: snap_pea
@@ -136,8 +200,13 @@
   family: legume
   n_demand: fixer
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 0.0   # planner assumption, see header
+  n_min_lb_per_1000sqft: 0
+  n_max_lb_per_1000sqft: 0
+  preplant_n_fraction: 0
+  sidedress_count: 0
   source: SRC-PLACEHOLDER
+  plant_seasons: [spring, fall]
+  type: cool
   verified: false
 
 - id: onion
@@ -145,8 +214,13 @@
   family: allium
   n_demand: heavy           # UGA C963 heavy feeder
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 2.75
+  n_max_lb_per_1000sqft: 3.67
+  preplant_n_fraction: 0.33
+  sidedress_count: 3
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [fall]
+  type: cool
   verified: false
 
 - id: garlic
@@ -154,8 +228,13 @@
   family: allium
   n_demand: medium          # not in UGA C963; OSU EM 9235 Table 6 lists garlic as medium
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 2.30
+  n_max_lb_per_1000sqft: 2.75
+  preplant_n_fraction: 0.5
+  sidedress_count: 1
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [fall]
+  type: cool
   verified: false
 
 - id: sweet_corn
@@ -163,8 +242,13 @@
   family: grass
   n_demand: medium          # UGA C963 medium feeder
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 2.75
+  n_max_lb_per_1000sqft: 3.67
+  preplant_n_fraction: 0.33
+  sidedress_count: 2
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, summer]
+  type: warm
   verified: false
 
 - id: lettuce
@@ -172,8 +256,13 @@
   family: aster
   n_demand: heavy           # UGA C963 heavy feeder (SARE agrees: poor root foraging)
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 2.30
+  n_max_lb_per_1000sqft: 3.44
+  preplant_n_fraction: 0.5
+  sidedress_count: 1
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, fall]
+  type: cool
   verified: false
 
 - id: carrot
@@ -181,8 +270,13 @@
   family: carrot
   n_demand: medium          # UGA C963 medium feeder
   target_ph: 6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 1.84
+  n_max_lb_per_1000sqft: 2.75
+  preplant_n_fraction: 0.5
+  sidedress_count: 1
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, fall]
+  type: cool
   verified: false
 
 - id: okra
@@ -190,8 +284,13 @@
   family: mallow
   n_demand: medium          # UGA C963 medium feeder
   target_ph: 6.5            # Clemson HGIC 1313: keep pH 5.8-6.5
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 2.30
+  n_max_lb_per_1000sqft: 3.44
+  preplant_n_fraction: 0.33
+  sidedress_count: 2
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [spring, summer]
+  type: warm
   verified: false
 
 - id: sweet_potato
@@ -199,6 +298,11 @@
   family: morning_glory
   n_demand: heavy           # UGA C963 heavy feeder
   target_ph: 6.0            # SARE Building Soils ch. 20: sweet potato prefers pH 5-6
-  n_need_lb_per_1000sqft: 2.55
-  source: SRC-CLEMSON-FERTVEG
+  n_min_lb_per_1000sqft: 1.38
+  n_max_lb_per_1000sqft: 2.30
+  preplant_n_fraction: 0.5
+  sidedress_count: 1
+  source: SRC-UGA-COMMERCIAL
+  plant_seasons: [summer]
+  type: warm
   verified: false

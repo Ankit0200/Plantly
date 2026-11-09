@@ -52,19 +52,44 @@ extension office.
 - Stay on the grower's plots and season planning. For anything else, say briefly that you can only help with \
 their plan."""
 
+IMPLEMENTED_SYSTEM_EXTRA = """
+
+IMPLEMENTED PLAN CONTEXT
+You are chatting about a plan where the farmer has already ticked the steps they intend to do. \
+Use get_implemented_items to see what they committed to and any recorded actual values.
+
+RECORDING WHAT THEY ACTUALLY DID
+- When the farmer tells you they used a different amount than planned, find the matching item with \
+get_implemented_items, call propose_item_update with exactly the numbers the farmer gave, and ask them to confirm.
+- Never change amounts yourself. Never record a number the farmer didn't say.
+- After the farmer saves a change, you may compare planned vs actual using only those two numbers \
+(e.g. "That's 12.3 lb more urea than planned."). Call run_what_if if they ask what the change means.
+
+EMERGENCIES AND WEATHER EVENTS (heavy rain, flooding, drought, frost, hail, pest outbreak)
+- First call get_plan and get_implemented_items to see which crops, plots and steps are involved.
+- Then call search_notes for the situation (e.g. "heavy rain nitrogen loss sandy soil").
+- Answer only from the notes and engine data returned: what's likely happening, which plots and crops \
+are most affected, and what to check or do. End every answer with sources.
+- If search_notes returns nothing useful, say so plainly and suggest contacting the county extension office. \
+Never give amounts or rates that no tool returned.
+- If the answer suggests a new step (e.g. extra side-dressing), offer to rerun the plan with run_what_if \
+so any new amount comes from the engine."""
+
 
 def chat(messages: list, grower: dict, data: dict, notes: list | None = None,
-         client=None, model: str = MODEL) -> dict:
+         client=None, model: str = MODEL, implemented_items: list | None = None,
+         system_extra: str = "") -> dict:
     """Run one chat turn. `messages` is the conversation so far as [{"role", "content"}], ending with the
     grower's new message. Claude may call tools several times before it answers."""
     if client is None:
         import anthropic
         client = anthropic.Anthropic()
-    box = ToolBox(grower, data, notes)
+    box = ToolBox(grower, data, notes, implemented_items=implemented_items)
     convo, trace = list(messages), []
+    system = SYSTEM_PROMPT + system_extra
 
     for _ in range(MAX_TOOL_ROUNDS + 1):
-        response = client.messages.create(model=model, max_tokens=1500, system=SYSTEM_PROMPT,
+        response = client.messages.create(model=model, max_tokens=1500, system=system,
                                           tools=TOOLS, messages=convo)
         blocks = [_block(b) for b in response.content]
         convo.append({"role": "assistant", "content": blocks})
@@ -72,7 +97,7 @@ def chat(messages: list, grower: dict, data: dict, notes: list | None = None,
             reply = "".join(b["text"] for b in blocks if b["type"] == "text").strip()
             return {"reply": reply,
                     "tools_used": [{"tool": t["tool"], "input": t["input"], "is_error": t["is_error"]} for t in trace],
-                    "unsupported_numbers": unsupported_numbers(reply, trace, messages)}
+                    "unsupported_numbers": unsupported_numbers(reply, trace, messages, implemented_items)}
         results = []
         for b in blocks:
             if b["type"] == "tool_use":
@@ -105,16 +130,24 @@ def _numbers(text: str) -> set[float]:
     return {float(m.group(1).replace(",", "")) for m in _NUM.finditer(text)}
 
 
-def unsupported_numbers(reply: str, trace: list, messages: list) -> list[float]:
+def unsupported_numbers(reply: str, trace: list, messages: list,
+                        implemented_items: list | None = None) -> list[float]:
     """Numbers in Claude's reply that no tool output (or the grower) gave it.
 
     Small counts (10 and under) are ignored. A number counts as supported if a tool value rounds to it
-    (217.8 -> 218). Show a "check this" badge, or ask Claude to fix the answer, when this isn't empty."""
+    (217.8 -> 218). Numbers from the farmer's conversation messages and from implemented items are also
+    considered supported. Show a "check this" badge when this isn't empty."""
     seen = set()
     for t in trace:
         seen |= _numbers(t["output"])
     for m in messages:
         if isinstance(m.get("content"), str):
             seen |= _numbers(m["content"])
+    # Numbers from implemented items (planned and actual) are supported
+    for item in (implemented_items or []):
+        for field in ("quantity", "cost_usd", "actual_quantity"):
+            v = item.get(field)
+            if v is not None:
+                seen.add(float(v))
     rounded = {round(v, nd) for v in seen for nd in (0, 1, 2)}
     return sorted(n for n in _numbers(reply) if n > 10 and n not in seen and n not in rounded)

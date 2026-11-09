@@ -285,9 +285,81 @@
 
 # --- Engine (added 2026-11-07): numbers the grower types in from their own lab report ---
 
+- id: SRC-SE-VEG-HANDBOOK
+  title: "Southeastern U.S. 2024 Vegetable Crop Handbook"
+  publisher: "Southeastern Vegetable Extension Workers"
+  year: 2024
+  url: "https://www.svegetableguide.com/"
+  verified: false
+
+- id: SRC-UGA-COMMERCIAL
+  title: "Commercial Vegetable Production Recommendations (various crops)"
+  publisher: "University of Georgia Cooperative Extension"
+  year: null
+  url: "https://site.extension.uga.edu/colquittag/2016/08/cabbage-fertility/"
+  verified: false
+
+- id: SRC-UGA-SOILTEST
+  title: "Soil Test Interpretation for Georgia Soils"
+  publisher: "University of Georgia Agricultural and Environmental Services Laboratories"
+  year: null
+  url: "https://aesl.ces.uga.edu/publications/soil/"
+  verified: false
+
+- id: SRC-UGA-CROPSHEETS
+  title: "UGA Soil Test Crop Sheets (Mehlich-1 Coastal Plain ranges)"
+  publisher: "University of Georgia Agricultural and Environmental Services Laboratories"
+  year: null
+  url: "https://aesl.ces.uga.edu/publications/soil/"
+  verified: false
+
 - id: SRC-GROWER-LAB-REPORT
   title: "The grower's own soil test report (lab lime recommendation)"
   publisher: "Grower's soil testing lab"
   year: null
   url: ""
   verified: true   # the number comes straight from the grower's report, confirmed on the intake screen
+
+# --- Batch 4 (added 2026-11-08): emergency / weather event sources ---
+
+- id: SRC-NCSU-EARLYBLIGHT
+  title: "Early Blight of Tomato"
+  publisher: "NC State Extension"
+  year: null
+  url: "https://content.ces.ncsu.edu/early-blight-of-tomato"
+  verified: false
+
+- id: SRC-CLEMSON-TOMDIS
+  title: "Tomato Diseases (HGIC 2217)"
+  publisher: "Clemson Cooperative Extension"
+  year: null
+  url: "https://hgic.clemson.edu/factsheet/tomato-diseases/"
+  verified: false
+
+- id: SRC-SARE-BSBC-NITROGEN
+  title: "Building Soils for Better Crops, Ch. 12 Nitrogen Management"
+  publisher: "SARE / USDA"
+  year: 2009
+  url: "https://www.sare.org/resources/building-soils-for-better-crops/"
+  verified: false
+
+- id: SRC-CLEMSON-IRRIGATE
+  title: "Irrigating the Vegetable Garden (HGIC 1260)"
+  publisher: "Clemson Cooperative Extension"
+  year: null
+  url: "https://hgic.clemson.edu/factsheet/irrigating-the-vegetable-garden/"
+  verified: false
+
+- id: SRC-UGA-VEGGUIDE
+  title: "Vegetable Gardening in Georgia (Circular 963)"
+  publisher: "University of Georgia Cooperative Extension"
+  year: null
+  url: "https://fieldreport.caes.uga.edu/publications/C963/"
+  verified: false
+
+- id: SRC-NCSU-FROSTCHART
+  title: "Frost Tolerances of Vegetables"
+  publisher: "NC State Extension"
+  year: null
+  url: "https://content.ces.ncsu.edu/growing-a-fall-garden"
+  verified: false
