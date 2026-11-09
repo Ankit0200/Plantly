@@ -31,6 +31,14 @@ export interface Plot {
 
 export type Season = 'spring' | 'summer' | 'fall' | 'winter';
 
+export function defaultSeason(): Season {
+  const m = new Date().getMonth() // 0-11
+  if (m >= 1 && m <= 3) return 'spring'   // Feb-Apr
+  if (m >= 4 && m <= 6) return 'summer'   // May-Jul
+  if (m >= 7 && m <= 9) return 'fall'     // Aug-Oct
+  return 'winter'                          // Nov-Jan
+}
+
 export interface Grower {
   name: string;
   season: Season;
@@ -96,6 +104,8 @@ export interface CostSummary {
   synthetic_n_lb_baseline: number;
   synthetic_n_lb_plan: number;
   pesticide_applications_baseline: number;
+  wasted_baseline_p2o5_lb?: number;
+  wasted_baseline_k2o_lb?: number;
   savings_breakdown_usd?: SavingsBreakdown;
 }
 
@@ -234,6 +244,7 @@ export interface PlanSummaryItem {
   data_version: string;
   crops: string[];
   totals: CostSummary;
+  plot_crops?: Record<string, string>;
 }
 
 export interface SavedConversation {
@@ -266,6 +277,7 @@ export interface PlanChatResponse {
   tools_used: ToolUsage[];
   unsupported_numbers: number[];
   stale: boolean;
+  attachment_id?: number | null;  // id of the photo sent with this message, if any
 }
 
 export interface HistoryItem {

@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import type { Grower, ReferenceData } from '../types'
+import { defaultSeason } from '../types'
 import { postIntakeChat, postIntake } from '../api'
 
 interface Props {
@@ -22,6 +23,7 @@ const STARTERS = [
 function emptyGrower(): Grower {
   return {
     name: '',
+    season: defaultSeason(),
     plots: [{
       id: 'A', name: 'Plot A', area_sqft: 1000, soil_texture: 'loam',
       soil_test: { ph: 6.5, p_ppm: 30, k_ppm: 100, organic_matter_pct: 3.0 },

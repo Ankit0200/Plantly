@@ -5,17 +5,35 @@ __pycache__/
 dist/
 node_modules/
 frontend/dist/
-.env
 *.db
 .DS_Store
-.claude/
-venv/
 *.log
 *.zip
+*.tsbuildinfo
+
+# Secrets: API keys live in backend/.env (and any .env variant). Never commit them.
+.env
+.env.*
+!.env.example
+
+# Python virtual environments (both venv/ and .venv/, at any level)
+venv/
+.venv/
+
+# Local runtime data: SQLite database and user uploads
+backend/instance/
 backend/soil-smart-engine/
 backend/data/soil-smart-data/
-*.tsbuildinfo
-backend/instance/
 sample_soil_report*
 soil-report-samples/
+
+# AI-assistant and tooling files (local only)
+.claude/
+CLAUDE.md
 SKILL.md
+skills-lock.json
+.playwright-mcp/
+
+# Internal design specs, reference screenshots and PDFs (not for the repo)
+docs/design/
+*.pdf

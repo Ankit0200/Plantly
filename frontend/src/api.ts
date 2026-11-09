@@ -1,8 +1,7 @@
 import type {
   Grower, Plan, ReferenceData, DataStatus, ChatMessage, ChatResponse,
   IntakeResponse, AuthUser, PlanSummaryItem, SavedPlanDetail, PlanChatResponse,
-  HistoryItem, NotificationsResponse, ImplementedItemData, ImplementedSummary,
-  PendingItemChange
+  HistoryItem, NotificationsResponse, ImplementedItemData, ImplementedSummary
 } from './types';
 
 const BASE = '/api';
@@ -164,7 +163,22 @@ export function getPlan(planId: number) {
   return fetchJSON<SavedPlanDetail>(`${BASE}/plans/${planId}`);
 }
 
-export function postPlanChat(planId: number, message: string, conversationId?: number, context?: string) {
+export async function postPlanChat(planId: number, message: string, conversationId?: number, context?: string,
+                                   image?: Blob): Promise<PlanChatResponse> {
+  if (image) {
+    // A photo goes as multipart/form-data; the backend checks the real file type and size.
+    const form = new FormData();
+    form.append('message', message);
+    if (conversationId) form.append('conversation_id', String(conversationId));
+    if (context) form.append('context', context);
+    form.append('image', image, 'photo.jpg');
+    const res = await fetch(`${BASE}/plans/${planId}/chat`, { method: 'POST', body: form });
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({ error: res.statusText }));
+      throw { status: res.status, body };
+    }
+    return res.json();
+  }
   return fetchJSON<PlanChatResponse>(`${BASE}/plans/${planId}/chat`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

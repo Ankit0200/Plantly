@@ -5,12 +5,11 @@ interface Props {
   crops: CropRef[]
   selected: string[]
   onToggle: (cropId: string) => void
-  multi?: boolean         // true = checkbox mode, false = single select
   label?: string
 }
 
 /** Visual grid of crop cards with emoji. Tap to select. */
-export default function CropPicker({ crops, selected, onToggle, multi = true, label }: Props) {
+export default function CropPicker({ crops, selected, onToggle, label }: Props) {
   return (
     <div className="crop-picker">
       {label && <div className="crop-picker-label">{label}</div>}

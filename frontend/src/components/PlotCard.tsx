@@ -13,24 +13,15 @@ interface Props {
 }
 
 const CATEGORY_META: Record<string, { label: string; icon: string; color: string }> = {
-  rotation:         { label: 'Rotation',        icon: '🔄', color: 'var(--gold, #ffc800)' },
-  soil:             { label: 'Soil Prep',       icon: '🧪', color: 'var(--purple, #a560e8)' },
-  feeding:          { label: 'Feeding Schedule', icon: '🌱', color: 'var(--green, #58cc02)' },
-  nutrient_warning: { label: 'Heads Up',        icon: '⚠️', color: 'var(--gold, #ffc800)' },
-  warning:          { label: 'Heads Up',        icon: '⚠️', color: 'var(--gold, #ffc800)' },
-  pest_prevention:  { label: 'Pest Prevention', icon: '🐛', color: 'var(--red, #ff4b4b)' },
+  rotation:         { label: 'Rotation',        icon: '🔄', color: 'var(--gold)' },
+  soil:             { label: 'Soil Prep',       icon: '🧪', color: 'var(--purple)' },
+  feeding:          { label: 'Feeding Schedule', icon: '🌱', color: 'var(--green)' },
+  nutrient_warning: { label: 'Heads Up',        icon: '⚠️', color: 'var(--gold)' },
+  warning:          { label: 'Heads Up',        icon: '⚠️', color: 'var(--gold)' },
+  pest_prevention:  { label: 'Pest Prevention', icon: '🐛', color: 'var(--red)' },
 }
 
 const CATEGORY_ORDER = ['rotation', 'soil', 'feeding', 'nutrient_warning', 'warning', 'pest_prevention']
-
-function isActionable(line: { category: string; text: string; quantity: number | null; cost_usd: number | null }) {
-  if (line.category === 'warning' || line.category === 'nutrient_warning') return false
-  if (line.category === 'pest_prevention') return true
-  if (line.category === 'soil' && line.quantity != null) return true
-  if (line.category === 'feeding' && line.quantity != null) return true
-  if (line.category === 'rotation' && line.text.includes('Suggested instead:')) return true
-  return false
-}
 
 /** Parse feeding text like "At planting: Apply 11.5 lb Urea 46-0-0 for 5.3 lb N." */
 function parseFeedingLine(text: string) {
@@ -41,18 +32,7 @@ function parseFeedingLine(text: string) {
   return { timing: null, action: text }
 }
 
-/** Make text more readable by splitting "Apply X lb Product for Y" */
-function formatAction(text: string) {
-  // "Apply 75 lb of Agricultural lime 2-3 months before planting to raise pH from 6 toward 6.5."
-  // Keep it readable but highlight the product
-  const applyMatch = text.match(/^Apply\s+([\d.]+)\s+lb\s+(?:of\s+)?(.+?)(?:\s+(?:for|to)\s+.+)?\.?$/)
-  if (applyMatch) {
-    return { product: applyMatch[2].replace(/\s+\d+-\d+-\d+/, ''), fullText: text }
-  }
-  return { product: null, fullText: text }
-}
-
-export default function PlotCard({ plotPlan, cropName, implementedMap, onImplementAll, allImplemented, showImplementBtn }: Props) {
+export default function PlotCard({ plotPlan, cropName, onImplementAll, allImplemented, showImplementBtn }: Props) {
   const [expandedLine, setExpandedLine] = useState<number | null>(null)
   const [cache, setCache] = useState<Record<string, string>>({})
 
@@ -127,7 +107,6 @@ export default function PlotCard({ plotPlan, cropName, implementedMap, onImpleme
                   {lines.map((line, i) => {
                     const globalIdx = plotPlan.lines.indexOf(line)
                     const parsed = cat === 'feeding' ? parseFeedingLine(line.text) : { timing: null, action: line.text }
-                    const actionInfo = formatAction(parsed.action)
 
                     return (
                       <div key={i} className={`section-item ${isWarning ? 'section-item-warning' : ''}`}>

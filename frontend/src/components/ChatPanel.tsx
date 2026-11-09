@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import type { Grower, ChatMessage, ToolUsage } from '../types'
 import { postChat } from '../api'
+import ChatText from './ChatText'
 
 interface Props {
   grower: Grower
@@ -64,7 +65,7 @@ export default function ChatPanel({ grower }: Props) {
         )}
         {messages.map((m, i) => (
           <div key={i} className={`chat-msg chat-${m.role}`}>
-            {m.content}
+            {m.role === 'assistant' ? <ChatText text={m.content} /> : m.content}
           </div>
         ))}
         {loading && <div className="chat-msg chat-assistant chat-loading">Thinking…</div>}

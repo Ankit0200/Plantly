@@ -6,7 +6,8 @@ from __future__ import annotations
 
 import base64
 import json
-import os
+
+from ai.gemini import GEMINI_MODEL, gemini_client
 
 
 def _build_extraction_prompt(data: dict) -> str:
@@ -148,11 +149,7 @@ def intake_chat(messages: list, data: dict) -> dict:
     """Multi-turn conversational intake. Returns reply text, and optionally extracted grower JSON."""
     from google import genai
 
-    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-    if not api_key:
-        raise ValueError("GEMINI_API_KEY environment variable not set.")
-
-    client = genai.Client(api_key=api_key)
+    client = gemini_client()
     system_prompt = _build_chat_system(data)
 
     # Convert messages to Gemini format
@@ -162,7 +159,7 @@ def intake_chat(messages: list, data: dict) -> dict:
         gemini_messages.append({"role": role, "parts": [{"text": m["content"]}]})
 
     response = client.models.generate_content(
-        model="gemini-3-flash-preview",
+        model=GEMINI_MODEL,
         contents=gemini_messages,
         config=genai.types.GenerateContentConfig(
             system_instruction=system_prompt,
@@ -199,11 +196,7 @@ def extract_grower(text: str | None, file_data: bytes | None,
     """Call Gemini to extract a grower JSON from text or a document/image."""
     from google import genai
 
-    api_key = os.environ.get("GEMINI_API_KEY") or os.environ.get("GOOGLE_API_KEY")
-    if not api_key:
-        raise ValueError("GEMINI_API_KEY environment variable not set.")
-
-    client = genai.Client(api_key=api_key)
+    client = gemini_client()
     system_prompt = _build_extraction_prompt(data)
 
     parts = []
@@ -226,7 +219,7 @@ def extract_grower(text: str | None, file_data: bytes | None,
         parts.append("Extract the farm data from this document.")
 
     response = client.models.generate_content(
-        model="gemini-3-flash-preview",
+        model=GEMINI_MODEL,
         contents=parts,
         config=genai.types.GenerateContentConfig(
             system_instruction=system_prompt,

@@ -4,8 +4,11 @@ interface Props {
   plots: PlotPlan[]
 }
 
+/** -$81.90 rather than $-81.90 */
+const money = (n: number) => `${n < 0 ? '-' : ''}$${Math.abs(n).toFixed(2)}`
+
 export default function CostTable({ plots }: Props) {
-  const totalBaseline = plots.reduce((s, p) => s + p.baseline_cost_usd, 0)
+  const totalBaseline = plots.reduce((s, p) => s + (p.baseline_cost_usd ?? 0), 0)
   const totalPlan = plots.reduce((s, p) => s + p.plan_cost_usd, 0)
 
   return (
@@ -20,13 +23,14 @@ export default function CostTable({ plots }: Props) {
       </thead>
       <tbody>
         {plots.map(p => {
-          const diff = p.plan_cost_usd - p.baseline_cost_usd
+          const base = p.baseline_cost_usd
+          const diff = base == null ? null : p.plan_cost_usd - base
           return (
             <tr key={p.plot_id}>
               <td>{p.plot_name || p.plot_id}</td>
-              <td>${p.baseline_cost_usd.toFixed(2)}</td>
+              <td>{base == null ? '—' : `$${base.toFixed(2)}`}</td>
               <td>${p.plan_cost_usd.toFixed(2)}</td>
-              <td className={diff > 0 ? 'cost-more' : 'cost-less'}>${diff.toFixed(2)}</td>
+              <td className={diff != null && diff > 0 ? 'cost-more' : 'cost-less'}>{diff == null ? '—' : money(diff)}</td>
             </tr>
           )
         })}
@@ -37,7 +41,7 @@ export default function CostTable({ plots }: Props) {
           <td><strong>${totalBaseline.toFixed(2)}</strong></td>
           <td><strong>${totalPlan.toFixed(2)}</strong></td>
           <td className={(totalPlan - totalBaseline) > 0 ? 'cost-more' : 'cost-less'}>
-            <strong>${(totalPlan - totalBaseline).toFixed(2)}</strong>
+            <strong>{money(totalPlan - totalBaseline)}</strong>
           </td>
         </tr>
       </tfoot>

@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect, useCallback, type CSSProperties } from 'react'
+import { createPortal } from 'react-dom'
 import type { CropRef } from '../types'
 import { cropEmoji } from '../cropIcons'
 
@@ -14,7 +15,7 @@ interface Props {
 export default function CropSelect({ crops, value, onChange, placeholder = '— pick a crop —', allowEmpty = false }: Props) {
   const [open, setOpen] = useState(false)
   const [focusIdx, setFocusIdx] = useState(-1)
-  const [flip, setFlip] = useState(false)
+  const [pos, setPos] = useState<CSSProperties>({})
   const ref = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const listRef = useRef<HTMLDivElement>(null)
@@ -25,23 +26,50 @@ export default function CropSelect({ crops, value, onChange, placeholder = '— 
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
+      const t = e.target as Node
+      // the list lives in a portal, so it is outside `ref` in the DOM
+      if (!ref.current?.contains(t) && !listRef.current?.contains(t)) setOpen(false)
     }
     document.addEventListener('mousedown', handler)
     return () => document.removeEventListener('mousedown', handler)
   }, [])
 
-  const openDropdown = useCallback(() => {
-    // Check if we need to flip upward
-    if (triggerRef.current) {
-      const rect = triggerRef.current.getBoundingClientRect()
-      const spaceBelow = window.innerHeight - rect.bottom
-      setFlip(spaceBelow < 260)
+  /** Pin the list to the trigger on screen: below it, or above when there is more room there. */
+  const place = useCallback(() => {
+    const t = triggerRef.current
+    if (!t) return
+    const r = t.getBoundingClientRect()
+    const gap = 4, margin = 8, preferred = 250
+    const below = window.innerHeight - r.bottom - gap - margin
+    const above = r.top - gap - margin
+    const up = below < 200 && above > below
+    const width = Math.min(Math.max(r.width, 192), window.innerWidth - 2 * margin)
+    setPos({
+      left: Math.max(margin, Math.min(r.left, window.innerWidth - width - margin)),
+      width,
+      maxHeight: Math.min(preferred, up ? above : below),
+      ...(up ? { bottom: window.innerHeight - r.top + gap } : { top: r.bottom + gap }),
+    })
+  }, [])
+
+  // Follow the trigger while open: page scroll, scroll inside any container, or a window resize.
+  useEffect(() => {
+    if (!open) return
+    const onMove = (e: Event) => { if (e.target !== listRef.current) place() }
+    window.addEventListener('scroll', onMove, true)
+    window.addEventListener('resize', onMove)
+    return () => {
+      window.removeEventListener('scroll', onMove, true)
+      window.removeEventListener('resize', onMove)
     }
+  }, [open, place])
+
+  const openDropdown = useCallback(() => {
+    place()
     setOpen(true)
     const currentIdx = allOptions.findIndex(c => c.id === value)
     setFocusIdx(currentIdx >= 0 ? currentIdx : 0)
-  }, [allOptions, value])
+  }, [allOptions, value, place])
 
   const select = useCallback((id: string) => {
     onChange(id)
@@ -111,11 +139,14 @@ export default function CropSelect({ crops, value, onChange, placeholder = '— 
         )}
         <span className="crop-select-arrow" aria-hidden="true">{open ? '▲' : '▼'}</span>
       </button>
-      {open && (
+      {open && createPortal(
+        // Portaled to <body> so no card or panel with overflow can clip it. React still bubbles its
+        // events (keyboard included) up to the wrapper above.
         <div
           id={listId}
           ref={listRef}
-          className={`crop-select-dropdown ${flip ? 'flip' : ''}`}
+          className="crop-select-dropdown"
+          style={pos}
           role="listbox"
           aria-label="Select a crop"
         >
@@ -132,7 +163,8 @@ export default function CropSelect({ crops, value, onChange, placeholder = '— 
               <span className="crop-select-emoji" aria-hidden="true">{c.id ? cropEmoji(c.id) : '—'}</span> {c.name}
             </button>
           ))}
-        </div>
+        </div>,
+        document.body,
       )}
     </div>
   )

@@ -9,8 +9,9 @@ interface Props {
 
 export default function LoginPage({ onLogin, onBack }: Props) {
   const [mode, setMode] = useState<'login' | 'register'>('login')
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  // Pre-filled with the demo account (created by `flask --app app seed-demo` in backend/).
+  const [email, setEmail] = useState('demo@plantly.test')
+  const [password, setPassword] = useState('demo-pass-123')
   const [name, setName] = useState('')
   const [zipCode, setZipCode] = useState('')
   const [error, setError] = useState('')
@@ -38,7 +39,7 @@ export default function LoginPage({ onLogin, onBack }: Props) {
       <div className="login-card">
         <div className="login-logo">
           {onBack && <button className="login-back" onClick={onBack} aria-label="Back">&larr;</button>}
-          <span className="login-brand-icon">🌱</span>
+          <img className="login-brand-icon" src="/images/plantly-mark.svg" alt="" />
           <h1>Plantly</h1>
         </div>
 
@@ -94,7 +95,7 @@ export default function LoginPage({ onLogin, onBack }: Props) {
 
           {mode === 'register' && (
             <label>
-              ZIP Code <span style={{ fontWeight: 400, color: 'var(--text-muted)' }}>(for pest alerts)</span>
+              ZIP Code <span className="label-hint">(for pest alerts)</span>
               <input
                 type="text"
                 value={zipCode}

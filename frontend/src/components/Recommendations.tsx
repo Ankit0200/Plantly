@@ -3,6 +3,7 @@ import type { Grower, Plan, PlotPlan, ReferenceData } from '../types'
 import { postRecommend, postPlanPreview, type PlotRecommendation } from '../api'
 import { cropEmoji } from '../cropIcons'
 import PlotCard from './PlotCard'
+import { useDialog } from '../useDialog'
 
 function ComparisonBanner({ original, alt, cropName }: { original: PlotPlan; alt: PlotPlan; cropName: (id: string) => string }) {
   const costDiff = original.plan_cost_usd - alt.plan_cost_usd
@@ -82,6 +83,7 @@ export default function Recommendations({ grower, plan, referenceData, onChooseC
   // Swipe tracking
   const touchStart = useRef<{ x: number; y: number } | null>(null)
   const modalContentRef = useRef<HTMLDivElement>(null)
+  useDialog(modalContentRef, !!modal) // Escape is handled by the keyboard-nav effect below
 
   useEffect(() => {
     setLoading(true)
@@ -240,6 +242,10 @@ export default function Recommendations({ grower, plan, referenceData, onChooseC
           <div
             className="rec-modal"
             ref={modalContentRef}
+            tabIndex={-1}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`Cost report: ${currentRec.crop_name}`}
             onClick={e => e.stopPropagation()}
             onTouchStart={handleTouchStart}
             onTouchEnd={handleTouchEnd}
